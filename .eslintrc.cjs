@@ -18,11 +18,13 @@ module.exports = {
       "version": "detect"
     },
     "import/resolver": {
+      typescript: {},
+      project: "./tsconfig.json",
       alias: {
         map: [
           ['', './public']  // <-- this line
         ],
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx',".ts",".tsx"]
       },
       "node": {
         "paths": [
@@ -42,15 +44,20 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'no-unused-vars': [
-      "error",
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": true,
-        "argsIgnorePattern": "^_"
-      }
-    ],
-    'react/react-in-jsx-scope': "off"
+    // 'no-unused-vars': [
+    //   "error",
+    //   {
+    //     "vars": "all",
+    //     "args": "after-used",
+    //     "ignoreRestSiblings": true,
+    //     "argsIgnorePattern": "^_"
+    //   }
+    // ],
+    "no-unused-vars": "off",
+    'react/react-in-jsx-scope': "off",
+    'jsx-a11y/label-has-associated-control': 'off',
+    'react/no-unknown-property': 'off',
+    "@typescript-eslint/no-unused-vars": 'off',
+    "jsx-a11y/anchor-is-valid": "off",
   },
 }
