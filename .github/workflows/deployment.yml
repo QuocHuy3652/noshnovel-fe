@@ -33,19 +33,19 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 14
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload dist folder
-          path: './dist'
+      - name: Create 404.html
+        run: |
+          cp dist/index.html dist/404.html
+      - name: Rename dist to docs
+        run: mv dist docs
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          target_folder: docs
