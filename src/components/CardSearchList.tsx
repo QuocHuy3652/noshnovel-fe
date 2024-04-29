@@ -2,6 +2,7 @@ import { Novel } from '~/models/Novel.tsx';
 import { NovelSearchCard } from '~/components/NovelSearchCard.tsx';
 import ReactPaginate from 'react-paginate';
 import { useState } from 'react';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 
 export type CardSearchListProps = {
   item: Novel[],
@@ -41,13 +42,13 @@ export const CardSearchList = (props: CardSearchListProps) => {
       ))}
       <ReactPaginate
         className="w-full flex flex-row justify-center items-center space-x-5"
-        previousLabel="Previous"
-        nextLabel="Next"
+        previousLabel={<ArrowLeftIcon className="w-5 h-5"/>}
+        nextLabel={<ArrowRightIcon className="w-5 h-5"/>}
         pageCount={Math.ceil(10 / itemsPerPage)}
         onPageChange={handlePageClick}
         previousClassName="inline-block rounded-xl bg-app_primary p-2 text-white"
         nextClassName="inline-block rounded-xl bg-app_primary p-2 text-white"
-        pageClassName="inline-block"
+        pageClassName="inline-block p-2 rounded-xl bg-app_secondary hover:opacity-50 w-[2rem] text-center"
         activeClassName="inline-block"
         breakLabel="..."
         pageRangeDisplayed={5}

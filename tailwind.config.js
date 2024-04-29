@@ -18,7 +18,7 @@ export default {
       yellow: colors.amber,
       pink: colors.fuchsia,
       app_primary: '#467400',
-      app_secondary: '#0ea5e9',
+      app_secondary: '#D1F4BC',
     },
   },
   plugins: [],
