@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import './index.css'
 import { Navbar } from '~/components';
 import { Dashboard } from '~/pages';
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route path="/" element={<ReadHistory />} />
-          <Route path="/search-result/*" element={<SearchResult />} />
+          <Route path="/search-result" element={<SearchResult />} />
         </Route>
         {/*<Route path="/" element={''} />*/}
       </Routes>

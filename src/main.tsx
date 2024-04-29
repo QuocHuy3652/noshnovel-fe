@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { BrowserRouter, createHashRouter, HashRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter, createHashRouter, HashRouter, Router, RouterProvider } from 'react-router-dom';
 import { Dashboard } from '~/pages';
 
 
@@ -21,9 +21,9 @@ import { Dashboard } from '~/pages';
 // ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <BrowserRouter basename={"/noshnovel-fe"}>
+      <App/>
+    </BrowserRouter>
   </React.StrictMode>,
 );
 
