@@ -5,9 +5,9 @@ export const SearchSection = () => {
 
   return (<>
     <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
-      <img className="w-full relative h-[35rem]" src="/src/assets/nosh_bg.png" alt="banner" />
+      <img className="w-full relative h-[35rem]" src="../src/assets/nosh_bg.png" alt="banner" />
       <div className="wrapper absolute flex flex-col items-center justify-center w-[30rem]">
-        <img className="w-[13rem] h-[13rem]" src="/src/assets/nosh_logo.png" alt="banner" />
+        <img className="w-[13rem] h-[13rem]" src="../src/assets/nosh_logo.png" alt="banner" />
         <div className="banner-text flex flex-col justify-center items-start text-white">
           <h1 className="text-5xl font-bold text-app_primary">Nosh Novel</h1>
         </div>
@@ -65,7 +65,7 @@ export const SearchSection = () => {
             </div>
             <button type="submit"
                     style={{
-                      backgroundImage: `url('src/assets/nosh_search.png')`,
+                      backgroundImage: `url('../src/assets/nosh_search.png')`,
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
                       backgroundSize: '50px 50px'

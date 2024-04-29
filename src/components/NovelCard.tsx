@@ -17,7 +17,7 @@ export const NovelCard = (props: NovelCardProps) => {
     <div
       className="card-wrapper hover:opacity-50 cursor-pointer relative flex flex-col justify-between rounded-2xl w-[14rem] h-[20rem]"
       style={{
-        backgroundImage: `url('src/assets/example_cover.jpg')`,
+        backgroundImage: `url('../src/assets/example_cover.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

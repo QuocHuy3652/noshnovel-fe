@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 // https://vitejs.dev/config/
 dotenv.config();
 export default defineConfig({
-  base: '/noshnovel-fe/',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,5 +13,6 @@ export default defineConfig({
   },
   define: {
     'process.env': process.env,
-  }
+  },
+  assetsInclude: ['src/assets/**'],
 })
