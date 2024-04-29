@@ -44,6 +44,16 @@ jobs:
           cp dist/index.html dist/404.html
       - name: Rename dist to docs
         run: mv dist docs
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload docs folder
+          path: './docs'
+        
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
