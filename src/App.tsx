@@ -14,8 +14,8 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Dashboard />}>
-          <Route path="/" element={<ReadHistory />} />
+        <Route path="" element={<Dashboard />}>
+          <Route path="" element={<ReadHistory />} />
           <Route path="/search-result" element={<SearchResult />} />
         </Route>
         {/*<Route path="/" element={''} />*/}
