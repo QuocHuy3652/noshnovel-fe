@@ -15,8 +15,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Dashboard />}>
-          <Route path="/" element={<ReadHistory />} />
-          <Route path="/search-result/*" element={<SearchResult />} />
+          <Route path="/noshnovel-fe" element={<ReadHistory />} />
+          <Route path="/noshnovel-fe/search-result/*" element={<SearchResult />} />
         </Route>
         {/*<Route path="/" element={''} />*/}
       </Routes>
