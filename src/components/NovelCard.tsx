@@ -1,4 +1,4 @@
-
+import novel_card_cover from '/src/assets/novel_card_cover.jpg'
 
 export type NovelCardProps = {
   title?:string,
@@ -17,12 +17,11 @@ export const NovelCard = (props: NovelCardProps) => {
     <div
       className="card-wrapper hover:opacity-50 cursor-pointer relative flex flex-col justify-between rounded-2xl w-[14rem] h-[20rem]"
       style={{
-        backgroundImage: `url('../src/assets/example_cover.jpg')`,
+        backgroundImage: `url(${novel_card_cover})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
       }}>
-
 
       <div className="overlay bg-gradient-to-b from-app_primary to-white opacity-30 absolute w-full h-full rounded-2xl">
       </div>
