@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { Outlet, Route, Routes } from 'react-router-dom';
-import './index.css'
+import './index.css';
 import { Navbar } from '~/components';
 import { Dashboard } from '~/pages';
 import { ReadHistory } from '~/components/ReadHistory.tsx';
 import { SearchResult } from '~/components/SearchResult.tsx';
+import { useServerStore } from './store/useServerStore';
+import { useGenreStore } from './store/useGenreStore';
 
 function App() {
-  // const [count, setCount] = useState(0);
+  const { getServerList } = useServerStore();
+  const { getGenreList } = useGenreStore();
+  useEffect(() => {
+    getServerList();
+    getGenreList();
+  }, []);
 
   return (
     <>
