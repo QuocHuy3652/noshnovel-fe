@@ -12,10 +12,8 @@ import { path } from '~/constants';
 
 function App() {
   const { getServerList } = useServerStore();
-  const { getGenreList } = useGenreStore();
   useEffect(() => {
     getServerList();
-    getGenreList();
   }, []);
 
   return (

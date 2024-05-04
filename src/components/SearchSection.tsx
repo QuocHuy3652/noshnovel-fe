@@ -10,6 +10,7 @@ import { createSearchParams } from 'react-router-dom';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import Select from 'react-select';
 import { FaSearch } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 interface OptionType {
   label: string;
@@ -24,8 +25,13 @@ interface SearchData {
 const SearchSection = ({ navigate }: WithRouterProps) => {
   const { register, handleSubmit, setValue } = useForm();
   const { serverList } = useServerStore();
-  const { genreList } = useGenreStore();
+  const { genreList, getGenreList } = useGenreStore();
+  const [selectedServer, setSelectedServer] = useState('truyenchu.com.vn');
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
+
+  useEffect(() => {
+    getGenreList(selectedServer);
+  }, [selectedServer]);
 
   const handleSearch = (data: SearchData) => {
     const param: Record<string, string | string[]> = {};
@@ -57,6 +63,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   </label>
                   <select
                     {...register('server')}
+                    onChange={(e) => setSelectedServer(e.target.value)}
                     id="countries"
                     className="bg-gray-50 border border-app_primary text-gray-900
                       text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500

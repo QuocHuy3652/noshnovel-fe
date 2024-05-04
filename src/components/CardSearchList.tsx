@@ -42,7 +42,7 @@ const CardSearchList = (props: CardSearchListProps & WithRouterProps) => {
                 {novel && (
                   <NovelSearchCard
                     title={novel.title}
-                    author={novel.author.name}
+                    author={novel.author?.name ?? undefined}
                     coverUrl={novel.coverImage}
                     totalChapters={novel.totalChapter}
                     category={novel.genres}
