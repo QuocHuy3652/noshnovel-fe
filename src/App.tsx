@@ -8,6 +8,7 @@ import { ReadHistory } from '~/components/ReadHistory.tsx';
 import { SearchResult } from '~/components/SearchResult.tsx';
 import { useServerStore } from './store/useServerStore';
 import { useGenreStore } from './store/useGenreStore';
+import { path } from '~/constants';
 
 function App() {
   const { getServerList } = useServerStore();
@@ -21,9 +22,9 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="" element={<Dashboard />}>
-          <Route path="" element={<ReadHistory />} />
-          <Route path="/search-result" element={<SearchResult />} />
+        <Route path={path.HOME} element={<Dashboard />}>
+          <Route path={path.HOME} element={<ReadHistory />} />
+          <Route path={path.SEARCH} element={<SearchResult />} />
         </Route>
         {/*<Route path="/" element={''} />*/}
       </Routes>

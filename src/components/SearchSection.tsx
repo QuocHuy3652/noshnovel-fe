@@ -1,8 +1,44 @@
+import { useServerStore } from '~/store/useServerStore';
+import { useLocation, useNavigate } from 'react-router-dom';
 import nosh_bg from '/src/assets/nosh_bg.png';
 import nosh_logo from '/src/assets/nosh_logo.png';
 import nosh_search from '/src/assets/nosh_search.png';
+import { useForm } from 'react-hook-form';
+import { useGenreStore } from '~/store/useGenreStore';
+import { path } from '~/constants';
+import { createSearchParams } from 'react-router-dom';
+import { withRouter, WithRouterProps } from '~/hocs/withRouter';
+import Select from 'react-select';
+import { FaSearch } from 'react-icons/fa';
 
-export const SearchSection = () => {
+interface OptionType {
+  label: string;
+  value: string;
+}
+
+interface SearchData {
+  server?: string;
+  keyword?: string;
+  genre?: string;
+}
+const SearchSection = ({ navigate }: WithRouterProps) => {
+  const { register, handleSubmit, setValue } = useForm();
+  const { serverList } = useServerStore();
+  const { genreList } = useGenreStore();
+  const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
+
+  const handleSearch = (data: SearchData) => {
+    const param: Record<string, string | string[]> = {};
+    if (data.server) param.server = data.server.toString();
+    if (data.keyword) param.keyword = data.keyword.toString();
+    if (data.genre) param.genre = Array.isArray(data.genre) ? data.genre : [data.genre.toString()];
+    console.log(param);
+
+    navigate({
+      pathname: `/${path.SEARCH}`,
+      search: createSearchParams(param).toString(),
+    });
+  };
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
@@ -20,6 +56,7 @@ export const SearchSection = () => {
                     Nguồn truyện
                   </label>
                   <select
+                    {...register('server')}
                     id="countries"
                     className="bg-gray-50 border border-app_primary text-gray-900
                       text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
@@ -27,12 +64,18 @@ export const SearchSection = () => {
                       dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
                       dark:focus:border-blue-500 pl-20"
                   >
-                    <option value="US">United States</option>
-                    <option selected value="CA">
-                      Canada
+                    <option value="" className="text-gray-900" disabled hidden>
+                      Chọn Server
                     </option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
+                    {serverList.map((server, index) => (
+                      <option
+                        className="text-gray-900 text-base bg-white dark:bg-gray-700 p-2"
+                        key={index}
+                        value={server.id}
+                      >
+                        {server}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -41,21 +84,20 @@ export const SearchSection = () => {
                   <label className=" text-[10px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary">
                     Thể loại
                   </label>
-                  <select
-                    id="categories"
-                    className=" border-2-app_primary bg-gray-50 border border-app_primary text-gray-900
-                      text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-                      block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                      dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                      dark:focus:border-blue-500 pl-20"
-                  >
-                    <option value="US" selected>
-                      United States
-                    </option>
-                    <option value="CA">Canada</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
-                  </select>
+                  <Select
+                    id="genre"
+                    options={options}
+                    placeholder="Chọn thể loại"
+                    isSearchable
+                    isClearable
+                    formatOptionLabel={(option: OptionType) => (
+                      <div className="flex items-center justify-center gap-2">
+                        <span>{option.label}</span>
+                      </div>
+                    )}
+                    className="bg-white border border-app_primary rounded-lg text-gray-900 z-10 color-black "
+                    onChange={(val) => setValue('genre', val?.value)}
+                  />
                 </div>
               </div>
             </div>
@@ -87,20 +129,10 @@ export const SearchSection = () => {
                   placeholder="Search story name..."
                   required
                 />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <FaSearch onClick={handleSubmit(handleSearch)} className="text-gray-500 cursor-pointer text-xl" />
+                </div>
               </div>
-              <button
-                type="submit"
-                style={{
-                  backgroundImage: nosh_search,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  backgroundSize: '50px 50px',
-                }}
-                className="border-none hover:opacity-60 p-5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800
-                    focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                <span className="sr-only">Search</span>
-              </button>
             </div>
           </form>
         </div>
@@ -108,3 +140,5 @@ export const SearchSection = () => {
     </>
   );
 };
+
+export default withRouter(SearchSection);
