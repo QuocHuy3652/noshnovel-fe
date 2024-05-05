@@ -5,7 +5,9 @@ export const Dashboard = () => {
 
 
   return (<>
-    <SearchSection />
-    <Outlet/>
+    <div className="dashboard-wrapper bg-gray-50">
+      <SearchSection />
+      <Outlet/>
+    </div>
   </>)
 }

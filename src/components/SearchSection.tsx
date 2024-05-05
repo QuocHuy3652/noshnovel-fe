@@ -1,6 +1,7 @@
 import nosh_bg from '/src/assets/nosh_bg.png'
 import nosh_logo from'/src/assets/nosh_logo.png'
 import nosh_search from '/src/assets/nosh_search.png'
+import * as url from 'url';
 
 export const SearchSection = () => {
 
@@ -22,9 +23,7 @@ export const SearchSection = () => {
                 <select id="countries"
                         className="bg-gray-50 border border-app_primary text-gray-900
                       text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-                      block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                      dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                      dark:focus:border-blue-500 pl-20">
+                      block w-full p-2.5 pl-20">
                   <option value="US">United States</option>
                   <option selected value="CA">Canada</option>
                   <option value="FR">France</option>
@@ -38,11 +37,9 @@ export const SearchSection = () => {
                   loại
                 </label>
                 <select id="categories"
-                        className=" border-2-app_primary bg-gray-50 border border-app_primary text-gray-900
+                        className="border-2-app_primary bg-gray-50 border border-app_primary text-gray-900
                       text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-                      block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                      dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                      dark:focus:border-blue-500 pl-20">
+                      block w-full p-2.5 pl-20">
                   <option value="US" selected>United States</option>
                   <option value="CA">Canada</option>
                   <option value="FR">France</option>
@@ -62,20 +59,21 @@ export const SearchSection = () => {
                 </svg>
               </div>
               <input type="text" id="simple-search"
-                     className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                     className=" bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                      placeholder="Search story name..." required />
+              <button type="submit"
+                      style={{
+                        backgroundImage: `url(${nosh_search})`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        backgroundSize: '45px 45px'
+                      }}
+                      className="absolute top-0 bottom-0 right-0 border-none hover:opacity-60 p-5 ms-2 text-sm font-medium text-white rounded-lg border border-blue-700
+                    focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <span className="sr-only">Search</span>
+              </button>
             </div>
-            <button type="submit"
-                    style={{
-                      backgroundImage: nosh_search,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      backgroundSize: '50px 50px'
-                    }}
-                    className="border-none hover:opacity-60 p-5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800
-                    focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              <span className="sr-only">Search</span>
-            </button>
+
           </div>
         </form>
       </div>

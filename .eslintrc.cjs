@@ -59,5 +59,8 @@ module.exports = {
     'react/no-unknown-property': 'off',
     "@typescript-eslint/no-unused-vars": 'off',
     "jsx-a11y/anchor-is-valid": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "no-undef": "off",
+    "react/no-children-prop": "off",
   },
 }

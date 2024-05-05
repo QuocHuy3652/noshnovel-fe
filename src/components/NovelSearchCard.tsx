@@ -16,7 +16,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
 
 
   return (<>
-    <div className="rounded-2xl hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row ">
+    <div className="bg-white rounded-2xl hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row ">
       <div className="novel-cover-img">
         <img className="min-w-[10rem] h-[15rem]" src={novel_cover} alt="cover" />
       </div>
