@@ -3,12 +3,18 @@ export interface Author {
   slug: string | null;
 }
 
+export interface Genre {
+  name: string;
+  slug: string;
+}
+
 export interface Novel {
   title: string;
-  author: Author;
+  author: Author | null;
   coverImage: string;
-  genres: string;
+  genres: Genre[] | null;
   novelSlug: string;
-  status: string;
+  status: string | null;
+  description: string | null;
   totalChapter: number;
 }

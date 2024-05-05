@@ -45,7 +45,9 @@ const CardSearchList = (props: CardSearchListProps & WithRouterProps) => {
                     author={novel.author?.name ?? undefined}
                     coverUrl={novel.coverImage}
                     totalChapters={novel.totalChapter}
-                    category={novel.genres}
+                    category={novel.genres?.[0]?.name ?? undefined}
+                    description={novel.description ?? undefined}
+                    status={novel.status ?? undefined}
                   />
                 )}
               </div>
