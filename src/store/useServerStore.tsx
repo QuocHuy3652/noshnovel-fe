@@ -10,7 +10,6 @@ export const useServerStore = create<ServerStore>((set) => ({
   serverList: [],
   getServerList: async () => {
     const response = await apiGetListServer();
-    console.log(response);
     if (Array.isArray(response)) {
       set({ serverList: response });
     } else {

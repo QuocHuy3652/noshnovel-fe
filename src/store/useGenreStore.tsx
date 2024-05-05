@@ -10,7 +10,6 @@ export const useGenreStore = create<GenreStore>((set) => ({
   genreList: [],
   getGenreList: async (server: string) => {
     const response = await apiGetGenre({ server });
-    console.log(response);
     if (Array.isArray(response)) {
       set({ genreList: response });
     } else {

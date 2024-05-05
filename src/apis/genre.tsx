@@ -6,3 +6,10 @@ export const apiGetGenre = (params: any) =>
     method: 'get',
     params,
   });
+
+export const apiFilterGenre = (params: any) =>
+  axios({
+    url: '/Novels/genre-filter',
+    method: 'get',
+    params,
+  });

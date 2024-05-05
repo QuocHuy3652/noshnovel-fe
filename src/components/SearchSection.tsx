@@ -27,6 +27,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
   const { genreList, getGenreList } = useGenreStore();
   const [selectedServer, setSelectedServer] = useState('truyenchu.com.vn');
+  console.log(serverList[0]);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
 
   useEffect(() => {
@@ -37,8 +38,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     const param: Record<string, string | string[]> = {};
     if (data.server) param.server = data.server.toString();
     if (data.keyword) param.keyword = data.keyword.toString();
-    if (data.genre) param.genre = Array.isArray(data.genre) ? data.genre : [data.genre.toString()];
-    console.log(param);
+    if (data.genre) param.genre = data.genre.toString();
 
     navigate({
       pathname: `/${path.SEARCH}`,
@@ -65,21 +65,16 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     {...register('server')}
                     onChange={(e) => setSelectedServer(e.target.value)}
                     id="countries"
-                    className="bg-gray-50 border border-app_primary text-gray-900
-                      text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-                      block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                      dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                      dark:focus:border-blue-500 pl-20"
+                    className="bg-white border border-app_primary text-black
+                                text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
+                                block w-full p-2.5   focus:ring-blue-500
+                                focus:border-blue-500 pl-20"
                   >
                     <option value="" className="text-gray-900" disabled hidden>
                       Chọn Server
                     </option>
                     {serverList.map((server, index) => (
-                      <option
-                        className="text-gray-900 text-base bg-white dark:bg-gray-700 p-2"
-                        key={index}
-                        value={server.id}
-                      >
+                      <option className="text-gray-900 text-base bg-white p-2" key={index} value={server.id}>
                         {server}
                       </option>
                     ))}
@@ -102,7 +97,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                         <span>{option.label}</span>
                       </div>
                     )}
-                    className="bg-white border border-app_primary rounded-lg text-gray-900 z-10 color-black "
+                    className="bg-white border border-app_primary rounded-lg text-gray-900 z-10 color-black  "
                     onChange={(val) => setValue('genre', val?.value)}
                   />
                 </div>
@@ -130,10 +125,10 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   </svg>
                 </div>
                 <input
-                  {...register('keyword', { required: 'Không được để trống!!!' })}
+                  {...register('keyword')}
                   type="text"
                   id="simple-search"
-                  className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2 text-dark "
                   placeholder="Search story name..."
                   required
                 />

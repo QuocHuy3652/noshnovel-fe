@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { apiSearchNovel } from '~/apis/novel';
+import { apiSearchNovel, apiFilterGenre } from '~/apis';
 import CardSearchList from '~/components/CardSearchList.tsx';
 import { Novel } from '~/models/Novel';
 
@@ -12,15 +12,25 @@ export const SearchResult = () => {
 
   useEffect(() => {
     const fetchSearchNovel = async (params: any) => {
-      const result: any = await apiSearchNovel({
-        perPage: 4,
-        page: params.page,
-        ...params,
-      });
-      console.log(result);
+      let result: any;
+
+      if (params.server && params.keyword) {
+        result = await apiSearchNovel({
+          perPage: 4,
+          page: params.page,
+          ...params,
+        });
+      } else if (params.server && params.genre) {
+        result = await apiFilterGenre({
+          perPage: 4,
+          page: params.page,
+          ...params,
+        });
+      }
       setNovels(result.data);
       setTotalPages(result.totalPages);
     };
+
     const params = Object.fromEntries([...searchParams]);
 
     fetchSearchNovel(params);

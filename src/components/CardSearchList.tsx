@@ -63,7 +63,7 @@ const CardSearchList = (props: CardSearchListProps & WithRouterProps) => {
         onPageChange={handlePageClick}
         previousClassName="inline-block rounded-md bg-app_primary p-2 text-white"
         nextClassName="inline-block rounded-md bg-app_primary p-2 text-white"
-        pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 w-[2rem] text-center"
+        pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[2rem] text-center"
         activeLinkClassName="text-black font-bold"
         breakLabel="..."
         pageRangeDisplayed={5}
