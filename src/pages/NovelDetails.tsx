@@ -79,22 +79,16 @@ export const NovelDetails = (props:NovelDetails) => {
   return (
     <>
     <div
-      // style={{
-      //   backgroundImage: `url(${nosh_bg_v})`,
-      //   backgroundSize: 'cover',
-      //   backgroundPosition: 'center',
-      //   backgroundRepeat: 'no-repeat',
-      // }}
       className="wrapper w-full flex items-center justify-center">
-      <div className="p-[3rem] h-full page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
-        <button className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-5 inline-block w-[10rem] justify-center items-center">
+      <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
+        <button className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-[2rem] inline-block w-[10rem] justify-center items-center">
           <ArrowLeftIcon className="w-5 h-5"/>
           <p className="ml-2 inline-block font-bold">Trang trước</p>
         </button>
         <div className="novel-cover p-[2rem] flex flex-row">
-          <img className="w-[15rem] h-[22rem]" src={novel_cover} alt="banner"/>
+          <img className="rounded-xl w-[15rem] h-[22rem]" src={novel_cover} alt="banner"/>
           <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
-            <div className="inner-wrapper flex flex-col ">
+            <div className="inner-wrapper flex flex-col">
               <p className="text-3xl font-bold text-black mt">{title}</p>
               <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
                 {rated}.7

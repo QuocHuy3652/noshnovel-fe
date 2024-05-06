@@ -13,7 +13,7 @@
 }
 
 body {
-  /* background-image: url('./assets/nosh_bg_v.png'); */
+  background-image: url('./assets/nosh_bg_v.png');
   background-color: white;
   background-repeat: no-repeat;
   background-size: cover;

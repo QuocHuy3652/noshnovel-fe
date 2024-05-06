@@ -10,6 +10,8 @@ import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import Select from 'react-select';
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
+import { Button } from '@material-tailwind/react';
+import nosh_search from '/src/assets/nosh_search.png';
 
 interface OptionType {
   label: string;
@@ -131,7 +133,14 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   required
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-4">
-                  <FaSearch onClick={handleSubmit(handleSearch)} className="text-gray-500 cursor-pointer text-xl" />
+                  <button
+                    style={{
+                      backgroundImage: `url(${nosh_search})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                    }} onClick={handleSubmit(handleSearch)} className="hover:opacity-50 w-10 h-10 rounded bg-none"
+                    children={undefined}/>
                 </div>
               </div>
             </div>

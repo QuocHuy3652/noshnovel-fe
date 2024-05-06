@@ -38,7 +38,7 @@ export const SearchResult = () => {
 
   return (
     <>
-      <section className="novel-history text-app_primary p-5">
+      <section className="novel-history text-app_primary p-5 bg-[#F8F8F8]">
         <div className="border-app_primary text-3xl font-semibold">Kết quả tìm kiếm: </div>
         <div className="novel-history p-3 mt-3">
           <CardSearchList item={novels} totalCol={2} totalRow={2} totalPages={totalPages} />
