@@ -4,7 +4,7 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color-scheme: light only!important;
+  color-scheme: light only !important;
   color: rgba(255, 255, 255, 0.94);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,7 +13,8 @@
 }
 
 body {
-  background-image: url("./assets/nosh_bg_v.png");
+  /* background-image: url('./assets/nosh_bg_v.png'); */
+  background-color: white;
   background-repeat: no-repeat;
   background-size: cover;
   margin: 0;
