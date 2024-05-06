@@ -2,7 +2,6 @@ import { useServerStore } from '~/store/useServerStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import nosh_bg from '/src/assets/nosh_bg.png';
 import nosh_logo from '/src/assets/nosh_logo.png';
-import nosh_search from '/src/assets/nosh_search.png';
 import { useForm } from 'react-hook-form';
 import { useGenreStore } from '~/store/useGenreStore';
 import { path } from '~/constants';
@@ -27,7 +26,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
   const { genreList, getGenreList } = useGenreStore();
   const [selectedServer, setSelectedServer] = useState('truyenchu.com.vn');
-  console.log(serverList[0]);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
 
   useEffect(() => {
@@ -132,7 +130,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   placeholder="Search story name..."
                   required
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-4">
                   <FaSearch onClick={handleSubmit(handleSearch)} className="text-gray-500 cursor-pointer text-xl" />
                 </div>
               </div>
