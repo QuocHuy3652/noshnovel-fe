@@ -1,14 +1,11 @@
 import './index.css';
 import './App.css';
 import { useEffect } from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
-import { Navbar } from '~/components';
-import { Dashboard } from '~/pages';
-import { ReadHistory } from '~/components/ReadHistory.tsx';
-import { SearchResult } from '~/components/SearchResult.tsx';
-import { useServerStore } from './store/useServerStore';
+import { Route, Routes } from 'react-router-dom';
+import { Navbar, ReadHistory, SearchResult } from '~/components';
+import { Dashboard, NovelDetails, NovelReader } from '~/pages';
 import { path } from '~/constants';
-import { NovelDetails } from '~/pages/NovelDetails.tsx';
+import { useServerStore } from '~/store';
 
 function App() {
   const { getServerList } = useServerStore();
@@ -25,6 +22,7 @@ function App() {
           <Route path={path.SEARCH} element={<SearchResult />} />
         </Route>
         <Route path="/novel-detail" element={<NovelDetails />} />
+        <Route path="/novel-reader" element={<NovelReader />}></Route>
       </Routes>
     </>
   );

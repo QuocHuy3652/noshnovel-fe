@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { apiGetListServer } from '~/apis';
 
 interface ServerStore {
-  serverList: any[];
+  serverList: any[]; // TODO: create model for this please
   getServerList: () => Promise<void>;
 }
 

@@ -1,10 +1,11 @@
 import { Novel } from '~/models/Novel.tsx';
-import { NovelSearchCard } from '~/components/NovelSearchCard.tsx';
 import ReactPaginate from 'react-paginate';
 import { useState } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
+import { NovelSearchCard } from '~/components/NovelSearchCard.tsx';
+
 
 export type CardSearchListProps = {
   item: Novel[];
@@ -13,7 +14,7 @@ export type CardSearchListProps = {
   totalPages: number;
 };
 
-const CardSearchList = (props: CardSearchListProps & WithRouterProps) => {
+export const CardSearchList = withRouter((props: CardSearchListProps & WithRouterProps) => {
   const { item, totalRow = 2, totalCol = 2, totalPages, navigate, location } = props;
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
@@ -71,6 +72,5 @@ const CardSearchList = (props: CardSearchListProps & WithRouterProps) => {
       />
     </div>
   );
-};
+});
 
-export default withRouter(CardSearchList);

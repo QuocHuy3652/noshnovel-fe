@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { apiSearchNovel, apiFilterGenre } from '~/apis';
-import CardSearchList from '~/components/CardSearchList.tsx';
 import { Novel } from '~/models/Novel';
+import { CardSearchList } from '~/components/CardSearchList.tsx';
+
 
 export const SearchResult = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
@@ -11,8 +12,8 @@ export const SearchResult = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const fetchSearchNovel = async (params: any) => {
-      let result: any;
+    const fetchSearchNovel = async (params: any) => {// TODO: create model for this please
+      let result: any;// TODO: create model for this please
 
       if (params.server && params.keyword) {
         result = await apiSearchNovel({

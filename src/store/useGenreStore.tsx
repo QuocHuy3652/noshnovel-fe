@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { apiGetGenre } from '~/apis';
 
 interface GenreStore {
-  genreList: any[];
+  genreList: any[]; // TODO: create model for this please
   getGenreList: (server: string) => Promise<void>;
 }
 
