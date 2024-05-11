@@ -6,3 +6,10 @@ export const apiSearchNovel = (params: any) =>
     method: 'get',
     params,
   });
+
+export const apiNovelDetail = (params: any) =>
+  axios({
+    url: '/Novels/detail',
+    method: 'get',
+    params,
+  });

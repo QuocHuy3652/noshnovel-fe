@@ -19,7 +19,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = totalRow * totalCol;
-
+  
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);
     const params = Object.fromEntries([...searchParams]);
@@ -49,6 +49,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
                     category={novel.genres?.[0]?.name ?? undefined}
                     description={novel.description ?? undefined}
                     status={novel.status ?? undefined}
+                    novelSlug={novel.novelSlug}
                   />
                 )}
               </div>

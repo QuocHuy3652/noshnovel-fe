@@ -8,7 +8,7 @@ import { path } from '~/constants';
 import { createSearchParams } from 'react-router-dom';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import Select from 'react-select';
-import { FaSearch } from 'react-icons/fa';
+// import { FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import nosh_search from '/src/assets/nosh_search.png';
@@ -24,26 +24,37 @@ interface SearchData {
   genre?: string;
 }
 const SearchSection = ({ navigate }: WithRouterProps) => {
+  let server = localStorage.getItem("selectedServer");
+  if (server == null) {
+    server = 'truyen.tangthuvien.vn';
+    localStorage.setItem('selectedServer', server);
+  }
   const { register, handleSubmit, setValue } = useForm();
   const { serverList } = useServerStore();
   const { genreList, getGenreList } = useGenreStore();
-  const [selectedServer, setSelectedServer] = useState('truyenchu.com.vn');
+  const [selectedServer, setSelectedServer] = useState(server);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
 
+  const handleSelectSever = (e: any) => {
+    localStorage.setItem('selectedServer', e.target.value);
+    setSelectedServer(e.target.value);
+  }
   useEffect(() => {
+    console.log(selectedServer)
     getGenreList(selectedServer);
   }, [selectedServer]);
 
   const handleSearch = (data: SearchData) => {
     const param: Record<string, string | string[]> = {};
-    if (data.server) param.server = data.server.toString();
+    param.server = selectedServer.toString();
     if (data.keyword) param.keyword = data.keyword.toString();
     if (data.genre) param.genre = data.genre.toString();
-
-    navigate({
-      pathname: `/${path.SEARCH}`,
-      search: createSearchParams(param).toString(),
-    });
+    if (param.keyword || param.genre) {
+      navigate({
+        pathname: `/${path.SEARCH}`,
+        search: createSearchParams(param).toString(),
+      });
+    }
   };
   return (
     <>
@@ -63,7 +74,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   </label>
                   <select
                     {...register('server')}
-                    onChange={(e) => setSelectedServer(e.target.value)}
+                    onChange={(e) => handleSelectSever(e)}
                     id="countries"
                     className="bg-white border border-app_primary text-black
                                 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
@@ -74,7 +85,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       Chọn Server
                     </option>
                     {serverList.map((server, index) => (
-                      <option className="text-gray-900 text-base bg-white p-2" key={index} value={server.id}>
+                      <option className="text-gray-900 text-base bg-white p-2" key={index} value={server.id} selected={server == selectedServer}>
                         {server}
                       </option>
                     ))}

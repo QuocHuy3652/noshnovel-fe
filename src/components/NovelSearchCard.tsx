@@ -1,5 +1,6 @@
 import { ShareIcon, TagIcon, BookOpenIcon, HeartIcon } from '@heroicons/react/16/solid';
 import { IconText } from '~/components/IconText.tsx';
+import { path } from '~/constants';
 
 export type NovelSeachCardProps = {
   title?: string;
@@ -9,13 +10,18 @@ export type NovelSeachCardProps = {
   totalChapters?: number;
   category?: string;
   status?: string;
+  novelSlug?: string
 };
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
-  const { title, author, coverUrl, description, totalChapters, category, status } = props;
+  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug } = props;
+  const handleClick = (slug: string | undefined) => {
+    window.location.href = `/noshnovel-fe/${path.DETAIL}?novelSlug=${slug}`
+  };
   return (
     <>
-      <div className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row ">
+      <div className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row "
+        onClick={() => handleClick(novelSlug)}>
         <div className="novel-cover-img">
           <img
             className="min-w-[10rem] h-[15rem]"

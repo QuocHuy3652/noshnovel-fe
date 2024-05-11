@@ -21,8 +21,8 @@ function App() {
           <Route path={path.HOME} element={<ReadHistory />} />
           <Route path={path.SEARCH} element={<SearchResult />} />
         </Route>
-        <Route path="/novel-detail" element={<NovelDetails />} />
-        <Route path="/novel-reader" element={<NovelReader />}></Route>
+        <Route path={path.DETAIL} element={<NovelDetails />} />
+        <Route path={path.READER} element={<NovelReader />}></Route>
       </Routes>
     </>
   );

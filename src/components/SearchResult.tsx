@@ -28,8 +28,10 @@ export const SearchResult = () => {
           ...params,
         });
       }
-      setNovels(result.data);
-      setTotalPages(result.totalPages);
+      if (result) {
+        setNovels(result.data);
+        setTotalPages(result.totalPages);
+      }
     };
 
     const params = Object.fromEntries([...searchParams]);
