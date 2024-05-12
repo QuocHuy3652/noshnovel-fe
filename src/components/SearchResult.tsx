@@ -51,7 +51,8 @@ export const SearchResult = () => {
           {novels && novels.length > 0 ? (
             <CardSearchList item={novels} totalCol={2} totalRow={3} totalPages={totalPages} />
           ) : (
-            <div className="text-xl mx-auto text-center">Không tìm thấy kết quả ¯\_(ツ)_/¯</div>
+            novels.length === 0 &&
+            !isLoading && <div className="text-xl mx-auto text-center">Không tìm thấy kết quả ¯\_(ツ)_/¯</div>
           )}
         </div>
       </section>
