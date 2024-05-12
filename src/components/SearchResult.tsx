@@ -30,6 +30,7 @@ export const SearchResult = () => {
           ...params,
         });
       }
+
       if (result) {
         setNovels(result.data);
         setTotalPages(result.totalPages);

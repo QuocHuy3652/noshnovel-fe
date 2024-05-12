@@ -5,16 +5,18 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
 import { NovelSearchCard } from '~/components/NovelSearchCard.tsx';
+import { ImagePlacehoderSkeleton } from '~/components/SearchCardSkeleton.tsx';
 
 export type CardSearchListProps = {
   item: Novel[];
   totalRow?: number;
   totalCol?: number;
   totalPages: number;
+  loading?: boolean;
 };
 
 export const CardSearchList = withRouter((props: CardSearchListProps & WithRouterProps) => {
-  const { item, totalRow = 2, totalCol = 2, totalPages, navigate, location } = props;
+  const { loading = false, item, totalRow = 2, totalCol = 2, totalPages, navigate, location } = props;
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = totalRow * totalCol;
@@ -35,9 +37,10 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
       {Array.from({ length: totalRow }).map((_, rowIndex) => (
         <div key={rowIndex} className="grid grid-cols-2 gap-4">
           {Array.from({ length: totalCol }).map((_, colIndex) => {
+
             const index = rowIndex * totalCol + colIndex;
             const novel = item[index]; // Changed from displayedItems to item
-            return (
+            return loading ? <ImagePlacehoderSkeleton /> : (
               <div key={index} className="col-span-1 p-3">
                 {novel && (
                   <NovelSearchCard

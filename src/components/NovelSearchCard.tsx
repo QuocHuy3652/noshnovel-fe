@@ -34,7 +34,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
         </div>
         <div className="novel-info ml-4 flex flex-col w-full relative">
           <div className="flex flex-row w-full justify-between">
-            <div className="novel-title text-xl font-bold">{title}</div>
+            <div className="novel-title text-xl font-bold text-ellipsis overflow-hidden line-clamp-1">{title}</div>
             <div className="top-action flex flex-row gap-2 mb-2">
               <a className="action">
                 <ShareIcon className="w-[1.5rem] h-[1.5rem]" />
