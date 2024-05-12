@@ -3,15 +3,18 @@ import { useSearchParams } from 'react-router-dom';
 import { apiSearchNovel, apiFilterGenre } from '~/apis';
 import { Novel } from '~/models/Novel';
 import { CardSearchList } from '~/components/CardSearchList.tsx';
+import Loading from './Loading';
 
 export const SearchResult = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchSearchNovel = async (params: any) => {
+      setIsLoading(true);
       let result: any;
 
       if (params.server && params.keyword) {
@@ -31,6 +34,7 @@ export const SearchResult = () => {
         setNovels(result.data);
         setTotalPages(result.totalPages);
       }
+      setIsLoading(false);
     };
 
     const params = Object.fromEntries([...searchParams]);
@@ -40,6 +44,7 @@ export const SearchResult = () => {
 
   return (
     <>
+      {isLoading && <Loading />}
       <section className="novel-history text-app_primary p-5 bg-[#F8F8F8]">
         <div className="border-app_primary text-3xl font-semibold">Kết quả tìm kiếm: </div>
         <div className="novel-history p-3 mt-3">

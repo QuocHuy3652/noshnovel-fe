@@ -23,7 +23,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
     setCurrentPage(event.selected);
     const params = Object.fromEntries([...searchParams]);
     params.page = String(event.selected + 1);
-    // Navigate to location.pathname with new params
+
     navigate({
       pathname: location.pathname,
       search: createSearchParams(params).toString(),

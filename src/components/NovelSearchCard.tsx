@@ -54,12 +54,12 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
             </div>
           )}
           <div className="novel-description text-xs mt-2">{description}</div>
-          <div className="novel-chapter mt-1 flex items-center ">
+          <div className="novel-chapter  flex items-center mt-2">
             <BookOpenIcon className="w-5 h-5 mr-1" /> {totalChapters}
           </div>
           {status && (
             <div
-              className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[6rem] absolute bottom-6 left-0 ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
+              className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] absolute bottom-6 left-0 ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
             >
               {status}
             </div>
