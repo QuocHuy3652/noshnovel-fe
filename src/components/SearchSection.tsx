@@ -24,7 +24,7 @@ interface SearchData {
   genre?: string;
 }
 const SearchSection = ({ navigate }: WithRouterProps) => {
-  let server = localStorage.getItem("selectedServer");
+  let server = localStorage.getItem('selectedServer');
   if (server == null) {
     server = 'truyen.tangthuvien.vn';
     localStorage.setItem('selectedServer', server);
@@ -34,13 +34,14 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const { genreList, getGenreList } = useGenreStore();
   const [selectedServer, setSelectedServer] = useState(server);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
+  const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
 
   const handleSelectSever = (e: any) => {
     localStorage.setItem('selectedServer', e.target.value);
     setSelectedServer(e.target.value);
-  }
+  };
   useEffect(() => {
-    console.log(selectedServer)
+    console.log(selectedServer);
     getGenreList(selectedServer);
   }, [selectedServer]);
 
@@ -56,6 +57,48 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       });
     }
   };
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: 'white',
+      borderColor: 'green',
+      borderRadius: '0.375rem',
+      padding: '0.3rem',
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: 'blue',
+      },
+      textAlign: 'right',
+      fontSize: '13px',
+      '&:focus': {
+        outline: '2px solid blue',
+        outlineOffset: '10px',
+      },
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'black',
+      backgroundColor: state.isSelected ? 'blue' : 'white',
+      padding: '0.5rem',
+    }),
+
+    menu: (provided: any) => ({
+      ...provided,
+      zIndex: 9999,
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+    }),
+    valueContainer: (provided: any) => ({
+      ...provided,
+      paddingLeft: '60px',
+    }),
+  };
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
@@ -69,32 +112,24 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
             <div className="filter-selection flex flex-row justify-between space-x-5 mt-5">
               <div className="source-select w-[20rem]">
                 <div className="relative">
-                  <label className=" text-[10px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary">
+                  <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
                     Nguồn truyện
                   </label>
-                  <select
+                  <Select
                     {...register('server')}
-                    onChange={(e) => handleSelectSever(e)}
-                    id="countries"
-                    className="bg-white border border-app_primary text-black
-                                text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-                                block w-full p-2.5   focus:ring-blue-500
-                                focus:border-blue-500 pl-20"
-                  >
-                    <option value="" className="text-gray-900" disabled hidden>
-                      Chọn Server
-                    </option>
-                    {serverList.map((server, index) => (
-                      <option className="text-gray-900 text-base bg-white p-2" key={index} value={server.id} selected={server == selectedServer}>
-                        {server}
-                      </option>
-                    ))}
-                  </select>
+                    options={serverOptions}
+                    placeholder="Chọn nguồn truyện"
+                    styles={customStyles}
+                    onChange={(val) => setSelectedServer(val?.value || '')}
+                    className="block w-full"
+                    isSearchable={false}
+                    isClearable
+                  />
                 </div>
               </div>
-              <div className="categories-select w-[20rem]">
+              <div className="categories-select w-[20rem] ">
                 <div className="relative">
-                  <label className=" text-[10px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary">
+                  <label className=" text-[13px] absolute left-2 top-6 transform -translate-y-1/2 text-app_primary z-10 ">
                     Thể loại
                   </label>
                   <Select
@@ -103,13 +138,15 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     placeholder="Chọn thể loại"
                     isSearchable
                     isClearable
+                    menuPlacement="bottom"
                     formatOptionLabel={(option: OptionType) => (
                       <div className="flex items-center justify-center gap-2">
                         <span>{option.label}</span>
                       </div>
                     )}
-                    className="bg-white border border-app_primary rounded-lg text-gray-900 z-10 color-black  "
+                    styles={customStyles}
                     onChange={(val) => setValue('genre', val?.value)}
+                    className="block w-full h-10 "
                   />
                 </div>
               </div>
@@ -140,7 +177,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   type="text"
                   id="simple-search"
                   className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2 text-dark "
-                  placeholder="Search story name..."
+                  placeholder="Nhập tên truyện..."
                   required
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-4">
@@ -150,8 +187,11 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
-                    }} onClick={handleSubmit(handleSearch)} className="hover:opacity-50 w-10 h-10 rounded bg-none"
-                    children={undefined}/>
+                    }}
+                    onClick={handleSubmit(handleSearch)}
+                    className="hover:opacity-50 w-10 h-10 rounded bg-none"
+                    children={undefined}
+                  />
                 </div>
               </div>
             </div>

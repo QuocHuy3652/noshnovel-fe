@@ -6,7 +6,6 @@ import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
 import { NovelSearchCard } from '~/components/NovelSearchCard.tsx';
 
-
 export type CardSearchListProps = {
   item: Novel[];
   totalRow?: number;
@@ -19,7 +18,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = totalRow * totalCol;
-  
+
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);
     const params = Object.fromEntries([...searchParams]);
@@ -66,7 +65,8 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
         previousClassName="inline-block rounded-md bg-app_primary p-2 text-white"
         nextClassName="inline-block rounded-md bg-app_primary p-2 text-white"
         pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[2rem] text-center"
-        activeLinkClassName="text-black font-bold"
+        activeLinkClassName="text-white font-bold "
+        activeClassName="inline-block rounded-md bg-[#467400] p-2 text-white"
         breakLabel="..."
         pageRangeDisplayed={5}
         renderOnZeroPageCount={null}
@@ -74,4 +74,3 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
     </div>
   );
 });
-

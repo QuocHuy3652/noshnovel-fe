@@ -1,4 +1,4 @@
-import { ShareIcon, TagIcon, BookOpenIcon, HeartIcon } from '@heroicons/react/16/solid';
+import { ShareIcon, UserCircleIcon, TagIcon, BookOpenIcon, HeartIcon } from '@heroicons/react/16/solid';
 import { IconText } from '~/components/IconText.tsx';
 import { path } from '~/constants';
 
@@ -10,18 +10,20 @@ export type NovelSeachCardProps = {
   totalChapters?: number;
   category?: string;
   status?: string;
-  novelSlug?: string
+  novelSlug?: string;
 };
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
   const { title, author, coverUrl, description, totalChapters, category, status, novelSlug } = props;
   const handleClick = (slug: string | undefined) => {
-    window.location.href = `/noshnovel-fe/${path.DETAIL}?novelSlug=${slug}`
+    window.location.href = `/noshnovel-fe/${path.DETAIL}?novelSlug=${slug}`;
   };
   return (
     <>
-      <div className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row "
-        onClick={() => handleClick(novelSlug)}>
+      <div
+        className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row  items-stretch relative"
+        onClick={() => handleClick(novelSlug)}
+      >
         <div className="novel-cover-img">
           <img
             className="min-w-[10rem] h-[15rem]"
@@ -30,7 +32,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
             onError={(e: any) => (e.target.src = 'https://truyenchu.com.vn/images/no-image.webp')}
           />
         </div>
-        <div className="novel-info ml-4 flex flex-col w-full">
+        <div className="novel-info ml-4 flex flex-col w-full relative">
           <div className="flex flex-row w-full justify-between">
             <div className="novel-title text-xl font-bold">{title}</div>
             <div className="top-action flex flex-row gap-2 mb-2">
@@ -43,19 +45,26 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
             </div>
           </div>
 
-          <div className="novel-author">{author}</div>
+          {author && (
+            <div className="novel-author flex items-center gap-1">
+              <span>
+                <UserCircleIcon className="w-[1.4rem] h-[1.4rem]" />
+              </span>
+              <span>{author}</span>
+            </div>
+          )}
           <div className="novel-description text-xs mt-2">{description}</div>
           <div className="novel-chapter mt-1 flex items-center ">
             <BookOpenIcon className="w-5 h-5 mr-1" /> {totalChapters}
           </div>
           {status && (
             <div
-              className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[6rem] ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
+              className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[6rem] absolute bottom-6 left-0 ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
             >
               {status}
             </div>
           )}
-          <div className="novel-category flex flex-row space-x-2 mt-10">
+          <div className="novel-category flex flex-row space-x-2 mt-10 absolute bottom-0 left-0">
             {category && (
               <IconText iconComp={<TagIcon className="w-[1rem] h-[1rem]" />} textContent={category}></IconText>
             )}
