@@ -35,10 +35,14 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const [selectedServer, setSelectedServer] = useState(server);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
+  console.log(serverOptions);
+  const defaultOption = serverOptions.find((option) => option.value === selectedServer);
+  console.log(defaultOption);
 
-  const handleSelectSever = (e: any) => {
-    localStorage.setItem('selectedServer', e.target.value);
-    setSelectedServer(e.target.value);
+  const handleSelectServer = (option: any) => {
+    const value = option ? option.value : '';
+    localStorage.setItem('selectedServer', value);
+    setSelectedServer(value);
   };
   useEffect(() => {
     console.log(selectedServer);
@@ -69,7 +73,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       '&:hover': {
         borderColor: 'blue',
       },
-      textAlign: 'right',
+      textAlign: 'center',
       fontSize: '13px',
       '&:focus': {
         outline: '2px solid blue',
@@ -86,17 +90,20 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     menu: (provided: any) => ({
       ...provided,
       zIndex: 9999,
+      paddingLeft: '0.5rem',
     }),
     placeholder: (provided: any) => ({
       ...provided,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100%',
     }),
     valueContainer: (provided: any) => ({
       ...provided,
-      paddingLeft: '60px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      transform: 'translateX(3rem)',
     }),
   };
   return (
@@ -120,10 +127,11 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     options={serverOptions}
                     placeholder="Chọn nguồn truyện"
                     styles={customStyles}
-                    onChange={(val) => setSelectedServer(val?.value || '')}
+                    onChange={(val) => handleSelectServer(val)}
                     className="block w-full"
                     isSearchable={false}
-                    isClearable
+                    defaultValue={defaultOption}
+                    key={defaultOption?.value}
                   />
                 </div>
               </div>
@@ -137,16 +145,27 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     options={options}
                     placeholder="Chọn thể loại"
                     isSearchable
-                    isClearable
                     menuPlacement="bottom"
                     formatOptionLabel={(option: OptionType) => (
                       <div className="flex items-center justify-center gap-2">
                         <span>{option.label}</span>
                       </div>
                     )}
-                    styles={customStyles}
-                    onChange={(val) => setValue('genre', val?.value)}
-                    className="block w-full h-10 "
+                    styles={{
+                      ...customStyles,
+                      valueContainer: (provided: any) => ({
+                        ...provided,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        transform: 'translateX(6rem)',
+                      }),
+                    }}
+                    onChange={(val) => {
+                      setValue('genre', val?.value);
+                      handleSearch({ genre: val?.value });
+                    }}
+                    className="block w-full "
                   />
                 </div>
               </div>
@@ -180,7 +199,14 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   placeholder="Nhập tên truyện..."
                   required
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-4">
+                <div
+                  className="absolute inset-y-0 right-0 flex items-center gap-4  border border-app_primary"
+                  style={{
+                    backgroundColor: '#D1F4BC',
+                    borderTopRightRadius: '0.375rem',
+                    borderBottomRightRadius: '0.375rem',
+                  }}
+                >
                   <button
                     style={{
                       backgroundImage: `url(${nosh_search})`,

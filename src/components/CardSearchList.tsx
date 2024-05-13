@@ -37,10 +37,11 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
       {Array.from({ length: totalRow }).map((_, rowIndex) => (
         <div key={rowIndex} className="grid grid-cols-2 gap-4">
           {Array.from({ length: totalCol }).map((_, colIndex) => {
-
             const index = rowIndex * totalCol + colIndex;
             const novel = item[index]; // Changed from displayedItems to item
-            return loading ? <ImagePlacehoderSkeleton /> : (
+            return loading ? (
+              <ImagePlacehoderSkeleton />
+            ) : (
               <div key={index} className="col-span-1 p-3">
                 {novel && (
                   <NovelSearchCard
@@ -61,15 +62,15 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
       ))}
       <ReactPaginate
         className="w-full flex flex-row justify-center items-center gap-2"
-        previousLabel={<ArrowLeftIcon className="w-5 h-5" />}
-        nextLabel={<ArrowRightIcon className="w-5 h-5" />}
+        previousLabel={<ArrowLeftIcon className="w-5 h-6" />}
+        nextLabel={<ArrowRightIcon className="w-5 h-6" />}
         pageCount={totalPages}
         onPageChange={handlePageClick}
         previousClassName="inline-block rounded-md bg-app_primary p-2 text-white"
         nextClassName="inline-block rounded-md bg-app_primary p-2 text-white"
-        pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[2rem] text-center"
+        pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[3rem] text-center"
         activeLinkClassName="text-white font-bold "
-        activeClassName="inline-block rounded-md bg-green-700 p-2 text-white"
+        activeClassName="inline-block rounded-md bg-green-500 p-2 text-white"
         breakLabel="..."
         pageRangeDisplayed={5}
         renderOnZeroPageCount={null}

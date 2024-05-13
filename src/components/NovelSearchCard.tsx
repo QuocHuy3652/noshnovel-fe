@@ -66,7 +66,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
           )}
           <div className="novel-category flex flex-row space-x-2 mt-10 absolute bottom-0 left-0">
             {category && (
-              <IconText iconComp={<TagIcon className="w-[1rem] h-[1rem]" />} textContent={category}></IconText>
+              <IconText iconComp={<TagIcon className="w-[1rem] h-[1rem] mr-2" />} textContent={category}></IconText>
             )}
           </div>
         </div>
