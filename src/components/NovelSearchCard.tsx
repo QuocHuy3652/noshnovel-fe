@@ -26,7 +26,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
       >
         <div className="novel-cover-img">
           <img
-            className="min-w-[10rem] h-[15rem]"
+            className="min-w-[10rem] h-[15rem] rounded-[0.5rem]"
             src={coverUrl}
             alt="cover"
             onError={(e: any) => (e.target.src = 'https://truyenchu.com.vn/images/no-image.webp')}
@@ -45,29 +45,25 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
             </div>
           </div>
 
-          {author && (
-            <div className="novel-author flex items-center gap-1">
-              <span>
-                <UserCircleIcon className="w-[1.4rem] h-[1.4rem]" />
-              </span>
-              <span>{author}</span>
-            </div>
-          )}
-          <div className="novel-description text-xs mt-2">{description}</div>
+          <div className="novel-author flex items-center gap-1">
+            <span>
+              <UserCircleIcon className="w-[1.4rem] h-[1.4rem]" />
+            </span>
+            <span>{author ?? 'Không rõ'}</span>
+          </div>
+          <div className="novel-description text-[1rem] mt-2 text-justify line-clamp-5">
+            {description || 'Người dùng có thể click vào để xem thông tin chi tiết ....'}
+          </div>
           <div className="novel-chapter  flex items-center mt-2">
             <BookOpenIcon className="w-5 h-5 mr-1" /> {totalChapters}
           </div>
-          {status && (
-            <div
-              className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] absolute bottom-6 left-0 ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
-            >
-              {status}
-            </div>
-          )}
+          <div
+            className={`badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] absolute bottom-6 left-0 ${status === 'Đang ra' ? 'bg-green-500' : 'bg-yellow-500'}`}
+          >
+            {status || 'Không rõ'}
+          </div>
           <div className="novel-category flex flex-row space-x-2 mt-10 absolute bottom-0 left-0">
-            {category && (
-              <IconText iconComp={<TagIcon className="w-[1rem] h-[1rem] mr-2" />} textContent={category}></IconText>
-            )}
+            <IconText iconComp={<TagIcon className="w-5 h-5 mr-1" />} textContent={category ?? 'Không rõ'}></IconText>
           </div>
         </div>
       </div>

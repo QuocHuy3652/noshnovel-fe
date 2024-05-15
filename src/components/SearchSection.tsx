@@ -35,9 +35,8 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const [selectedServer, setSelectedServer] = useState(server);
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
-  console.log(serverOptions);
   const defaultOption = serverOptions.find((option) => option.value === selectedServer);
-  console.log(defaultOption);
+  const [selectedOption, setSelectedOption] = useState<any>(null);
 
   const handleSelectServer = (option: any) => {
     const value = option ? option.value : '';
@@ -53,8 +52,9 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     const param: Record<string, string | string[]> = {};
     param.server = selectedServer.toString();
     if (data.keyword) param.keyword = data.keyword.toString();
-    if (data.genre) param.genre = data.genre.toString();
+    else if (data.genre) param.genre = data.genre.toString();
     if (param.keyword || param.genre) {
+      param.page = '1';
       navigate({
         pathname: `/${path.SEARCH}`,
         search: createSearchParams(param).toString(),
@@ -75,10 +75,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       },
       textAlign: 'center',
       fontSize: '13px',
-      '&:focus': {
-        outline: '2px solid blue',
-        outlineOffset: '10px',
-      },
+      caretColor: 'transparent',
     }),
     option: (provided: any, state: any) => ({
       ...provided,
@@ -144,6 +141,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     id="genre"
                     options={options}
                     placeholder="Chọn thể loại"
+                    value={selectedOption}
                     isSearchable
                     menuPlacement="bottom"
                     formatOptionLabel={(option: OptionType) => (
@@ -162,6 +160,8 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       }),
                     }}
                     onChange={(val) => {
+                      setSelectedOption(val);
+                      setValue('keyword', '');
                       setValue('genre', val?.value);
                       handleSearch({ genre: val?.value });
                     }}
@@ -197,6 +197,9 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   id="simple-search"
                   className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2 text-dark "
                   placeholder="Nhập tên truyện..."
+                  onFocus={() => {
+                    setSelectedOption(null);
+                  }}
                   required
                 />
                 <div

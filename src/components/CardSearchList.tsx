@@ -1,6 +1,6 @@
 import { Novel } from '~/models/Novel.tsx';
 import ReactPaginate from 'react-paginate';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
@@ -20,6 +20,12 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = totalRow * totalCol;
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const page = Number(params.get('page')) || 1;
+    setCurrentPage(page - 1);
+  }, [location.search]);
 
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);
@@ -74,6 +80,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
         breakLabel="..."
         pageRangeDisplayed={5}
         renderOnZeroPageCount={null}
+        forcePage={currentPage}
       />
     </div>
   );
