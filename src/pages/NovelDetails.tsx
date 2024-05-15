@@ -13,6 +13,8 @@ import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { toSlug } from '~/utils/fn';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 export interface SourceNovel {
   name?: string;
@@ -119,6 +121,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
   ];
   const fetchChapters = async (page: number = 1) => {
     try {
+      setIsLoading(true);
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
       setChapters(response.data);
       setTotalItems(response.total);
@@ -126,6 +129,8 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
       setItemsPerPage(response.perPage);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -145,7 +150,6 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
   };
 
   const handleSearch = (data: any) => {
-    console.log('handleSearch called with data:', data);
     const param: any = {};
     param.server = selectedServer?.toString();
 
@@ -157,7 +161,6 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
       search: createSearchParams(param).toString(),
     });
   };
-  console.log(novelDetail.rating);
   return (
     <>
       {isLoading && <Loading />}
@@ -172,7 +175,8 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
           </button>
           {isAvailable ? (
             <div className="novel-cover p-[2rem] flex flex-row">
-              <img
+              <LazyLoadImage
+                effect="blur"
                 className="rounded-xl w-[15rem] h-[22rem]"
                 src={novelDetail.coverImage}
                 alt="banner"
