@@ -68,15 +68,15 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
       ))}
       <ReactPaginate
         className="w-full flex flex-row justify-center items-center gap-2"
-        previousLabel={<ArrowLeftIcon className="w-5 h-6" />}
-        nextLabel={<ArrowRightIcon className="w-5 h-6" />}
+        previousLabel={totalPages != 1 ? <ArrowLeftIcon className="w-5 h-6" /> : null}
+        nextLabel={totalPages != 1 ? <ArrowRightIcon className="w-5 h-6" /> : null}
         pageCount={totalPages}
         onPageChange={handlePageClick}
-        previousClassName="inline-block rounded-md bg-app_primary p-2 text-white"
-        nextClassName="inline-block rounded-md bg-app_primary p-2 text-white"
+        previousClassName={totalPages != 1 ? 'inline-block rounded-md bg-app_primary p-2 text-white' : ''}
+        nextClassName={totalPages != 1 ? 'inline-block rounded-md bg-app_primary p-2 text-white' : ''}
         pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[3rem] text-center"
         activeLinkClassName="text-white font-bold "
-        activeClassName="inline-block rounded-md bg-green-500 p-2 text-white"
+        activeClassName="inline-block rounded-md bg-green-700 p-2 text-white"
         breakLabel="..."
         pageRangeDisplayed={5}
         renderOnZeroPageCount={null}

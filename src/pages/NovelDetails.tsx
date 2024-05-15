@@ -8,10 +8,11 @@ import { ChapterList } from '~/components';
 import { useServerStore } from '~/store/useServerStore';
 import { createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { apiGetGenre, apiNovelDetail } from '~/apis';
+import { apiGetGenre, apiGetNovelChapter, apiNovelDetail } from '~/apis';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { toSlug } from '~/utils/fn';
 import { path } from '~/constants';
+import Loading from '~/components/Loading';
 
 export interface SourceNovel {
   name?: string;
@@ -44,6 +45,12 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
   const [selectedServer, setSelectedServer] = useState(server);
   const [isAvailable, setIsAvailable] = useState(true);
   const [genres, setGenres] = useState<Category[]>([]);
+  const [chapters, setChapters] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(40);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -80,6 +87,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
 
   useEffect(() => {
     const fetchNovelDetail = async (novelSlug: any, server: any) => {
+      setIsLoading(true);
       let result: any;
 
       result = await apiNovelDetail({
@@ -93,6 +101,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
       } else {
         setIsAvailable(false);
       }
+      setIsLoading(false);
     };
 
     fetchNovelDetail(novelSlug, server);
@@ -108,20 +117,37 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
       value: 'chapters',
     },
   ];
+  const fetchChapters = async (page: number = 1) => {
+    try {
+      const response: any = await apiGetNovelChapter({ novelSlug, server, page });
+      setChapters(response.data);
+      setTotalItems(response.total);
+      setTotalPages(response.totalPages);
+      setItemsPerPage(response.perPage);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChapters();
+  }, [novelSlug]);
+  console.log(chapters);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchChapters(page);
+  };
+
   const handleSelectSever = (server: any) => {
     localStorage.setItem('selectedServer', server);
     setSelectedServer(server);
   };
-  useEffect(() => {
-    console.log(novelDetail);
-  }, [novelDetail]);
 
   const handleSearch = (data: any) => {
     console.log('handleSearch called with data:', data);
     const param: any = {};
     param.server = selectedServer?.toString();
-
-    // Convert data to slug
 
     param.genre = toSlug(data);
     param.page = '1';
@@ -134,6 +160,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
   console.log(novelDetail.rating);
   return (
     <>
+      {isLoading && <Loading />}
       <div className="wrapper w-full flex items-center justify-center">
         <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
           <button
@@ -149,7 +176,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
                 className="rounded-xl w-[15rem] h-[22rem]"
                 src={novelDetail.coverImage}
                 alt="banner"
-                onError={(e: any) => (e.target.src = '/no-image.webp')}
+                onError={(e: any) => (e.target.src = '/no-image.png')}
               />
               <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                 <div className="inner-wrapper flex flex-col">
@@ -282,7 +309,14 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
                     </TabPanel>
                   ) : (
                     <TabPanel key={value} value={value}>
-                      <ChapterList item={[]} />
+                      <ChapterList
+                        item={chapters}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        totalItems={totalItems}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                      />
                     </TabPanel>
                   ),
                 )}
