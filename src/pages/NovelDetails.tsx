@@ -6,9 +6,12 @@ import React from 'react';
 import { Category, CategoryChips } from '~/components/CategoryChips.tsx';
 import { ChapterList } from '~/components';
 import { useServerStore } from '~/store/useServerStore';
-import { useLocation } from 'react-router-dom';
+import { createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { apiNovelDetail } from '~/apis';
+import { apiGetGenre, apiNovelDetail } from '~/apis';
+import { withRouter, WithRouterProps } from '~/hocs/withRouter';
+import { toSlug } from '~/utils/fn';
+import { path } from '~/constants';
 
 export interface SourceNovel {
   name?: string;
@@ -31,8 +34,7 @@ export interface NovelDetails {
   genres: Category[];
   author: object;
 }
-
-export const NovelDetails = () => {
+const NovelDetails = ({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
   const sources = serverList.map((name) => ({ name }));
   const location = useLocation();
@@ -41,6 +43,7 @@ export const NovelDetails = () => {
   const server = localStorage.getItem('selectedServer');
   const [selectedServer, setSelectedServer] = useState(server);
   const [isAvailable, setIsAvailable] = useState(true);
+  const [genres, setGenres] = useState<Category[]>([]);
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -53,9 +56,30 @@ export const NovelDetails = () => {
     author: {},
   });
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const result: any = await apiGetGenre({ server: selectedServer });
+      console.log('API result:', result);
+
+      if (result) {
+        setGenres(result);
+      }
+    };
+
+    fetchGenres();
+  }, [selectedServer]);
+
+  const isGenreAvailable = (genre: Category) => {
+    if (!genres) return false;
+    return genres.some((g) => g.name.trim().toLowerCase() === genre.name.trim().toLowerCase());
+  };
+
   useEffect(() => {
     const fetchNovelDetail = async (novelSlug: any, server: any) => {
-      // TODO: create model for this please
       let result: any;
 
       result = await apiNovelDetail({
@@ -92,24 +116,48 @@ export const NovelDetails = () => {
     console.log(novelDetail);
   }, [novelDetail]);
 
+  const handleSearch = (data: any) => {
+    console.log('handleSearch called with data:', data);
+    const param: any = {};
+    param.server = selectedServer?.toString();
+
+    // Convert data to slug
+
+    param.genre = toSlug(data);
+    param.page = '1';
+    console.log(param);
+    navigate({
+      pathname: `/${path.SEARCH}`,
+      search: createSearchParams(param).toString(),
+    });
+  };
+  console.log(novelDetail.rating);
   return (
     <>
       <div className="wrapper w-full flex items-center justify-center">
         <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
-          <button className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-[2rem] inline-block w-[10rem] justify-center items-center">
+          <button
+            className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-[2rem] inline-block w-[10rem] justify-center items-center"
+            onClick={goBack}
+          >
             <ArrowLeftIcon className="w-5 h-5" />
             <p className="ml-2 inline-block font-bold">Trang trước</p>
           </button>
           {isAvailable ? (
             <div className="novel-cover p-[2rem] flex flex-row">
-              <img className="rounded-xl w-[15rem] h-[22rem]" src={novelDetail.coverImage} alt="banner" />
+              <img
+                className="rounded-xl w-[15rem] h-[22rem]"
+                src={novelDetail.coverImage}
+                alt="banner"
+                onError={(e: any) => (e.target.src = '/no-image.webp')}
+              />
               <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                 <div className="inner-wrapper flex flex-col">
                   <p className="text-3xl font-bold text-black mt">{novelDetail.title}</p>
                   <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
                     {novelDetail.rating}
                     <Rating
-                      value={4}
+                      value={novelDetail.rating || 5}
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -124,7 +172,11 @@ export const NovelDetails = () => {
                       Based on {novelDetail.reviewsNumber} Reviews
                     </Typography>
                   </div>
-                  <CategoryChips categories={novelDetail.genres} />
+                  <CategoryChips
+                    categories={novelDetail.genres}
+                    isGenreAvailable={isGenreAvailable}
+                    handleSearch={handleSearch}
+                  />
                   {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                 </div>
                 <div className="bottom-action flex flex-row">
@@ -198,7 +250,7 @@ export const NovelDetails = () => {
 
           <hr />
           <div className="novel-tab p-5">
-            <Tabs value="html">
+            <Tabs value="detail">
               <TabsHeader placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {data.map(({ label, value }) => (
                   <Tab
@@ -242,3 +294,5 @@ export const NovelDetails = () => {
     </>
   );
 };
+
+export default withRouter(NovelDetails);

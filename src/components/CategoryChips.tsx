@@ -1,24 +1,27 @@
-import { Chip } from "@material-tailwind/react";
+import { Chip } from '@material-tailwind/react';
 
 export interface Category {
-  name: string,
-  handler?: () => void
+  name: string;
+  handler?: () => void;
 }
 export interface CategoryChipsProps {
-  categories: Category[]
+  categories: Category[];
+  isGenreAvailable: (category: Category) => boolean;
+  handleSearch: (genre: string) => void;
 }
-export const CategoryChips = (props:CategoryChipsProps) => {
-  const {categories} = props
+export const CategoryChips = (props: CategoryChipsProps) => {
+  const { categories, isGenreAvailable, handleSearch } = props;
 
   return (
     <div className="category-chips w-full flex flex-row flex-wrap mt-2 max-w-full">
-      {
-        categories.map((category) => (
-          <Chip
-            className="my-2 mr-2 bg-app_tertiary"
-            key={category.name} size="sm"
-            value={category.name} />))
-      }
+      {categories.map((category) => (
+        <div
+          className={`my-2 mr-2 rounded-[7px] ${isGenreAvailable(category) ? 'cursor-pointer  bg-app_primary  ' : 'bg-gray-500'}`}
+          onClick={isGenreAvailable(category) ? () => handleSearch(category.name) : undefined}
+        >
+          <Chip key={category.name} size="sm" value={category.name} className="bg-transparent" />
+        </div>
+      ))}
     </div>
-    )
-}
+  );
+};

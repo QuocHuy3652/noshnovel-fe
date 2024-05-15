@@ -195,7 +195,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   {...register('keyword')}
                   type="text"
                   id="simple-search"
-                  className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2 text-dark "
+                  className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2 text-dark outline-none focus:outline-none "
                   placeholder="Nhập tên truyện..."
                   onFocus={() => {
                     setSelectedOption(null);
