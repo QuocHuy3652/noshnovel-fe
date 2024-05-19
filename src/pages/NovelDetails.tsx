@@ -49,7 +49,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [openReadDialog,setOpenReadDialog]= useState(false);
+  const [isChangePage, setIsChangePage] = useState(false);
+  const [openReadDialog, setOpenReadDialog] = useState(false);
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -118,7 +119,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   ];
   const fetchChapters = async (page: number = 1) => {
     try {
-      setIsLoading(true);
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
       setChapters(response.data);
       setTotalItems(response.total);
@@ -127,7 +127,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsChangePage(false);
     }
   };
 
@@ -138,6 +138,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    setIsChangePage(true);
     fetchChapters(page);
   };
 
@@ -161,84 +162,84 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   return (
     <>
       {isLoading ? <Loading /> :
-      <div className="wrapper w-full flex items-center justify-center">
-        <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
-          <button
-            className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-[2rem] inline-block w-[10rem] justify-center items-center"
-            onClick={goBack}
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            <p className="ml-2 inline-block font-bold">Trang trước</p>
-          </button>
-          {isAvailable ? (
-            <div className="novel-cover p-[2rem] flex flex-row">
-              <LazyLoadImage
-                effect="blur"
-                className="rounded-xl w-[15rem] h-[22rem]"
-                src={novelDetail.coverImage}
-                alt="banner"
-                onError={(e: any) => (e.target.src = '/no-image.png')}
-              />
-              <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
-                <div className="inner-wrapper flex flex-col">
-                  <p className="text-3xl font-bold text-black mt">{novelDetail.title}</p>
-                  <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
-                    {novelDetail.rating}
-                    <Rating
-                      value={Math.round(novelDetail.rating) || 0}
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
+        <div className="wrapper w-full flex items-center justify-center">
+          <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
+            <button
+              className="flex flex-row rounded-2xl bg-app_tertiary hover:bg-app_secondary p-2 mt-5 ml-[2rem] inline-block w-[10rem] justify-center items-center"
+              onClick={goBack}
+            >
+              <ArrowLeftIcon className="w-5 h-5" />
+              <p className="ml-2 inline-block font-bold">Trang trước</p>
+            </button>
+            {isAvailable ? (
+              <div className="novel-cover p-[2rem] flex flex-row">
+                <LazyLoadImage
+                  effect="blur"
+                  className="rounded-xl w-[15rem] h-[22rem]"
+                  src={novelDetail.coverImage}
+                  alt="banner"
+                  onError={(e: any) => (e.target.src = '/no-image.png')}
+                />
+                <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
+                  <div className="inner-wrapper flex flex-col">
+                    <p className="text-3xl font-bold text-black mt">{novelDetail.title}</p>
+                    <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
+                      {novelDetail.rating}
+                      <Rating
+                        value={Math.round(novelDetail.rating) || 0}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      />
+                      <Typography
+                        color="blue-gray"
+                        className="font-medium text-blue-gray-500"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Dựa trên {novelDetail.reviewsNumber} đánh giá
+                      </Typography>
+                    </div>
+                    <CategoryChips
+                      categories={novelDetail.genres}
+                      isGenreAvailable={isGenreAvailable}
+                      handleSearch={handleSearch}
                     />
-                    <Typography
-                      color="blue-gray"
-                      className="font-medium text-blue-gray-500"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      Dựa trên {novelDetail.reviewsNumber} đánh giá
-                    </Typography>
+                    {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                   </div>
-                  <CategoryChips
-                    categories={novelDetail.genres}
-                    isGenreAvailable={isGenreAvailable}
-                    handleSearch={handleSearch}
-                  />
-                  {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
-                </div>
-                <div className="bottom-action flex flex-row">
-                  <Button
-                    onClick={() => setOpenReadDialog(true)}
-                    className="bg-app_tertiary"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    Đọc ngay
-                  </Button>
-                  {sources.map((source) => (
+                  <div className="bottom-action flex flex-row">
                     <Button
-                      key={source.name}
-                      className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                      onClick={() => setOpenReadDialog(true)}
+                      className="bg-app_tertiary"
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
-                      onClick={() => handleSelectSever(source.name)}
                     >
-                      {source.name}
+                      Đọc ngay
                     </Button>
-                  ))}
+                    {sources.map((source) => (
+                      <Button
+                        key={source.name}
+                        className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                        onClick={() => handleSelectSever(source.name)}
+                      >
+                        {source.name}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="novel-cover p-[2rem] flex flex-row">
-              <img className="rounded-xl w-[15rem] h-[22rem]" src={novelDetail.coverImage} alt="banner" />
-              <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
-                <div className="inner-wrapper flex flex-col">
-                  <p className="text-3xl font-bold text-black mt">Không khả dụng, vui lòng chọn sever khác</p>
-                  {/* <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
+            ) : (
+              <div className="novel-cover p-[2rem] flex flex-row">
+                <img className="rounded-xl w-[15rem] h-[22rem]" src={novelDetail.coverImage} alt="banner" />
+                <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
+                  <div className="inner-wrapper flex flex-col">
+                    <p className="text-3xl font-bold text-black mt">Không khả dụng, vui lòng chọn sever khác</p>
+                    {/* <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
                     {novelDetail.rating}
                     <Rating value={4} placeholder={undefined}
                       onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
@@ -248,85 +249,86 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     </Typography>
                   </div>
                   <CategoryChips categories={novelDetail.genres} /> */}
-                  {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
-                </div>
-                <div className="bottom-action flex flex-row">
-                  <Button
-                    className="bg-app_tertiary"
-                    placeholder={undefined}
-                    disabled
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    Đọc ngay
-                  </Button>
-                  {sources.map((source) => (
+                    {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
+                  </div>
+                  <div className="bottom-action flex flex-row">
                     <Button
-                      key={source.name}
-                      className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                      className="bg-app_tertiary"
+                      placeholder={undefined}
+                      disabled
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      Đọc ngay
+                    </Button>
+                    {sources.map((source) => (
+                      <Button
+                        key={source.name}
+                        className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                        onClick={() => handleSelectSever(source.name)}
+                      >
+                        {source.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <hr />
+            <div className="novel-tab p-5">
+              <Tabs value="detail">
+                <TabsHeader placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                  {data.map(({ label, value }) => (
+                    <Tab
+                      key={value}
+                      value={value}
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
-                      onClick={() => handleSelectSever(source.name)}
                     >
-                      {source.name}
-                    </Button>
+                      {label}
+                    </Tab>
                   ))}
-                </div>
-              </div>
+                </TabsHeader>
+                <TabsBody
+                  className="p-3"
+                  animate={{
+                    initial: { y: 250 },
+                    mount: { y: 0 },
+                    unmount: { y: 250 },
+                  }}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
+                  {data.map(({ value }) =>
+                    value === 'detail' ? (
+                      <TabPanel key={value} value={value}>
+                        <div dangerouslySetInnerHTML={{ __html: novelDetail.description }} />
+                      </TabPanel>
+                    ) : (
+                      <TabPanel key={value} value={value}>
+                        <ChapterList
+                          item={chapters}
+                          currentPage={currentPage}
+                          itemsPerPage={itemsPerPage}
+                          totalItems={totalItems}
+                          totalPages={totalPages}
+                          onPageChange={handlePageChange}
+                        />
+                      </TabPanel>
+                    ),
+                  )}
+                  {isChangePage && <Loading></Loading>}
+                </TabsBody>
+              </Tabs>
             </div>
-          )}
-
-          <hr />
-          <div className="novel-tab p-5">
-            <Tabs value="detail">
-              <TabsHeader placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                {data.map(({ label, value }) => (
-                  <Tab
-                    key={value}
-                    value={value}
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    {label}
-                  </Tab>
-                ))}
-              </TabsHeader>
-              <TabsBody
-                className="p-3"
-                animate={{
-                  initial: { y: 250 },
-                  mount: { y: 0 },
-                  unmount: { y: 250 },
-                }}
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                {data.map(({ value }) =>
-                  value === 'detail' ? (
-                    <TabPanel key={value} value={value}>
-                      <div dangerouslySetInnerHTML={{ __html: novelDetail.description }} />
-                    </TabPanel>
-                  ) : (
-                    <TabPanel key={value} value={value}>
-                      <ChapterList
-                        item={chapters}
-                        currentPage={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        totalItems={totalItems}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                      />
-                    </TabPanel>
-                  ),
-                )}
-              </TabsBody>
-            </Tabs>
           </div>
         </div>
-      </div>
       }
       <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
     </>

@@ -12,6 +12,7 @@ import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import nosh_search from '/src/assets/nosh_search.png';
+import Spinner from './Spinner';
 
 interface OptionType {
   label: string;
