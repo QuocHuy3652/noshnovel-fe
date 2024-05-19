@@ -134,7 +134,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   useEffect(() => {
     fetchChapters();
   }, [novelSlug]);
-  console.log(chapters);
+  // console.log(chapters);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -152,7 +152,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
 
     param.genre = toSlug(data);
     param.page = '1';
-    console.log(param);
+    // console.log(param);
     navigate({
       pathname: `/${path.SEARCH}`,
       search: createSearchParams(param).toString(),

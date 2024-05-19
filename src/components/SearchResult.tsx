@@ -8,6 +8,7 @@ import Loading from './Loading';
 export const SearchResult = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -34,6 +35,7 @@ export const SearchResult = () => {
       if (result) {
         setNovels(result.data);
         setTotalPages(result.totalPages);
+        setTotal(result.total);
       }
       setIsLoading(false);
     };
@@ -47,7 +49,7 @@ export const SearchResult = () => {
     <>
       {isLoading && <Loading />}
       <section className="novel-history text-app_primary p-5 bg-[#F8F8F8]">
-        <div className="border-app_primary text-3xl font-semibold">Kết quả tìm kiếm: </div>
+        <div className="border-app_primary text-3xl font-semibold">Kết quả tìm kiếm ({total} kết quả): </div>
         <div className="novel-history p-3 mt-3">
           {novels && novels.length > 0 ? (
             <CardSearchList item={novels} totalCol={2} totalRow={3} totalPages={totalPages} />

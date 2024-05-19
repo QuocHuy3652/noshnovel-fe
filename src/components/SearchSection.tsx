@@ -36,15 +36,27 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
   const defaultOption = serverOptions.find((option) => option.value === selectedServer);
-  const [selectedOption, setSelectedOption] = useState<any>(null);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const [selectedOption, setSelectedOption] = useState<any>(null);
+  
+  useEffect(() => {
+    if (options.length > 0) {
+      const genreFromUrl = options.filter(e => e.value === searchParams.get('genre'))[0];
+      if (genreFromUrl && genreFromUrl.value !== (selectedOption?.value)) {
+        setSelectedOption(genreFromUrl);
+      }
+    }
+  }, [options, searchParams, selectedOption]);
+  
   const handleSelectServer = (option: any) => {
     const value = option ? option.value : '';
     localStorage.setItem('selectedServer', value);
     setSelectedServer(value);
   };
   useEffect(() => {
-    console.log(selectedServer);
+    // console.log(selectedServer);
     getGenreList(selectedServer);
   }, [selectedServer]);
 
@@ -141,7 +153,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     id="genre"
                     options={options}
                     placeholder="Chọn thể loại"
-                    value={selectedOption}
+                    value={selectedOption}                    
                     isSearchable
                     menuPlacement="bottom"
                     formatOptionLabel={(option: OptionType) => (
@@ -160,6 +172,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       }),
                     }}
                     onChange={(val) => {
+                      console.log(options, selectedOption)
                       setSelectedOption(val);
                       setValue('keyword', '');
                       setValue('genre', val?.value);
