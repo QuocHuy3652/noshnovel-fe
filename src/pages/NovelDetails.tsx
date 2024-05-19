@@ -139,7 +139,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   useEffect(() => {
     fetchChapters();
   }, [novelSlug]);
-  console.log(chapters);
+  // console.log(chapters);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

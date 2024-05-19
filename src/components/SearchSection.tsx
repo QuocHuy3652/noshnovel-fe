@@ -173,7 +173,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       }),
                     }}
                     onChange={(val) => {
-                      console.log(options, selectedOption)
+                      // console.log(options, selectedOption)
                       setSelectedOption(val);
                       setValue('keyword', '');
                       setValue('genre', val?.value);

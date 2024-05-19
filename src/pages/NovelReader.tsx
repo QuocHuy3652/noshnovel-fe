@@ -34,17 +34,17 @@ export const NovelReader = (props: NovelReaderProps) => {
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
 
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
-  const [currentSource, setCurrentSource] = React.useState<Novel>({} as Novel);
+  const [currentServer, setCurrentServer] = useState(params.server);
   const [currentChapter, setCurrentChapter] = React.useState<string>('Chương 1');
   const [currentContent, setCurrentContent] = React.useState<string>('');
   const [openChapterCategories, setOpenChapterCategories] = React.useState<boolean>(false);
   const [openSettings, setOpenSettings] = React.useState<boolean>(false);
   const [openDownload, setOpenDownload] = React.useState<boolean>(false);
-
+  console.log(currentServer)
   useEffect(() => {
     const fetchContent = async () => {
       const result: any = await apiGetNovelContent(params);
-      console.log(result);
+      // console.log(result);
       if (result) {
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter.label);
@@ -58,6 +58,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const onDownload = () => {
 
   }
+
 
   const handleSave = () => {
 
@@ -74,16 +75,17 @@ export const NovelReader = (props: NovelReaderProps) => {
   const toggleMenuDialog = (isOpen: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(isOpen);
   }
-  const { sources = [
-    {
-      name: 'Truyenfull'
-    },
-    {
-      name: 'Tangthuvien'
-    },
-    {
-      name: 'TruyenXYZ'
-    }], novel } = props
+  // const { sources = [
+  //   {
+  //     name: 'Truyenfull'
+  //   },
+  //   {
+  //     name: 'Tangthuvien'
+  //   },
+  //   {
+  //     name: 'TruyenXYZ'
+  //   }], novel } = props
+
 
   return (
     <>
@@ -106,12 +108,17 @@ export const NovelReader = (props: NovelReaderProps) => {
           </div> */}
           <div className="novel-source flex flex-row w-full justify-end">
             <div className="w-[10rem] mr-[3rem]">
-              <Select className="bg-white" label="Select Version" success placeholder={undefined}
-                onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+              <Select
+                className="bg-white"
+                label="Chọn nguồn truyện"
+                success
+                placeholder={"Chọn nguồn truyện"}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}>
                 {
-                  sources.map((source, index) => {
+                  serverOptions.map((source, index) => {
                     return (
-                      <Option key={index} placeholder={"Chọn nguồn truyện"} value={source.name}>{source.name}</Option>
+                      <Option key={index} value={source.value}>{source.label}</Option>
                     )
                   })
                 }
