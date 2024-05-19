@@ -16,7 +16,7 @@ export type NovelSeachCardProps = {
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
   const { title, author, coverUrl, description, totalChapters, category, status, novelSlug } = props;
   const handleClick = (slug: string | undefined) => {
-    window.location.href = `/noshnovel-fe/${path.DETAIL}?novelSlug=${slug}`;
+    window.location.href = `${path.DETAIL}?novelSlug=${slug}`;
   };
   return (
     <>
