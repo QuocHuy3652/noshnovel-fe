@@ -160,7 +160,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   };
   return (
     <>
-      {isLoading && <Loading />}
+      {isLoading ? <Loading /> :
       <div className="wrapper w-full flex items-center justify-center">
         <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
           <button
@@ -185,7 +185,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                   <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
                     {novelDetail.rating}
                     <Rating
-                      value={novelDetail.rating || 5}
+                      value={Math.round(novelDetail.rating) || 0}
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -197,7 +197,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
                     >
-                      Based on {novelDetail.reviewsNumber} Reviews
+                      Dựa trên {novelDetail.reviewsNumber} đánh giá
                     </Typography>
                   </div>
                   <CategoryChips
@@ -327,6 +327,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
           </div>
         </div>
       </div>
+      }
       <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
     </>
   );
