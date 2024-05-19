@@ -44,6 +44,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [genres, setGenres] = useState<Category[]>([]);
   const [chapters, setChapters] = useState([]);
+  const [chapterOne, setChapterOne] = useState('chuong-1');
   const [itemsPerPage, setItemsPerPage] = useState(40);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -120,6 +121,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const fetchChapters = async (page: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
+      if (page === 1) {
+        // console.log(response.data[0])
+        setChapterOne(response.data[0].slug);
+      }
       setChapters(response.data);
       setTotalItems(response.total);
       setTotalPages(response.totalPages);
@@ -134,7 +139,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   useEffect(() => {
     fetchChapters();
   }, [novelSlug]);
-  // console.log(chapters);
+  console.log(chapters);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -142,10 +147,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     fetchChapters(page);
   };
 
-  const handleSelectSever = (server: any) => {
-    localStorage.setItem('selectedServer', server);
-    setSelectedServer(server);
-  };
+  // const handleSelectSever = (server: any) => {
+  //   localStorage.setItem('selectedServer', server);
+  //   setSelectedServer(server);
+  // };
 
   const handleSearch = (data: any) => {
     const param: any = {};
@@ -159,6 +164,18 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
       search: createSearchParams(param).toString(),
     });
   };
+
+  const handleReadNovel = (data: any) => {
+    const param: any = {};
+    param.server = selectedServer?.toString();
+    param.novelSlug = novelSlug?.toString();
+    param.chapterSlug = toSlug(data)
+    navigate({
+      pathname: `/${path.READER}`,
+      search: createSearchParams(param).toString(),
+    });
+  };
+
   return (
     <>
       {isLoading ? <Loading /> :
@@ -210,7 +227,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                   </div>
                   <div className="bottom-action flex flex-row">
                     <Button
-                      onClick={() => setOpenReadDialog(true)}
+                      onClick={() => handleReadNovel(chapterOne)}
                       className="bg-app_tertiary"
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
@@ -225,7 +242,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => handleSelectSever(source.name)}
+                        onClick={() => setOpenReadDialog(true)}
                       >
                         {source.name}
                       </Button>
@@ -268,7 +285,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => handleSelectSever(source.name)}
+                        onClick={() => setOpenReadDialog(true)}
                       >
                         {source.name}
                       </Button>
@@ -319,6 +336,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                           totalItems={totalItems}
                           totalPages={totalPages}
                           onPageChange={handlePageChange}
+                          onReadNovel={handleReadNovel}
                         />
                       </TabPanel>
                     ),

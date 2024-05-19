@@ -20,3 +20,10 @@ export const apiGetNovelChapter = (params: any) =>
     method: 'get',
     params,
   });
+
+export const apiGetNovelContent = (params: any) =>
+  axios({
+    url: '/Novels/content',
+    method: 'get',
+    params,
+  });

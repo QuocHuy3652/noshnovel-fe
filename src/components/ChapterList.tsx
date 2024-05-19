@@ -9,12 +9,13 @@ export interface ChapterListProps {
   totalItems: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onReadNovel: (data: any) => void;
 }
 
 export const ChapterList = (props: ChapterListProps) => {
-  const { item, itemsPerPage, totalItems, totalPages, onPageChange } = props;
+  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel } = props;
   const [currentPage, setCurrentPage] = useState(props.currentPage);
-  console.log(currentPage);
+  // console.log(currentPage);
 
   useEffect(() => {
     setCurrentPage(props.currentPage);
@@ -23,12 +24,25 @@ export const ChapterList = (props: ChapterListProps) => {
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1);
   };
+  const handleReadNovel = (data: any) => {
+    onReadNovel(data);
+  }
   return (
     <>
       <div className="chapter-list wrapper flex flex-col ">
         <div className="grid grid-cols-4 gap-4">
           {item.map((chapter, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              onClick={() => handleReadNovel(chapter.slug)}
+              style={{
+                cursor: 'pointer',
+                padding: '10px',
+                transition: 'background-color 0.3s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
               {chapter.label} - {chapter.name}
             </div>
           ))}
