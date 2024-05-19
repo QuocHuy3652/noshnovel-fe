@@ -15,14 +15,15 @@ export type NovelSeachCardProps = {
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
   const { title, author, coverUrl, description, totalChapters, category, status, novelSlug } = props;
-  const handleClick = (slug: string | undefined) => {
-    window.location.href = `${path.DETAIL}?novelSlug=${slug}`;
+  const server = localStorage.getItem('selectedServer');
+  const handleClick = (slug: string | undefined, server: string | null) => {
+    window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
   };
   return (
     <>
       <div
         className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row  items-stretch relative"
-        onClick={() => handleClick(novelSlug)}
+        onClick={() => handleClick(novelSlug, server)}
       >
         <div className="novel-cover-img">
           <img
