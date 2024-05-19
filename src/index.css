@@ -12,6 +12,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@layer base {
+  :root {
+    --color-app_primary: #467400;
+    --color-app_secondary: #D1F4BC;
+    --color-app_tertiary: #85da66;
+    /* ... */
+  }
+}
+
 body {
   background-image: url('./assets/nosh_bg_v.png');
   background-color: white;

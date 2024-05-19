@@ -1,9 +1,10 @@
-import nosh_bg_v from '/src/assets/nosh_bg_v.png';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
-import novel_cover from '/src/assets/novel_cover.jpg';
 import { Button, Rating, TabsBody, Typography, Tab, TabPanel, Tabs, TabsHeader } from '@material-tailwind/react';
 import React from 'react';
-import { Category, CategoryChips } from '~/components/CategoryChips.tsx';
+import {
+  Category,
+  CategoryChips,
+} from '~/components/CategoryChips.tsx';
 import { ChapterList } from '~/components';
 import { useServerStore } from '~/store/useServerStore';
 import { createSearchParams, useLocation } from 'react-router-dom';
@@ -13,18 +14,13 @@ import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import { toSlug } from '~/utils/fn';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
 export interface SourceNovel {
   name?: string;
   url?: string;
   sourceHandlerFn: () => void;
-}
-
-export interface Category {
-  name: string;
-  handler?: () => void;
 }
 
 export interface NovelDetails {
@@ -37,7 +33,7 @@ export interface NovelDetails {
   genres: Category[];
   author: object;
 }
-const NovelDetails = ({ navigate }: WithRouterProps) => {
+export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
   const sources = serverList.map((name) => ({ name }));
   const location = useLocation();
@@ -53,6 +49,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [openReadDialog,setOpenReadDialog]= useState(false);
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -212,6 +209,7 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
                 </div>
                 <div className="bottom-action flex flex-row">
                   <Button
+                    onClick={() => setOpenReadDialog(true)}
                     className="bg-app_tertiary"
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
@@ -329,8 +327,8 @@ const NovelDetails = ({ navigate }: WithRouterProps) => {
           </div>
         </div>
       </div>
+      <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
     </>
   );
-};
+});
 
-export default withRouter(NovelDetails);

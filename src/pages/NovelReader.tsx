@@ -3,6 +3,9 @@ import { SourceNovel } from '~/pages/NovelDetails.tsx';
 import { Button, IconButton, Option, Select, Typography } from '@material-tailwind/react';
 import { Novel } from '~/models';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
+import { ChapterCatergoriesDialog } from '~/components/ChapterCatergoriesDialog.tsx';
+import { SettingDialog } from '~/components/SettingDialog.tsx';
+import { DownloadNovelDialog } from '~/components/DownloadNovelDialog.tsx';
 
 
 export interface NovelReaderProps {
@@ -12,8 +15,31 @@ export interface NovelReaderProps {
 
 
 export const NovelReader = (props:NovelReaderProps) => {
-  const [ currentSource, setCurrentSource] = React.useState<Novel>(0);
+  const [ currentSource, setCurrentSource] = React.useState<Novel>({} as Novel);
   const [ currentChapter, setCurrentChapter] = React.useState<string>('Chương 1');
+  const [ openChapterCategories, setOpenChapterCategories] = React.useState<boolean>(false);
+  const [ openSettings, setOpenSettings] = React.useState<boolean>(false);
+  const [ openDownload, setOpenDownload] = React.useState<boolean>(false);
+
+  const onDownload =  () => {
+
+  }
+
+  const handleSave = () => {
+
+  }
+
+  const handleDownload = () => {
+
+  }
+
+  const handleSaveSetting = () => {
+
+  }
+
+  const toggleMenuDialog = (isOpen: boolean, setter:  React.Dispatch<React.SetStateAction<boolean>>) => {
+      setter(isOpen);
+  }
   const {  sources = [
     {
       name:'Truyenfull'
@@ -24,9 +50,6 @@ export const NovelReader = (props:NovelReaderProps) => {
     {
       name: 'TruyenXYZ'
     }] , novel } = props
-
-
-
 
   return (
     <>
@@ -64,16 +87,20 @@ export const NovelReader = (props:NovelReaderProps) => {
           <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">
             <div
               className="max-h-[8rem] fixed ml-[-3rem] py-1 action-menu bg-app_primary rounded-xl justify-center items-center align-middle flex flex-col w-[3rem]">
-              <IconButton className="bg-transparent shadow-none hover:bg-app_tertiary"
-                          placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+              <IconButton
+                onClick={() => toggleMenuDialog(true, setOpenChapterCategories)}
+                className="bg-transparent shadow-none hover:bg-app_tertiary"
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                   <path fillRule="evenodd"
                         d="M2.625 6.75a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0A.75.75 0 0 1 8.25 6h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75ZM2.625 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0ZM7.5 12a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12A.75.75 0 0 1 7.5 12Zm-4.875 5.25a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Z"
                         clipRule="evenodd" />
                 </svg>
               </IconButton>
-              <IconButton className="bg-transparent shadow-none hover:bg-app_tertiary"
-                          placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+              <IconButton
+                onClick={() => toggleMenuDialog(true, setOpenSettings)}
+                className="bg-transparent shadow-none hover:bg-app_tertiary"
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" className="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,8 +108,10 @@ export const NovelReader = (props:NovelReaderProps) => {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
               </IconButton>
-              <IconButton className="bg-transparent shadow-none hover:bg-app_tertiary"
-                          placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+              <IconButton
+                onClick={() => toggleMenuDialog(true, setOpenDownload)}
+                className="bg-transparent shadow-none hover:bg-app_tertiary"
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" className="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -161,6 +190,19 @@ export const NovelReader = (props:NovelReaderProps) => {
           </div>
         </div>
       </div>
+      <ChapterCatergoriesDialog
+        open={openChapterCategories}
+        handleSave={handleSave}
+        handleClose={() => toggleMenuDialog(false,setOpenChapterCategories)} />
+      <SettingDialog
+        open={openSettings}
+        handleClose={() => toggleMenuDialog(false,setOpenSettings)}
+        handleSave={handleSaveSetting} />
+      <DownloadNovelDialog
+        open={openDownload}
+        handleClose={() => toggleMenuDialog(false,setOpenDownload)}
+        handleDownload={handleDownload}
+      />
     </>
   )
 }
