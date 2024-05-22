@@ -51,6 +51,9 @@ export const NovelReader = (props: NovelReaderProps) => {
   const { chapterList, setCurrentChapterList, isLoad } = useChapterStore();
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const navigate = useNavigate();
+  const endOfPageRef = useRef<HTMLDivElement | null>(null);
+  const [showButton, setShowButton] = useState(false);
+  const [isAtEnd, setIsAtEnd] = useState(false);
   const { novelSlug, chapterSlug, server } = params;
 
   useEffect(() => {
@@ -123,6 +126,51 @@ export const NovelReader = (props: NovelReaderProps) => {
   //   {
   //     name: 'TruyenXYZ'
   //   }], novel } = props
+
+  // Logic for Scroll
+  const checkScrollHeight = () => {
+    if (window.scrollY > 500) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', checkScrollHeight);
+
+    return () => {
+      window.removeEventListener('scroll', checkScrollHeight);
+    };
+  }, []);
+
+  const scrollToBottom = () => {
+    try {
+      const targetPosition = endOfPageRef.current?.offsetTop || 0;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 2000;
+      let start: number | null = null;
+
+      const step = (timestamp: number) => {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        window.scrollTo(0, easeInOutCubic(progress, startPosition, distance, duration));
+        if (progress < duration) window.requestAnimationFrame(step);
+      };
+
+      window.requestAnimationFrame(step);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const easeInOutCubic = (t: number, b: number, c: number, d: number) => {
+    t /= d / 2;
+    if (t < 1) return (c / 2) * t * t * t + b;
+    t -= 2;
+    return (c / 2) * (t * t * t + 2) + b;
+  };
 
   return (
     <>
@@ -248,7 +296,7 @@ export const NovelReader = (props: NovelReaderProps) => {
               ></div>
             </div>
           </div>
-          <div className="novel-reader-bottom-action flex justify-center space-x-5 mt-5">
+          <div className="novel-reader-bottom-action flex justify-center space-x-5 mt-5" ref={endOfPageRef}>
             <Button
               className="bg-app_tertiary text-white flex"
               label="Back"
@@ -267,6 +315,23 @@ export const NovelReader = (props: NovelReaderProps) => {
               Chương sau
               <ArrowRightIcon className="ml-2 w-4 h-4" />
             </Button>
+            {showButton && (
+              <button
+                onClick={scrollToBottom}
+                className="fixed bottom-[100px] right-8 rounded-md bg-app_primary shadow-none hover:bg-app_tertiary"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-[2.5rem] h-[2.5rem]"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </div>
