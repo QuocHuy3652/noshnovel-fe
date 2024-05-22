@@ -13,6 +13,7 @@ import { apiGetNovelChapter } from '~/apis';
 import { toSlug } from '~/utils/fn';
 import { createSearchParams, useLocation } from 'react-router-dom';
 import { path } from '~/constants';
+import Loading from '~/components/Loading';
 
 
 export interface ChapterCatergoriesDialog {
@@ -26,21 +27,21 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [size, setSize] = React.useState(null);
   const { open, handleClose, handleSave, params } = props;
   const [chapters, setChapters] = useState([]);
-  const [itemsPerPage, setItemsPerPage] = useState(30);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isChangePage, setIsChangePage] = useState(false);
+
 
   // TODO: get novel slug & server
   const novelSlug = params.novelSlug;
   const server = params.server;
-  
+
   const fetchChapters = async (page: number = 1) => {
     try {
-      setIsLoading(true);
-      const response: any = await apiGetNovelChapter({ novelSlug, server, page });
-      console.log(response)
+      const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: itemsPerPage });
+      // console.log(response)
       setChapters(response.data);
       setTotalItems(response.total);
       setTotalPages(response.totalPages);
@@ -48,7 +49,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsChangePage(false);
     }
   };
 
@@ -58,6 +59,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    setIsChangePage(true);
     fetchChapters(page);
   };
 
@@ -66,7 +68,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     param.server = params.server?.toString();
     param.novelSlug = params.novelSlug?.toString();
     param.chapterSlug = toSlug(data)
-    window.location.href = `${path.DETAIL}?${createSearchParams(param).toString()}`;
+    window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
   };
 
   return (
@@ -114,8 +116,10 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             onPageChange={handlePageChange}
             onReadNovel={handleReadNovel}
           />
+          {isChangePage && <Loading></Loading>}
+
         </DialogBody>
-        <DialogFooter className={'text-center justify-center'} >
+        {/* <DialogFooter className={'text-center justify-center'} >
           <Button
             variant="filled"
             color="red"
@@ -129,7 +133,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             onClick={handleSave}>
             <span>Confirm</span>
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </Dialog>
     </>
   )

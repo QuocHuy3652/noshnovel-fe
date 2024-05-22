@@ -13,6 +13,7 @@ import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { useChapterStore } from '~/store';
 import { toSlug, updateHistory } from '~/utils/fn';
+import { path } from '~/constants';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -50,7 +51,6 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { chapterList, setCurrentChapterList, isLoad } = useChapterStore();
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const navigate = useNavigate();
   const endOfPageRef = useRef<HTMLDivElement | null>(null);
   const [showButton, setShowButton] = useState(false);
   const [isAtEnd, setIsAtEnd] = useState(false);
@@ -82,22 +82,21 @@ export const NovelReader = (props: NovelReaderProps) => {
           setAuthor(author.author.name);
         }
       }
-      setIsLoading(false);
       window.scrollTo(0, 0);
+      setIsLoading(false);
     };
 
     fetchContent();
-  }, [currentChapter]);
+  }, []);
 
   const getPreviousChapter = () => {
-    console.log(currentChapter);
     const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter);
     if (currentIndex > 0) {
       const prevChapter = chapters[currentIndex - 1];
       const prevChapterSlug = chapters[currentIndex - 1].slug;
-      setCurrentChapter(prevChapter.label);
+      // setCurrentChapter(prevChapter.label);
       updateHistory(server, novelSlug, prevChapter.slug, prevChapter.label);
-      navigate(`/novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}`);
+      window.location.href = `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}`;
     }
   };
 
@@ -106,9 +105,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     if (currentIndex < chapters.length - 1) {
       const nextChapter = chapters[currentIndex + 1];
       const nextChapterSlug = nextChapter.slug;
-      setCurrentChapter(nextChapter.label);
+      // setCurrentChapter(nextChapter.label);
       updateHistory(server, novelSlug, nextChapter.slug, nextChapter.label);
-      navigate(`/novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}`);
+      window.location.href = `${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}`;
     }
   };
 
@@ -290,7 +289,7 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
               <div
                 dangerouslySetInnerHTML={{ __html: currentContent }}
-                className="novel-content text-black text-justify text-[30px] p-[3rem]"
+                className="novel-content text-black text-justify text-left p-[3rem]"
               ></div>
             </div>
           </div>
