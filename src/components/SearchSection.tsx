@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import nosh_search from '/src/assets/nosh_search.png';
 import Spinner from './Spinner';
+import Loading from '~/components/Loading';
 
 interface OptionType {
   label: string;
@@ -34,31 +35,47 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
   const { genreList, getGenreList } = useGenreStore();
   const [selectedServer, setSelectedServer] = useState(server);
-  const options: OptionType[] = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
+  const [options, setOptions] = useState<OptionType[]>(
+    (genreList || []).map((genre) => ({ value: genre.slug, label: genre.name })),
+  );
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
   const defaultOption = serverOptions.find((option) => option.value === selectedServer);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const [selectedOption, setSelectedOption] = useState<any>(null);
-  
+  const [genreCache, setGenreCache] = useState<Record<string, OptionType[]>>({});
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (options.length > 0) {
-      const genreFromUrl = options.filter(e => e.value === searchParams.get('genre'))[0];
-      if (genreFromUrl && genreFromUrl.value !== (selectedOption?.value)) {
+      const genreFromUrl = options.filter((e) => e.value === searchParams.get('genre'))[0];
+      if (genreFromUrl && genreFromUrl.value !== selectedOption?.value) {
         setSelectedOption(genreFromUrl);
       }
     }
   }, [options, searchParams, selectedOption]);
-  
+
   const handleSelectServer = (option: any) => {
     const value = option ? option.value : '';
     localStorage.setItem('selectedServer', value);
     setSelectedServer(value);
   };
   useEffect(() => {
-    // console.log(selectedServer);
-    getGenreList(selectedServer);
+    if (genreCache[selectedServer]) {
+      // Use the cached genre lis
+      setOptions(genreCache[selectedServer]);
+    } else {
+      // Load the genre list from the server
+      setIsLoading(true);
+      getGenreList(selectedServer).then((genreList) => {
+        console.log(genreList); // Add this line
+        const options = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
+        setOptions(options);
+        setGenreCache((prev) => ({ ...prev, [selectedServer]: options }));
+        setIsLoading(false);
+      });
+    }
   }, [selectedServer]);
 
   const handleSearch = (data: SearchData) => {
@@ -118,6 +135,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   };
   return (
     <>
+      {isLoading && <Loading />}
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
         <img className="w-full relative h-[35rem]" src={nosh_bg} alt="banner" />
         <div className="wrapper absolute flex flex-col items-center justify-center w-[30rem]">
@@ -154,7 +172,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                     id="genre"
                     options={options}
                     placeholder="Chọn thể loại"
-                    value={selectedOption}                    
+                    value={selectedOption}
                     isSearchable
                     menuPlacement="bottom"
                     formatOptionLabel={(option: OptionType) => (

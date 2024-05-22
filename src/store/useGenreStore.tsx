@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { apiGetGenre } from '~/apis';
 
 interface GenreStore {
-  genreList: any[]; // TODO: create model for this please
-  getGenreList: (server: string) => Promise<void>;
+  genreList: any[];
+  getGenreList: (server: string) => Promise<any[]>;
 }
 
 export const useGenreStore = create<GenreStore>((set) => ({
@@ -12,8 +12,10 @@ export const useGenreStore = create<GenreStore>((set) => ({
     const response = await apiGetGenre({ server });
     if (Array.isArray(response)) {
       set({ genreList: response });
+      return response;
     } else {
       console.error('apiGetListServer did not return an array');
+      return [];
     }
   },
 }));
