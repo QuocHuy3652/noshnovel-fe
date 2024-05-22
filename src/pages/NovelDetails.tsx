@@ -95,7 +95,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
         server,
         novelSlug,
       });
-      console.log(result);
+      // console.log(result);
       if (result && Object.values(result).every((value) => value !== null)) {
         setNovelDetail(result);
         setIsAvailable(true);

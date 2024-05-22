@@ -53,7 +53,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
             <span>{author ?? 'Không rõ'}</span>
           </div>
           <div className="novel-description text-[1rem] mt-2 text-justify line-clamp-5">
-            {description || 'Người dùng có thể click vào để xem thông tin chi tiết ....'}
+            {description || 'Bạn có thể click vào để xem thông tin chi tiết ....'}
           </div>
           <div className="novel-chapter  flex items-center mt-2">
             <BookOpenIcon className="w-5 h-5 mr-1" /> {totalChapters}
