@@ -166,7 +166,12 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
       slug: param.chapterSlug,
       label: data,
     };
-    insertToHistory(chapter, toSlug(novelDetail.title), param.server);
+    const novelInfo = {
+      coverImage: novelDetail.coverImage,
+      title: novelDetail.title,
+      novelSlug: param.novelSlug,
+    };
+    insertToHistory(chapter, novelInfo, param.server);
 
     navigate({
       pathname: `/${path.READER}`,

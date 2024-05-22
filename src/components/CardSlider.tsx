@@ -12,25 +12,29 @@ export const CardSlider = () => {
   const history = JSON.parse(localStorage.getItem('history') || '[]');
   return (
     <>
-      <Swiper
-        // install Swiper modules
-        modules={[Navigation, Pagination, Scrollbar, A11y, FreeMode]}
-        spaceBetween={50}
-        slidesPerView={5}
-        navigation
-        freeMode={true}
-        pagination={{ clickable: true }}
-        scrollbar={{ draggable: true }}
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
-        className="p-5"
-      >
-        {history.map((item: NovelCardProps, index: number) => (
-          <SwiperSlide className="mb-[3rem] !mr-5" key={index}>
-            <NovelCard {...item} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {history.length === 0 ? (
+        <div className="text-center  text-xl "> *** Bạn chưa đọc truyện nào gần đây ¯\_(ツ)_/¯ *** </div>
+      ) : (
+        <Swiper
+          // install Swiper modules
+          modules={[Navigation, Pagination, Scrollbar, A11y, FreeMode]}
+          spaceBetween={50}
+          slidesPerView={5}
+          navigation
+          freeMode={true}
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+          className="p-5"
+        >
+          {history.map((item: NovelCardProps, index: number) => (
+            <SwiperSlide className="mb-[3rem] !mr-5" key={index}>
+              <NovelCard {...item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </>
   );
 };
