@@ -7,7 +7,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { ChapterCatergoriesDialog } from '~/components/ChapterCatergoriesDialog.tsx';
 import { SettingDialog } from '~/components/SettingDialog.tsx';
 import { DownloadNovelDialog } from '~/components/DownloadNovelDialog.tsx';
-import { apiGetNovelContent } from '~/apis';
+import { apiGetNovelContent, apiNovelDetail } from '~/apis';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
@@ -55,6 +55,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [showButton, setShowButton] = useState(false);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const { novelSlug, chapterSlug, server } = params;
+  const [author, setAuthor] = useState('');
 
   useEffect(() => {
     if (novelSlug && server) {
@@ -72,10 +73,14 @@ export const NovelReader = (props: NovelReaderProps) => {
     const fetchContent = async () => {
       setIsLoading(true);
       const result: any = await apiGetNovelContent(params);
+      const author: any = await apiNovelDetail({ server: params.server, novelSlug: params.novelSlug });
       if (result) {
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter.label);
         setCurrentContent(result.content.replace(/\r\n/g, '<br/>'));
+        if (author) {
+          setAuthor(author.author.name);
+        }
       }
       setIsLoading(false);
       window.scrollTo(0, 0);
@@ -118,18 +123,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const toggleMenuDialog = (isOpen: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(isOpen);
   };
-  // const { sources = [
-  //   {
-  //     name: 'Truyenfull'
-  //   },
-  //   {
-  //     name: 'Tangthuvien'
-  //   },
-  //   {
-  //     name: 'TruyenXYZ'
-  //   }], novel } = props
 
-  // Logic for Scroll
   const checkScrollHeight = () => {
     if (window.scrollY > 500) {
       setShowButton(true);
@@ -176,7 +170,7 @@ export const NovelReader = (props: NovelReaderProps) => {
 
   return (
     <>
-      {isLoading && <Loading />}
+      {isLoading ? <Loading></Loading> :
       <div className="wrapper w-full h-full flex flex-col items-center justify-center px-[10rem] mt-[2rem]">
         <div className="novel-wrapper text-center">
           <div className="novel-title">
@@ -190,13 +184,15 @@ export const NovelReader = (props: NovelReaderProps) => {
               {currentTitle}
             </Typography>
           </div>
-          {/* <div className="novel-author">
-            <Typography className="text-app_primary" variant="h5" placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}>
-              {novel?.author?.name ?? 'Robin Sarma'}
-            </Typography>
-          </div> */}
+          {author !== '' &&
+              <div className="novel-author">
+                <Typography className="text-app_primary" variant="h5" placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}>
+                  Tác giả: {author}
+                </Typography>
+              </div>
+            }
           <div className="novel-source flex flex-row w-full justify-end">
             <div className="w-[10rem] mr-[3rem]">
               <Select
@@ -337,12 +333,13 @@ export const NovelReader = (props: NovelReaderProps) => {
           </div>
         </div>
       </div>
+      }
 
       <ChapterCatergoriesDialog
         open={openChapterCategories}
         handleSave={handleSave}
         handleClose={() => toggleMenuDialog(false, setOpenChapterCategories)}
-      />
+        params={params} />
       <SettingDialog
         open={openSettings}
         handleClose={() => toggleMenuDialog(false, setOpenSettings)}

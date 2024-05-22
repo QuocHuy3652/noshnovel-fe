@@ -7,93 +7,40 @@ import {
   IconButton,
   Typography,
 } from '@material-tailwind/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChapterList } from '~/components/ChapterList.tsx';
 import { apiGetNovelChapter } from '~/apis';
+import { toSlug } from '~/utils/fn';
+import { createSearchParams, useLocation } from 'react-router-dom';
+import { path } from '~/constants';
 
 
 export interface ChapterCatergoriesDialog {
   open: boolean;
   handleClose: () => void;
   handleSave: () => void;
+  params: any;
 }
 
-export const ChapterCatergoriesDialog = (props:ChapterCatergoriesDialog) => {
-  const [ size, setSize] = React.useState(null);
-  const { open, handleClose, handleSave } = props;
-  const [chapters, setChapters] = useState([{
-    label: 'Chương 1' ,
-    slug: 'chapter-1',
-    name: 'Phim con heo',
-  },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con lợn',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con gà',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con mèo',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con heo',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con lợn',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con gà',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con mèo',
-    },{
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con heo',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con lợn',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con gà',
-    },
-    {
-      label: 'Chương 1' ,
-      slug: 'chapter-1',
-      name: 'Phim con mèo',
-    }]);
-  const [itemsPerPage, setItemsPerPage] = useState(40);
-  const [totalItems, setTotalItems] = useState(10);
-  const [totalPages, setTotalPages] = useState(3);
+export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
+  const [size, setSize] = React.useState(null);
+  const { open, handleClose, handleSave, params } = props;
+  const [chapters, setChapters] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(30);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
   // TODO: get novel slug & server
-  const novelSlug = 'novel'
-  const server = 'tangthuvien.vn'
-
+  const novelSlug = params.novelSlug;
+  const server = params.server;
+  
   const fetchChapters = async (page: number = 1) => {
     try {
       setIsLoading(true);
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
+      console.log(response)
       setChapters(response.data);
       setTotalItems(response.total);
       setTotalPages(response.totalPages);
@@ -105,9 +52,21 @@ export const ChapterCatergoriesDialog = (props:ChapterCatergoriesDialog) => {
     }
   };
 
+  useEffect(() => {
+    fetchChapters();
+  }, [novelSlug]);
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     fetchChapters(page);
+  };
+
+  const handleReadNovel = (data: any) => {
+    const param: any = {};
+    param.server = params.server?.toString();
+    param.novelSlug = params.novelSlug?.toString();
+    param.chapterSlug = toSlug(data)
+    window.location.href = `${path.DETAIL}?${createSearchParams(param).toString()}`;
   };
 
   return (
@@ -121,7 +80,7 @@ export const ChapterCatergoriesDialog = (props:ChapterCatergoriesDialog) => {
           </div>
           <div>
             <Typography variant="h5" color="blue-gray">
-            Danh sách chương
+              Danh sách chương
             </Typography>
           </div>
           <IconButton
@@ -153,6 +112,7 @@ export const ChapterCatergoriesDialog = (props:ChapterCatergoriesDialog) => {
             totalItems={totalItems}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            onReadNovel={handleReadNovel}
           />
         </DialogBody>
         <DialogFooter className={'text-center justify-center'} >
