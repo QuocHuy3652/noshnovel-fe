@@ -1,6 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import ReactPaginate from 'react-paginate';
 import { useEffect, useState } from 'react';
+import { useChapterStore } from '~/store';
 
 export interface ChapterListProps {
   item: { label: string; slug: string; name: string }[];
@@ -10,12 +11,22 @@ export interface ChapterListProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   onReadNovel: (data: any) => void;
+  novelSlug: string | null;
+  title: string | null;
+  coverImage: string | null;
 }
 
 export const ChapterList = (props: ChapterListProps) => {
-  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel } = props;
+  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug } = props;
   const [currentPage, setCurrentPage] = useState(props.currentPage);
-  // console.log(currentPage);
+  const { chapterList, setCurrentChapterList } = useChapterStore();
+  const server = localStorage.getItem('selectedServer') || '';
+
+  useEffect(() => {
+    if (novelSlug) {
+      setCurrentChapterList(novelSlug, server);
+    }
+  }, [novelSlug]);
 
   useEffect(() => {
     setCurrentPage(props.currentPage);
@@ -26,7 +37,7 @@ export const ChapterList = (props: ChapterListProps) => {
   };
   const handleReadNovel = (data: any) => {
     onReadNovel(data);
-  }
+  };
   return (
     <>
       <div className="chapter-list wrapper flex flex-col ">
@@ -42,6 +53,7 @@ export const ChapterList = (props: ChapterListProps) => {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              className="hover:underline"
             >
               {chapter.label} - {chapter.name}
             </div>

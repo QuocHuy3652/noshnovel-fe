@@ -1,10 +1,7 @@
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
 import { Button, Rating, TabsBody, Typography, Tab, TabPanel, Tabs, TabsHeader } from '@material-tailwind/react';
 import React from 'react';
-import {
-  Category,
-  CategoryChips,
-} from '~/components/CategoryChips.tsx';
+import { Category, CategoryChips } from '~/components/CategoryChips.tsx';
 import { ChapterList } from '~/components';
 import { useServerStore } from '~/store/useServerStore';
 import { createSearchParams, useLocation } from 'react-router-dom';
@@ -71,7 +68,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   useEffect(() => {
     const fetchGenres = async () => {
       const result: any = await apiGetGenre({ server: selectedServer });
-      console.log('API result:', result);
 
       if (result) {
         setGenres(result);
@@ -95,7 +91,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
         server,
         novelSlug,
       });
-      console.log(result);
+
       if (result && Object.values(result).every((value) => value !== null)) {
         setNovelDetail(result);
         setIsAvailable(true);
@@ -147,11 +143,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     fetchChapters(page);
   };
 
-  // const handleSelectSever = (server: any) => {
-  //   localStorage.setItem('selectedServer', server);
-  //   setSelectedServer(server);
-  // };
-
   const handleSearch = (data: any) => {
     const param: any = {};
     param.server = selectedServer?.toString();
@@ -169,7 +160,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     const param: any = {};
     param.server = selectedServer?.toString();
     param.novelSlug = novelSlug?.toString();
-    param.chapterSlug = toSlug(data)
+    param.chapterSlug = toSlug(data);
     navigate({
       pathname: `/${path.READER}`,
       search: createSearchParams(param).toString(),
@@ -178,7 +169,9 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
 
   return (
     <>
-      {isLoading ? <Loading /> :
+      {isLoading ? (
+        <Loading />
+      ) : (
         <div className="wrapper w-full flex items-center justify-center">
           <div className="p-[3rem] h-full rounded-xl page-detail mt-[5rem] bg-white w-[90vw] flex flex-col">
             <button
@@ -337,6 +330,9 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                           totalPages={totalPages}
                           onPageChange={handlePageChange}
                           onReadNovel={handleReadNovel}
+                          novelSlug={novelSlug}
+                          coverImage={novelDetail.coverImage}
+                          title={novelDetail.title}
                         />
                       </TabPanel>
                     ),
@@ -347,9 +343,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
             </div>
           </div>
         </div>
-      }
+      )}
       <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
     </>
   );
 });
-
