@@ -14,6 +14,8 @@ import Loading from '~/components/Loading';
 import { useChapterStore } from '~/store';
 import { toSlug, updateHistory } from '~/utils/fn';
 import { path } from '~/constants';
+import { useForm } from 'react-hook-form';
+import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -40,9 +42,10 @@ export const NovelReader = (props: NovelReaderProps) => {
   };
   const { serverList } = useServerStore();
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
+  const { setValue } = useForm();
 
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
-  const [currentServer, setCurrentServer] = useState(params.server);
+  const [currentServer, setCurrentServer] = useState<any>(params.server);
   const [currentChapter, setCurrentChapter] = React.useState<string>('');
   const [currentContent, setCurrentContent] = React.useState<string>('');
   const [openChapterCategories, setOpenChapterCategories] = React.useState<boolean>(false);
@@ -56,6 +59,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [isAtEnd, setIsAtEnd] = useState(false);
   const { novelSlug, chapterSlug, server } = params;
   const [author, setAuthor] = useState('');
+  const [openReadDialog, setOpenReadDialog] = useState(false);
 
   useEffect(() => {
     if (novelSlug && server) {
@@ -199,8 +203,15 @@ export const NovelReader = (props: NovelReaderProps) => {
                 label="Chọn nguồn truyện"
                 success
                 placeholder={'Chọn nguồn truyện'}
+                value={currentServer}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
+                onChange={(val) => {
+                  // console.log(options, selectedOption)
+                  setCurrentServer(val);
+                  setValue('genre', val);
+                  setOpenReadDialog(true);
+                }}
               >
                 {serverOptions.map((source, index) => {
                   return (
@@ -349,6 +360,7 @@ export const NovelReader = (props: NovelReaderProps) => {
         handleClose={() => toggleMenuDialog(false, setOpenDownload)}
         handleDownload={handleDownload}
       />
+      <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
     </>
   );
 };

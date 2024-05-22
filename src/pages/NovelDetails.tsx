@@ -96,7 +96,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
         setNovelDetail(result);
         setIsAvailable(true);
       } else {
-        setIsAvailable(false);
+        fetchNovelDetail(novelSlug, server);
       }
       setIsLoading(false);
     };
