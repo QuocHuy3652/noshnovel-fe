@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { NovelCard } from '~/components/NovelCard.tsx';
+import { NovelCard, NovelCardProps } from '~/components/NovelCard.tsx';
 import { Navigation, Pagination, Scrollbar, FreeMode, A11y } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
@@ -9,6 +9,7 @@ import 'swiper/css/scrollbar';
 import 'swiper/css/free-mode';
 
 export const CardSlider = () => {
+  const history = JSON.parse(localStorage.getItem('history') || '[]');
   return (
     <>
       <Swiper
@@ -24,10 +25,12 @@ export const CardSlider = () => {
         onSwiper={(swiper) => console.log(swiper)}
         className="p-5"
       >
-        {[1, 2, 3, 4, 5, 6].map((item) =>
-          <SwiperSlide className="mb-[3rem]" key={item}><NovelCard /></SwiperSlide>
-        )}
+        {history.map((item: NovelCardProps, index: number) => (
+          <SwiperSlide className="mb-[3rem] !mr-5" key={index}>
+            <NovelCard {...item} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
-  )
-}
+  );
+};

@@ -12,7 +12,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { useChapterStore } from '~/store';
-import { toSlug } from '~/utils/fn';
+import { toSlug, updateHistory } from '~/utils/fn';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -91,6 +91,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       const prevChapter = chapters[currentIndex - 1];
       const prevChapterSlug = chapters[currentIndex - 1].slug;
       setCurrentChapter(prevChapter.label);
+      updateHistory(server, novelSlug, prevChapter.slug, prevChapter.label);
       navigate(`/novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}`);
     }
   };
@@ -101,6 +102,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       const nextChapter = chapters[currentIndex + 1];
       const nextChapterSlug = nextChapter.slug;
       setCurrentChapter(nextChapter.label);
+      updateHistory(server, novelSlug, nextChapter.slug, nextChapter.label);
       navigate(`/novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}`);
     }
   };

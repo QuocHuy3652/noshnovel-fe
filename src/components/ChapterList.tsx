@@ -2,6 +2,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import ReactPaginate from 'react-paginate';
 import { useEffect, useState } from 'react';
 import { useChapterStore } from '~/store';
+import { insertToHistory } from '~/utils/fn';
 
 export interface ChapterListProps {
   item: { label: string; slug: string; name: string }[];
@@ -36,8 +37,10 @@ export const ChapterList = (props: ChapterListProps) => {
     onPageChange(event.selected + 1);
   };
   const handleReadNovel = (data: any) => {
-    onReadNovel(data);
+    onReadNovel(data.slug);
+    insertToHistory(data, props, server);
   };
+
   return (
     <>
       <div className="chapter-list wrapper flex flex-col ">
@@ -45,7 +48,7 @@ export const ChapterList = (props: ChapterListProps) => {
           {item.map((chapter, index) => (
             <div
               key={index}
-              onClick={() => handleReadNovel(chapter.slug)}
+              onClick={() => handleReadNovel(chapter)}
               style={{
                 cursor: 'pointer',
                 padding: '10px',

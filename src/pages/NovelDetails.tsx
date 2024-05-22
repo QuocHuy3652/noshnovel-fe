@@ -8,7 +8,7 @@ import { createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { apiGetGenre, apiGetNovelChapter, apiNovelDetail } from '~/apis';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
-import { toSlug } from '~/utils/fn';
+import { insertToHistory, toSlug, updateHistory } from '~/utils/fn';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -161,6 +161,13 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     param.server = selectedServer?.toString();
     param.novelSlug = novelSlug?.toString();
     param.chapterSlug = toSlug(data);
+
+    const chapter = {
+      slug: param.chapterSlug,
+      label: data,
+    };
+    insertToHistory(chapter, toSlug(novelDetail.title), param.server);
+
     navigate({
       pathname: `/${path.READER}`,
       search: createSearchParams(param).toString(),
