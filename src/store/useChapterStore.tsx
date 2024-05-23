@@ -25,7 +25,7 @@ export const useChapterStore = create<ChapterStore>((set) => ({
     let allChapters: Chapter[] = [];
 
     while (shouldContinue) {
-      const data: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: 100 });
+      const data: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: 2000 });
 
       if (data && Array.isArray(data.data)) {
         allChapters = [...allChapters, ...data.data];

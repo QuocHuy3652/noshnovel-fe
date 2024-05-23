@@ -81,7 +81,10 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const handleSearch = (data: SearchData) => {
     const param: Record<string, string | string[]> = {};
     param.server = selectedServer.toString();
-    if (data.keyword) param.keyword = data.keyword.toString();
+    if (data.keyword) {
+      param.keyword = data.keyword.toString();
+      setSelectedOption(null);
+    }
     else if (data.genre) param.genre = data.genre.toString();
     if (param.keyword || param.genre) {
       param.page = '1';
@@ -229,7 +232,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   id="simple-search"
                   className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2 text-dark outline-none focus:outline-none "
                   placeholder="Nhập tên truyện..."
-                  onFocus={() => {
+                  onClick={() => {
                     setSelectedOption(null);
                   }}
                   required

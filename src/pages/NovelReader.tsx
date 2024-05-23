@@ -116,9 +116,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     // };
 
     // fetchChapterEnds();
-    const index = chapterList.findIndex(e => e.slug == currentChapter.slug)
-    setListChapterEnds(chapterList.slice(index, index + 7));
-  }, [chapterList])
+    const index = chapters.findIndex(e => e.slug == currentChapter.slug)
+    setListChapterEnds(chapters.slice(index, index + 7));
+  }, [chapters])
 
   const getPreviousChapter = () => {
     const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter.label);
