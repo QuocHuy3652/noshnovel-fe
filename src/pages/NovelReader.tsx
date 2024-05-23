@@ -41,6 +41,8 @@ export const NovelReader = (props: NovelReaderProps) => {
     chapterSlug: searchParams.get('chapterSlug'),
   };
   const { serverList } = useServerStore();
+  const sources = serverList.map((name) => ({ name }));
+
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
   const { setValue } = useForm();
 
@@ -63,6 +65,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [listFileNameExtensions, setListFileNameExtensions] = useState([]);
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
   const [isdownloading, setIsdownloading] = useState(false);
+  const [serverChange, setServerChange] = useState(server);
 
   useEffect(() => {
     if (novelSlug && server) {
@@ -117,7 +120,7 @@ export const NovelReader = (props: NovelReaderProps) => {
 
     // fetchChapterEnds();
     const index = chapters.findIndex(e => e.slug == currentChapter.slug)
-    setListChapterEnds(chapters.slice(index, index + 7));
+    setListChapterEnds(chapters.slice(index, index + 5));
   }, [chapters])
 
   const getPreviousChapter = () => {
@@ -216,7 +219,13 @@ export const NovelReader = (props: NovelReaderProps) => {
     t -= 2;
     return (c / 2) * (t * t * t + 2) + b;
   };
-
+  const handleChangeServer = (data: any) => {
+    console.log(data, server)
+    if (data !== server) {
+      setOpenReadDialog(true);
+      setServerChange(data);
+    }
+  }
   return (
     <>
       {isLoading ? <Loading></Loading> :
@@ -243,7 +252,7 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
             }
             <div className="novel-source flex flex-row w-full justify-end">
-              <div className="w-[10rem] mr-[3rem]">
+              <div className="w-[10rem] mr-[3rem] flex flex-row">
                 <Select
                   className="bg-white"
                   label="Chọn nguồn truyện"
@@ -255,7 +264,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                   onChange={(val) => {
                     setCurrentServer(val);
                     setValue('genre', val);
-                    setOpenReadDialog(true);
+                    handleChangeServer(val)
                   }}
                 >
                   {serverOptions.map((source, index) => {
@@ -266,6 +275,19 @@ export const NovelReader = (props: NovelReaderProps) => {
                     );
                   })}
                 </Select>
+                {/* {sources.map((source) => (
+                      <Button
+                        key={source.name}
+                        className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== server ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                        onClick={() => handleChangeServer(source)}
+                      // disabled={selectedServer === source.name}
+                      >
+                        {source.name}
+                      </Button>
+                    ))} */}
               </div>
             </div>
             <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">
@@ -409,7 +431,13 @@ export const NovelReader = (props: NovelReaderProps) => {
         listChapterEnds={listChapterEnds}
         isdownloading={isdownloading}
       />
-      <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
+      <ReadNovelDialog
+        open={openReadDialog}
+        handleClose={() => setOpenReadDialog(false)}
+        server={serverChange}
+        title={currentTitle}
+        namePage='reader'
+      />
     </>
   );
 };

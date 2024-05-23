@@ -14,6 +14,7 @@ import Loading from '~/components/Loading';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
+
 export interface SourceNovel {
   name?: string;
   url?: string;
@@ -49,6 +50,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isChangePage, setIsChangePage] = useState(false);
   const [openReadDialog, setOpenReadDialog] = useState(false);
+  const [serverChange, setServerChange] = useState(server);
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -91,7 +93,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
         server,
         novelSlug,
       });
-      
+
       if (result && Object.values(result).every((value) => value !== null)) {
         setNovelDetail(result);
         setIsAvailable(true);
@@ -179,6 +181,13 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     });
   };
 
+  const handleChangeServer = (data: any) => {
+    if (data.name !== selectedServer) {
+      setOpenReadDialog(true);
+      setServerChange(data.name);
+    }
+  }
+
   return (
     <>
       {isLoading ? (
@@ -247,7 +256,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => setOpenReadDialog(true)}
+                        onClick={() => handleChangeServer(source)}
+                      // disabled={selectedServer === source.name}
                       >
                         {source.name}
                       </Button>
@@ -356,7 +366,13 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
           </div>
         </div>
       )}
-      <ReadNovelDialog open={openReadDialog} handleClose={() => setOpenReadDialog(false)} handleDownload="" />
+      <ReadNovelDialog
+        open={openReadDialog}
+        handleClose={() => setOpenReadDialog(false)}
+        server={serverChange}
+        title={novelDetail.title}
+        namePage='detail'
+      />
     </>
   );
 });

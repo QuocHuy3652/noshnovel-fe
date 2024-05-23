@@ -9,24 +9,56 @@ import {
   Select,
   Typography,
 } from '@material-tailwind/react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { path } from '~/constants';
 import nosh_search from '~/assets/nosh_search.png';
-
+import { Novel } from '~/models/Novel';
+import { apiSearchNovel } from '~/apis';
+import Spinner from './Spinner';
+import { NovelSearchCard } from '.';
 
 export interface ReadNovelDialogProps {
-  open: boolean
-  handleClose?: () => void
+  open: boolean,
+  handleClose?: () => void,
+  server: any,
+  title: string,
+  namePage: string,
 }
-export const ReadNovelDialog = (props:ReadNovelDialogProps) => {
-  const { open, handleClose } = props
+export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
+  const { open, handleClose, server, title, namePage } = props
+  const [novels, setNovels] = useState<Novel[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [keyword, setKeyword] = useState(title);
 
+  const handleChange = (e: any) => {
+    setKeyword(e.target.value);
+  };
 
+  const fetchSearchNovel = async (keyword: string) => {
+    setIsLoading(true)
+    const result: any = await apiSearchNovel({ server, keyword, page: 1, perPage: 1 });
+    if (result) {
+      setNovels(result.data);
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [novels])
+
+  useEffect(() => {
+
+    fetchSearchNovel(title);
+  }, [server, title])
+
+  const handleSearch = () => {
+    fetchSearchNovel(keyword)
+  }
   return (
     <>
       <Dialog
         open={open}
-        size={"sm"}
+        size={"xl"}
         handler={handleClose}>
         <DialogHeader className="justify-between">
           <div>
@@ -61,7 +93,7 @@ export const ReadNovelDialog = (props:ReadNovelDialogProps) => {
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row space-x-2 p-0">
               <Typography variant="h6">Server: </Typography>
-              <Typography variant="h6">Truyen tang thu vien</Typography>
+              <Typography variant="h6">{server}</Typography>
             </div>
             <div className="search-input flex flex-row mt-5">
               <label htmlFor="simple-search" className="sr-only">
@@ -90,9 +122,8 @@ export const ReadNovelDialog = (props:ReadNovelDialogProps) => {
                   id="simple-search"
                   className="bg-gray-50 border border-app_primary text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full ps-10 p-2 text-dark outline-none focus:outline-none "
                   placeholder="Nhập tên truyện..."
-                  onFocus={() => {
-                    // setSelectedOption(null);
-                  }}
+                  defaultValue={title}
+                  onChange={handleChange}
                   required
                 />
                 <div
@@ -110,7 +141,7 @@ export const ReadNovelDialog = (props:ReadNovelDialogProps) => {
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
                     }}
-                    // onClick={handleSubmit(handleSearch)}
+                    onClick={handleSearch}
                     className="hover:opacity-50 w-10 h-10 rounded bg-none"
                     children={undefined}
                   />
@@ -118,6 +149,32 @@ export const ReadNovelDialog = (props:ReadNovelDialogProps) => {
               </div>
             </div>
           </div>
+          {isLoading ? <div className='my-5'><Spinner></Spinner></div> :
+            <div className="novel-history p-3 mt-3">
+              {novels && novels.length > 0 ? (
+                novels.map((novel, index) => (
+                  <div key={index} className="col-span-1 p-3">
+                    {novel && (
+                      <NovelSearchCard
+                        title={novel.title}
+                        author={novel.author?.name ?? undefined}
+                        coverUrl={novel.coverImage}
+                        totalChapters={novel.totalChapter}
+                        category={novel.genres?.[0]?.name ?? undefined}
+                        description={novel.description ?? undefined}
+                        status={novel.status ?? undefined}
+                        novelSlug={novel.novelSlug}
+                        namePage={namePage}
+                        server={server}
+                      />
+                    )}
+                  </div>
+                ))
+              ) : (
+                novels.length === 0 && <div className="text-xl mx-auto text-center">Không tìm thấy kết quả ¯\_(ツ)_/¯</div>
+              )}
+            </div>
+          }
         </DialogBody>
         <DialogFooter className={'text-center justify-center'}>
         </DialogFooter>

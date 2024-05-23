@@ -11,13 +11,21 @@ export type NovelSeachCardProps = {
   category?: string;
   status?: string;
   novelSlug?: string;
+  namePage?: string; // search / detail / reader
+  server?: any;
 };
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
-  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug } = props;
-  const server = localStorage.getItem('selectedServer');
-  const handleClick = (slug: string | undefined, server: string | null) => {
-    window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
+  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug, namePage, server } = props;
+  const handleClick = (slug: string | undefined, server: any) => {
+    if (namePage === 'search') {
+      window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
+    } else if (namePage === 'detail') {
+      localStorage.setItem('selectedServer', server);
+      window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
+    } else if (namePage === 'reader') {
+      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=chuong-1`;
+    }
   };
   return (
     <>
