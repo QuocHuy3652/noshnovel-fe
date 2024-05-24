@@ -203,17 +203,17 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
               <p className="ml-2 inline-block font-bold">Trang trước</p>
             </button>
             {isAvailable ? (
-              <div className="novel-cover p-[2rem] flex flex-row">
+              <div className="novel-cover p-[2rem] flex flex-row overflow-hidden">
                 <LazyLoadImage
                   effect="blur"
-                  className="rounded-xl w-[15rem] h-[22rem]"
+                  className="rounded-xl min-w-[15rem] h-[22rem]"
                   src={novelDetail.coverImage}
                   alt="banner"
                   onError={(e: any) => (e.target.src = '/no-image.png')}
                 />
                 <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                   <div className="inner-wrapper flex flex-col">
-                    <p className="text-3xl font-bold text-black mt">{novelDetail.title}</p>
+                    <p className="text-3xl font-bold text-black max-w-[40rem]">{novelDetail.title}</p>
                     <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
                       {novelDetail.rating}
                       <Rating
@@ -239,10 +239,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     />
                     {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                   </div>
-                  <div className="bottom-action flex flex-row">
+                  <div className="bottom-action flex flex-row max-w-[60rem] flex-wrap space-x-2">
                     <Button
                       onClick={() => handleReadNovel(chapterOne)}
-                      className="bg-app_tertiary"
+                      className="bg-app_tertiary mt-2 border-app_primary  "
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -252,7 +252,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     {sources.map((source) => (
                       <Button
                         key={source.name}
-                        className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        className={`border-app_primary mt-2 text-app_primary border-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
@@ -283,7 +283,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                   <CategoryChips categories={novelDetail.genres} /> */}
                     {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                   </div>
-                  <div className="bottom-action flex flex-row">
+                  <div className="bottom-action flex flex-wrap flex-row">
                     <Button
                       className="bg-app_tertiary"
                       placeholder={undefined}
