@@ -4,12 +4,13 @@ import {
   DialogBody,
   DialogFooter,
   DialogHeader,
-  IconButton, Input, Option, Select,
+  IconButton, Input, Menu, MenuHandler, MenuItem, MenuList, Option, Select,
   Typography,
 } from '@material-tailwind/react';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import Spinner from '~/components/Spinner';
+import { ArrowDownIcon } from '@heroicons/react/16/solid';
 
 interface Chapter {
   label: string;
@@ -20,7 +21,7 @@ interface Chapter {
 export interface DownloadNovelDialogProps {
   open: boolean;
   handleClose: () => void;
-  handleDownload: (a: any, b: any) => void;
+  handleDownload: (a: any, b: any, c: any) => void;
   listFileNameExtensions: string[];
   chapterStart: any;
   listChapterEnds: Chapter[];
@@ -31,6 +32,8 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
   const { setValue } = useForm();
   const [selectedFileExt, setSelectedFileExt] = useState<any>('');
   const [chapterEnd, setChapterEnd] = useState<any>(chapterStart.slug);
+  // TODO: fetch source list and handle download novel with that source
+  const [sourceList, setSourceList] = useState<any>(['truyen.tangthuvien.vn', 'nhattruyen.com']);
 
   useEffect(() => {
     if (listFileNameExtensions.length > 0) {
@@ -129,12 +132,40 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
         <DialogFooter className={'text-center justify-center'} >
           {
             isdownloading ? <Spinner></Spinner> :
-              <Button
-                // variant="gradient"
-                className="!bg-app_primary hover:opacity-60"
-                onClick={() => handleDownload(selectedFileExt, chapterEnd)}>
-                <span>Download</span>
-              </Button>
+              (
+                <Menu
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                >
+                  <MenuHandler>
+                    <Button className="text-white bg-app_tertiary flex flex-row space-x-1">
+                      <p>Download</p>
+                      <ArrowDownIcon
+                        strokeWidth={2}
+                        className="h-4 w-4"
+                      />
+                    </Button>
+                  </MenuHandler>
+                  <MenuList className="z-[10000]">
+                    {
+                      sourceList.map((val, index) => {
+                        return (
+                          <MenuItem
+                            key={index}
+                            onClick={() => {
+                              handleDownload(val, selectedFileExt, chapterEnd);
+                              setValue('source', val);
+                            }}
+                          >
+                            {val}
+                          </MenuItem>
+                        );
+                      })
+                    }
+                  </MenuList>
+                </Menu>)
           }
         </DialogFooter>
       </Dialog>

@@ -152,8 +152,9 @@ export const NovelReader = (props: NovelReaderProps) => {
   const onDownload = () => {};
 
   const handleSave = () => {};
+  // TODO: fetch source list and handle download novel with that source
 
-  const handleDownload = async (selectedFileExt: any, chapterEnd: any) => {
+  const handleDownload = async (downloadSource:any, selectedFileExt: any, chapterEnd: any) => {
     setIsdownloading(true);
     const chapterSlugs = listChapterEnds
       .slice(
