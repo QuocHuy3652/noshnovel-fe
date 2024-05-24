@@ -1,4 +1,5 @@
 import { updateHistory } from '~/utils/fn';
+import { useNavigate } from 'react-router-dom';
 
 export type NovelCardProps = {
   title?: string;
@@ -13,11 +14,12 @@ export type NovelCardProps = {
 
 export const NovelCard = (props: NovelCardProps) => {
   const { title, author, coverImage, description, totalChapters, category, chapterLabel, url } = props;
+  const navigate = useNavigate();
   // console.log(coverImage);
 
   const handleClick = () => {
     if (url) {
-      window.location.href = url;
+      navigate(url);
 
       // Extract the server, novelSlug and chapterSlug from the url
       const urlParams = new URLSearchParams(url.split('?')[1]);

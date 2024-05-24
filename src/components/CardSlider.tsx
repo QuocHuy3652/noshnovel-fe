@@ -29,7 +29,7 @@ export const CardSlider = () => {
           className="p-5"
         >
           {history.map((item: NovelCardProps, index: number) => (
-            <SwiperSlide className="mb-[3rem] !mr-5" key={index}>
+            <SwiperSlide className="mb-[3rem] mr-5" key={index}>
               <NovelCard {...item} />
             </SwiperSlide>
           ))}
