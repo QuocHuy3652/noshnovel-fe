@@ -67,13 +67,12 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       setOptions(genreCache[selectedServer]);
     } else {
       // Load the genre list from the server
-      setIsLoading(true);
+
       getGenreList(selectedServer).then((genreList) => {
         console.log(genreList); // Add this line
         const options = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
         setOptions(options);
         setGenreCache((prev) => ({ ...prev, [selectedServer]: options }));
-        setIsLoading(false);
       });
     }
   }, [selectedServer]);
@@ -84,8 +83,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     if (data.keyword) {
       param.keyword = data.keyword.toString();
       setSelectedOption(null);
-    }
-    else if (data.genre) param.genre = data.genre.toString();
+    } else if (data.genre) param.genre = data.genre.toString();
     if (param.keyword || param.genre) {
       param.page = '1';
       navigate({
@@ -201,6 +199,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       handleSearch({ genre: val?.value });
                     }}
                     className="block w-full "
+                    isLoading={options.length === 0}
                   />
                 </div>
               </div>
