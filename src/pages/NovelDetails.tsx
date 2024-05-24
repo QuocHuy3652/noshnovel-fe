@@ -239,10 +239,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     />
                     {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                   </div>
-                  <div className="bottom-action flex flex-row max-w-[60rem] flex-wrap space-x-2">
+                  <div className="bottom-action flex flex-row max-w-[60rem] flex-wrap">
                     <Button
                       onClick={() => handleReadNovel(chapterOne)}
-                      className="bg-app_tertiary mt-2 border-app_primary  "
+                      className="bg-app_tertiary mt-2 border-app_primary ml-2"
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -252,7 +252,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     {sources.map((source) => (
                       <Button
                         key={source.name}
-                        className={`border-app_primary mt-2 text-app_primary border-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        className={`border-app_primary mt-2 text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}

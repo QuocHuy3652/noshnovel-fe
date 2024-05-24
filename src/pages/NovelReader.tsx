@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { SourceNovel } from '~/pages/NovelDetails.tsx';
-import { Button, IconButton, Option, Select, Typography } from '@material-tailwind/react';
+import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { Novel } from '~/models';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { ChapterCatergoriesDialog } from '~/components/ChapterCatergoriesDialog.tsx';
@@ -11,17 +11,17 @@ import {
   apiGetNovelContent,
   apiNovelDetail,
   apiGetFileNameExtension,
-  apiGetNovelChapter,
   apiPostNovelDownload,
 } from '~/apis';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { useChapterStore } from '~/store';
-import { toSlug, updateHistory } from '~/utils/fn';
+import { updateHistory } from '~/utils/fn';
 import { path } from '~/constants';
 import { useForm } from 'react-hook-form';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
+import Select from 'react-select';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -38,6 +38,48 @@ interface Chapter {
   name: string;
 }
 
+const customStyles = {
+  control: (provided: any) => ({
+    ...provided,
+    backgroundColor: 'white',
+    borderColor: 'green',
+    borderRadius: '0.375rem',
+    padding: '0.3rem',
+    boxShadow: 'none',
+    '&:hover': {
+      borderColor: 'blue',
+    },
+    textAlign: 'center',
+    fontSize: '13px',
+    caretColor: 'transparent',
+  }),
+  option: (provided: any, state: any) => ({
+    ...provided,
+    color: state.isSelected ? 'white' : 'black',
+    backgroundColor: state.isSelected ? 'blue' : 'white',
+    padding: '0.5rem',
+  }),
+
+  menu: (provided: any) => ({
+    ...provided,
+    zIndex: 9999,
+    paddingLeft: '0.5rem',
+  }),
+  placeholder: (provided: any) => ({
+    ...provided,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
+  valueContainer: (provided: any) => ({
+    ...provided,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    transform: 'translateX(3rem)',
+  }),
+};
+
 export const NovelReader = (props: NovelReaderProps) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -48,12 +90,11 @@ export const NovelReader = (props: NovelReaderProps) => {
   };
   const { serverList } = useServerStore();
   const sources = serverList.map((name) => ({ name }));
-
+  const { register, handleSubmit, setValue } = useForm();
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
-  const { setValue } = useForm();
-
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
-  const [currentServer, setCurrentServer] = useState<any>(params.server);
+
+  const [currentServer, setCurrentServer] = useState<any>({ value: params.server, label: params.server });
   const [currentChapter, setCurrentChapter] = React.useState<any>('');
   const [currentContent, setCurrentContent] = React.useState<string>('');
   const [openChapterCategories, setOpenChapterCategories] = React.useState<boolean>(false);
@@ -154,7 +195,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const handleSave = () => {};
   // TODO: fetch source list and handle download novel with that source
 
-  const handleDownload = async (downloadSource:any, selectedFileExt: any, chapterEnd: any) => {
+  const handleDownload = async (selectedFileExt: any, chapterEnd: any) => {
     setIsdownloading(true);
     const chapterSlugs = listChapterEnds
       .slice(
@@ -270,29 +311,61 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
             )}
             <div className="novel-source flex flex-row w-full justify-end">
-              <div className="w-[10rem] mr-[3rem] flex flex-row">
-                <Select
-                  className="bg-white"
-                  label="Chọn nguồn truyện"
-                  success
-                  placeholder={'Chọn nguồn truyện'}
-                  value={currentServer}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(val) => {
-                    setCurrentServer(val);
-                    setValue('genre', val);
-                    handleChangeServer(val);
-                  }}
-                >
-                  {serverOptions.map((source, index) => {
-                    return (
-                      <Option key={index} value={source.value}>
-                        {source.label}
-                      </Option>
-                    );
-                  })}
-                </Select>
+              <div className="w-[10rem] mr-[10rem] flex flex-row">
+                <div className="source-select w-[40rem]">
+                  <div className="relative">
+                    <label
+                      className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                      Nguồn truyện
+                    </label>
+                    <div className="source-select w-[20rem]">
+                      <div className="relative">
+                        <label
+                          className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                          Nguồn truyện
+                        </label>
+                        <Select
+                          {...register('server')}
+                          options={serverOptions}
+                          placeholder="Chọn nguồn truyện"
+                          styles={customStyles}
+                          onChange={(val) => {
+                            const server = { value: val?.value, label: val?.label };
+                            setCurrentServer(server);
+                            setValue('genre', server.value);
+                            handleChangeServer(server.value);
+                          }}
+                          className="block w-full"
+                          isSearchable={false}
+                          defaultValue={currentServer}
+                          // key={currentServer?.value}
+                        />
+                      </div>
+                    </div>
+                    {/*<Select*/}
+                    {/*  className="bg-white"*/}
+                    {/*  label="Chọn nguồn truyện"*/}
+                    {/*  success*/}
+                    {/*  placeholder={'Chọn nguồn truyện'}*/}
+                    {/*  value={currentServer}*/}
+                    {/*  onPointerEnterCapture={undefined}*/}
+                    {/*  onPointerLeaveCapture={undefined}*/}
+                    {/*  onChange={(val) => {*/}
+                    {/*    setCurrentServer(val);*/}
+                    {/*    setValue('genre', val);*/}
+                    {/*    handleChangeServer(val);*/}
+                    {/*  }}*/}
+                    {/*>*/}
+                    {/*  {serverOptions.map((source, index) => {*/}
+                    {/*    return (*/}
+                    {/*      <Option key={index} value={source.value}>*/}
+                    {/*        {source.label}*/}
+                    {/*      </Option>*/}
+                    {/*    );*/}
+                    {/*  })}*/}
+                    {/*</Select>*/}
+                  </div>
+                </div>
                 {/* {sources.map((source) => (
                       <Button
                         key={source.name}
@@ -309,7 +382,8 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
             </div>
             <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">
-              <div className="max-h-[8rem] fixed ml-[-3rem] py-1 action-menu bg-app_primary rounded-xl justify-center items-center align-middle flex flex-col w-[3rem]">
+              <div
+                className="max-h-[8rem] fixed ml-[-3rem] py-1 action-menu bg-app_primary rounded-xl justify-center items-center align-middle flex flex-col w-[3rem]">
                 <IconButton
                   onClick={() => toggleMenuDialog(true, setOpenChapterCategories)}
                   className="bg-transparent shadow-none hover:bg-app_tertiary"

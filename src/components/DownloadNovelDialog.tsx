@@ -21,7 +21,7 @@ interface Chapter {
 export interface DownloadNovelDialogProps {
   open: boolean;
   handleClose: () => void;
-  handleDownload: (a: any, b: any, c: any) => void;
+  handleDownload: (a: any, b: any) => void;
   listFileNameExtensions: string[];
   chapterStart: any;
   listChapterEnds: Chapter[];
@@ -32,8 +32,6 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
   const { setValue } = useForm();
   const [selectedFileExt, setSelectedFileExt] = useState<any>('');
   const [chapterEnd, setChapterEnd] = useState<any>(chapterStart.slug);
-  // TODO: fetch source list and handle download novel with that source
-  const [sourceList, setSourceList] = useState<any>(['truyen.tangthuvien.vn', 'nhattruyen.com']);
 
   useEffect(() => {
     if (listFileNameExtensions.length > 0) {
@@ -87,7 +85,6 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
             <div className="flex flex-col space-y-10">
               <Typography variant="h6" className="text-app_primary">Từ:</Typography>
               <Typography variant="h6" className="text-app_primary">Đến:</Typography>
-              <Typography variant="h6" className="text-app_primary">Định dạng:</Typography>
             </div>
             <div className="flex flex-col basis-2/3 space-y-6">
               <Input label='Chương bắt đầu' value={chapterStart.label} readOnly></Input>
@@ -109,23 +106,23 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
                   );
                 })}
               </Select>
-              {/* <Input type="number" label="Số chương" /> */}
-              <Select
-                id='fileExt'
-                label="Đuôi tệp"
-                value={selectedFileExt}
-                onChange={(val) => {
-                  setSelectedFileExt(val);
-                  setValue('fileExt', val);
-                }}>
-                {listFileNameExtensions.map((val, index) => {
-                  return (
-                    <Option key={index} value={val}>
-                      {val}
-                    </Option>
-                  );
-                })}
-              </Select>
+              {/*/!* <Input type="number" label="Số chương" /> *!/*/}
+              {/*<Select*/}
+              {/*  id='fileExt'*/}
+              {/*  label="Đuôi tệp"*/}
+              {/*  value={selectedFileExt}*/}
+              {/*  onChange={(val) => {*/}
+              {/*    setSelectedFileExt(val);*/}
+              {/*    setValue('fileExt', val);*/}
+              {/*  }}>*/}
+              {/*  {listFileNameExtensions.map((val, index) => {*/}
+              {/*    return (*/}
+              {/*      <Option key={index} value={val}>*/}
+              {/*        {val}*/}
+              {/*      </Option>*/}
+              {/*    );*/}
+              {/*  })}*/}
+              {/*</Select>*/}
             </div>
           </div>
         </DialogBody>
@@ -150,12 +147,12 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
                   </MenuHandler>
                   <MenuList className="z-[10000]">
                     {
-                      sourceList.map((val, index) => {
+                      listFileNameExtensions.map((val, index) => {
                         return (
                           <MenuItem
                             key={index}
                             onClick={() => {
-                              handleDownload(val, selectedFileExt, chapterEnd);
+                              handleDownload(val, chapterEnd);
                               setValue('source', val);
                             }}
                           >

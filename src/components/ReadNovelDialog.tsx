@@ -64,7 +64,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
           <div>
           </div>
           <div>
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" className="text-app_primary">
               Truyện tương tự
             </Typography>
           </div>
@@ -91,11 +91,11 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
         </DialogHeader>
         <DialogBody className="p-0">
           <div className="flex flex-col justify-center items-center">
-            <div className="flex flex-row space-x-2 p-0">
+            <div className="flex flex-row space-x-2 p-0 text-app_tertiary">
               <Typography variant="h6">Server: </Typography>
               <Typography variant="h6">{server}</Typography>
             </div>
-            <div className="search-input flex flex-row mt-5">
+            <div className="search-input flex flex-row mt-5 w-[40rem]">
               <label htmlFor="simple-search" className="sr-only">
                 Search
               </label>
