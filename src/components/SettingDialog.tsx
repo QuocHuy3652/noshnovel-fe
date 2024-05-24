@@ -81,6 +81,11 @@ export const SettingDialog = (props:SettingDialogProps) => {
 
   const bgColors = [
     {
+      name: 'white',
+      class: '!bg-white',
+      value: 'rgb(255 255 255 / var(--tw-bg-opacity))',
+    },
+    {
       name: 'secondary',
       class: '!bg-app_secondary',
       value: 'rgb(209 244 188 / var(--tw-bg-opacity))',
