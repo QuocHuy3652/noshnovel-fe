@@ -445,7 +445,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                   </svg>
                 </IconButton>
               </div>
-              <div className="py-[3rem] h-full rounded-xl page-detail bg-white w-[70vw] flex flex-col">
+              <div className="py-[3rem] h-full rounded-xl page-detail bg-white min-w-[70vw] flex flex-col">
                 <div className="chapter-name text-center">
                   <Typography
                     className="text-app_primary"
