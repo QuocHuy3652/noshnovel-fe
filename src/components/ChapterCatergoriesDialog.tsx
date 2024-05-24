@@ -15,7 +15,6 @@ import { createSearchParams, useLocation } from 'react-router-dom';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 
-
 export interface ChapterCatergoriesDialog {
   open: boolean;
   handleClose: () => void;
@@ -32,7 +31,6 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isChangePage, setIsChangePage] = useState(false);
-
 
   // TODO: get novel slug & server
   const novelSlug = params.novelSlug;
@@ -67,29 +65,21 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     const param: any = {};
     param.server = params.server?.toString();
     param.novelSlug = params.novelSlug?.toString();
-    param.chapterSlug = toSlug(data)
+    param.chapterSlug = toSlug(data);
     window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
   };
 
   return (
     <>
-      <Dialog
-        open={open}
-        size={size || "lg"}
-        handler={handleClose}>
+      <Dialog open={open} size={size || 'lg'} handler={handleClose}>
         <DialogHeader className="justify-between">
-          <div>
-          </div>
+          <div></div>
           <div>
             <Typography variant="h5" color="blue-gray">
               Danh sách chương
             </Typography>
           </div>
-          <IconButton
-            color="blue-gray"
-            size="sm"
-            variant="text"
-            onClick={handleClose}>
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -98,11 +88,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
               strokeWidth={2}
               className="h-5 w-5"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </IconButton>
         </DialogHeader>
@@ -116,8 +102,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             onPageChange={handlePageChange}
             onReadNovel={handleReadNovel}
           />
-          {isChangePage && <Loading></Loading>}
-
+          {isChangePage && <Loading isBlur={false}></Loading>}
         </DialogBody>
         {/* <DialogFooter className={'text-center justify-center'} >
           <Button
@@ -136,5 +121,5 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
         </DialogFooter> */}
       </Dialog>
     </>
-  )
-}
+  );
+};

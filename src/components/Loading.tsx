@@ -2,12 +2,12 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { HashLoader } from 'react-spinners';
 
-const Loading = ({ bgColor = 'rgba(0, 0, 0, 0.4)' }) => {
+const Loading = ({ bgColor = 'rgba(0, 0, 0, 0.4)', isBlur = true }) => {
   return (
     <Backdrop
       sx={{
         color: '#fff',
-        backgroundColor: bgColor,
+        backgroundColor: isBlur ? bgColor : 'transparent',
         position: 'fixed',
       }}
       style={{

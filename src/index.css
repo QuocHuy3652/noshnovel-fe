@@ -27,7 +27,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   margin: 0;
-  overflow-y: scroll;
+  overflow-y: hidden;
   padding-bottom: 5rem;
 }
 

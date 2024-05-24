@@ -14,6 +14,7 @@ import { Button } from '@material-tailwind/react';
 import nosh_search from '/src/assets/nosh_search.png';
 import Spinner from './Spinner';
 import Loading from '~/components/Loading';
+import smoothscroll from 'smoothscroll-polyfill';
 
 interface OptionType {
   label: string;
@@ -91,6 +92,9 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
         search: createSearchParams(param).toString(),
       });
     }
+    smoothscroll.polyfill();
+
+    window.scrollTo({ top: 275, behavior: 'smooth' });
   };
 
   const customStyles = {

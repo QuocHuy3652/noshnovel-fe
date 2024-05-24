@@ -7,7 +7,13 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import { ChapterCatergoriesDialog } from '~/components/ChapterCatergoriesDialog.tsx';
 import { SettingDialog } from '~/components/SettingDialog.tsx';
 import { DownloadNovelDialog } from '~/components/DownloadNovelDialog.tsx';
-import { apiGetNovelContent, apiNovelDetail, apiGetFileNameExtension, apiGetNovelChapter, apiPostNovelDownload } from '~/apis';
+import {
+  apiGetNovelContent,
+  apiNovelDetail,
+  apiGetFileNameExtension,
+  apiGetNovelChapter,
+  apiPostNovelDownload,
+} from '~/apis';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
@@ -87,7 +93,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       if (result) {
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter);
-        setCurrentContent(result.content.replace(/\r\n/g, '<br/>'));
+        setCurrentContent(result.content.replace(/\r\n|\n/g, '<br/>'));
         if (author) {
           setAuthor(author.author.name);
         }
@@ -119,9 +125,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     // };
 
     // fetchChapterEnds();
-    const index = chapters.findIndex(e => e.slug == currentChapter.slug)
+    const index = chapters.findIndex((e) => e.slug == currentChapter.slug);
     setListChapterEnds(chapters.slice(index, index + 5));
-  }, [chapters])
+  }, [chapters]);
 
   const getPreviousChapter = () => {
     const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter.label);
@@ -143,20 +149,25 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
-  const onDownload = () => { };
+  const onDownload = () => {};
 
-  const handleSave = () => { };
+  const handleSave = () => {};
 
   const handleDownload = async (selectedFileExt: any, chapterEnd: any) => {
     setIsdownloading(true);
-    const chapterSlugs = listChapterEnds.slice(listChapterEnds.findIndex(e => e.slug === currentChapter.slug), listChapterEnds.findIndex(e => e.slug === chapterEnd) + 1).map(e => e.slug);
+    const chapterSlugs = listChapterEnds
+      .slice(
+        listChapterEnds.findIndex((e) => e.slug === currentChapter.slug),
+        listChapterEnds.findIndex((e) => e.slug === chapterEnd) + 1,
+      )
+      .map((e) => e.slug);
     const response: any = await apiPostNovelDownload({
       server,
       fileExtension: selectedFileExt,
       novelSlug,
-      novelStyling: "",
-      chapterSlugs
-    })
+      novelStyling: '',
+      chapterSlugs,
+    });
     const fileExtension = `.${selectedFileExt}`;
     const url = window.URL.createObjectURL(response);
     const link = document.createElement('a');
@@ -170,7 +181,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     setIsdownloading(false);
   };
 
-  const handleSaveSetting = () => { };
+  const handleSaveSetting = () => {};
 
   const toggleMenuDialog = (isOpen: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(isOpen);
@@ -220,15 +231,17 @@ export const NovelReader = (props: NovelReaderProps) => {
     return (c / 2) * (t * t * t + 2) + b;
   };
   const handleChangeServer = (data: any) => {
-    console.log(data, server)
+    console.log(data, server);
     if (data !== server) {
       setOpenReadDialog(true);
       setServerChange(data);
     }
-  }
+  };
   return (
     <>
-      {isLoading ? <Loading></Loading> :
+      {isLoading ? (
+        <Loading></Loading>
+      ) : (
         <div className="wrapper w-full h-full flex flex-col items-center justify-center px-[10rem] mt-[2rem]">
           <div className="novel-wrapper text-center">
             <div className="novel-title">
@@ -242,15 +255,19 @@ export const NovelReader = (props: NovelReaderProps) => {
                 {currentTitle}
               </Typography>
             </div>
-            {author !== '' &&
+            {author !== '' && (
               <div className="novel-author">
-                <Typography className="text-app_primary" variant="h5" placeholder={undefined}
+                <Typography
+                  className="text-app_primary"
+                  variant="h5"
+                  placeholder={undefined}
                   onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}>
+                  onPointerLeaveCapture={undefined}
+                >
                   Tác giả: {author}
                 </Typography>
               </div>
-            }
+            )}
             <div className="novel-source flex flex-row w-full justify-end">
               <div className="w-[10rem] mr-[3rem] flex flex-row">
                 <Select
@@ -264,7 +281,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                   onChange={(val) => {
                     setCurrentServer(val);
                     setValue('genre', val);
-                    handleChangeServer(val)
+                    handleChangeServer(val);
                   }}
                 >
                   {serverOptions.map((source, index) => {
@@ -410,13 +427,14 @@ export const NovelReader = (props: NovelReaderProps) => {
             </div>
           </div>
         </div>
-      }
+      )}
 
       <ChapterCatergoriesDialog
         open={openChapterCategories}
         handleSave={handleSave}
         handleClose={() => toggleMenuDialog(false, setOpenChapterCategories)}
-        params={params} />
+        params={params}
+      />
       <SettingDialog
         open={openSettings}
         handleClose={() => toggleMenuDialog(false, setOpenSettings)}
@@ -436,7 +454,7 @@ export const NovelReader = (props: NovelReaderProps) => {
         handleClose={() => setOpenReadDialog(false)}
         server={serverChange}
         title={currentTitle}
-        namePage='reader'
+        namePage="reader"
       />
     </>
   );
