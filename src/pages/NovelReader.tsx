@@ -89,11 +89,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     chapterSlug: searchParams.get('chapterSlug'),
   };
   const { serverList } = useServerStore();
-  const sources = serverList.map((name) => ({ name }));
   const { register, handleSubmit, setValue } = useForm();
   const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
-
   const [currentServer, setCurrentServer] = useState<any>({ value: params.server, label: params.server });
   const [currentChapter, setCurrentChapter] = React.useState<any>('');
   const [currentContent, setCurrentContent] = React.useState<string>('');
@@ -113,7 +111,11 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
   const [isdownloading, setIsdownloading] = useState(false);
   const [serverChange, setServerChange] = useState(server);
-
+  const [textColor, setTextColor] = useState('black');
+  const [fontSize, setFontSize] = useState(14);
+  const [fontFamily, setFontFamily] = useState('Arial');
+  const [bgColor, setBgColor] = useState('white');
+  const [lineHeight, setLineHeight] = useState(1.5);
   useEffect(() => {
     if (novelSlug && server) {
       setCurrentChapterList(novelSlug, server);
@@ -445,10 +447,18 @@ export const NovelReader = (props: NovelReaderProps) => {
                   </svg>
                 </IconButton>
               </div>
-              <div className="py-[3rem] h-full rounded-xl page-detail bg-white min-w-[70vw] flex flex-col">
+              <div
+                style={{
+                  color: textColor ?? 'var(--color-app_primary)',
+                  lineHeight: lineHeight ?? 1.5,
+                  fontSize: fontSize ?? '1rem',
+                  fontFamily: fontFamily ?? 'Arial, Helvetica, sans-serif',
+                  backgroundColor: bgColor ?? 'var(white)',
+                }}
+                className="py-[3rem] h-full rounded-xl page-detail bg-white min-w-[70vw] flex flex-col">
                 <div className="chapter-name text-center">
                   <Typography
-                    className="text-app_primary"
+                    // className="text-app_primary"
                     variant="h4"
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
@@ -459,7 +469,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                 </div>
                 <div
                   dangerouslySetInnerHTML={{ __html: currentContent }}
-                  className="novel-content text-black text-justify text-left p-[3rem]"
+                  className="novel-content text-justify text-left p-[3rem]"
                 ></div>
               </div>
             </div>
@@ -513,7 +523,12 @@ export const NovelReader = (props: NovelReaderProps) => {
       <SettingDialog
         open={openSettings}
         handleClose={() => toggleMenuDialog(false, setOpenSettings)}
-        handleSave={handleSaveSetting}
+        setFontFamily={setFontFamily}
+        setFontSize={setFontSize}
+        setBackgroundColor={setBgColor}
+        setFontColor={setTextColor}
+        setLineHeight={setLineHeight}
+        // handleSave={handleSaveSetting}
       />
       <DownloadNovelDialog
         open={openDownload}
