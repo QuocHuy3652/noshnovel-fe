@@ -6,13 +6,20 @@ import { Navbar, ReadHistory, SearchResult } from '~/components';
 import { Dashboard, NovelDetails, NovelReader } from '~/pages';
 import { path } from '~/constants';
 import { useServerStore } from '~/store';
-
+import { useDownloadStore } from './store/useDownloadStore';
+import useSignal from './hooks/useSignal';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 function App() {
   const { getServerList } = useServerStore();
+  const { getFileExtensions } = useDownloadStore();
+
   useEffect(() => {
     getServerList();
+    getFileExtensions();
   }, []);
 
+  useSignal();
   return (
     <>
       <Navbar />
@@ -24,6 +31,7 @@ function App() {
         <Route path={path.DETAIL} element={<NovelDetails />} />
         <Route path={path.READER} element={<NovelReader />}></Route>
       </Routes>
+      <ToastContainer />
     </>
   );
 }
