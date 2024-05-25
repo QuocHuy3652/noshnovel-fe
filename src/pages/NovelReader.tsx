@@ -138,7 +138,6 @@ export const NovelReader = (props: NovelReaderProps) => {
       setIsLoading(true);
       const result: any = await apiGetNovelContent(params);
       const author: any = await apiNovelDetail({ server: params.server, novelSlug: params.novelSlug });
-      console.log(result)
       if (result) {
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter);
@@ -176,7 +175,6 @@ export const NovelReader = (props: NovelReaderProps) => {
       } else {
         const next = await fetchChapters(parseInt(chapterIndex) + 1, 1);
         const prev = await fetchChapters(parseInt(chapterIndex) - 1, 1);
-        console.log(next, prev)
         setNextChapter(next.data[0]);
         setPrevChapter(prev.data[0]);
       }
@@ -306,7 +304,6 @@ export const NovelReader = (props: NovelReaderProps) => {
     return (c / 2) * (t * t * t + 2) + b;
   };
   const handleChangeServer = (data: any) => {
-    console.log(data, server);
     if (data !== server) {
       setOpenReadDialog(true);
       setServerChange(data);

@@ -168,7 +168,6 @@ export const SettingDialog = (props:SettingDialogProps) => {
                 <>
                   {
                     fontFamily.map((item, index) => {
-                      //  console.log(index);
                       return <>
                         <Button
                           style={{
@@ -178,7 +177,6 @@ export const SettingDialog = (props:SettingDialogProps) => {
                           }}
                           onClick={() => {
                             setDialogActiveFont(index);
-                            //  console.log('index:', index);
                           }
                           }
                           className={`font-family text-[0.5rem] option-1 text-black bg-white border`}

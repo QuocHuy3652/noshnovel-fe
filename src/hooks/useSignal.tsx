@@ -21,7 +21,6 @@ const useSignal = () => {
       if (!toast.isActive('downloadFormatUpdateToast')) {
         toast.info('Download format list has been updated', { toastId: 'downloadFormatUpdateToast' });
         getFileExtensions();
-        console.log(fileExtensions);
       }
     });
 
@@ -29,7 +28,6 @@ const useSignal = () => {
       if (!toast.isActive('novelServerUpdateToast')) {
         toast.success('Novel server list has been updated', { toastId: 'novelServerUpdateToast' });
         getServerList();
-        console.log(serverList);
       }
     });
 

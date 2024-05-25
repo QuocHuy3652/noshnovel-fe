@@ -50,16 +50,13 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
     if (result) {
       setNovels(result.data);
     }
-    console.log(result)
     if (namePage === 'reader' && result.data.length > 0) {
       setIsLoadingChapter(true)
       const chapter: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: parseInt(chapterIndex), perPage: 1 });
-      console.log(chapter)
       if (chapter.data.length > 0) {
         setChapterChangeServer(chapter.data[0]);
       } else {
         const chapterEnd: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: chapter.total, perPage: 1 });
-        console.log(chapterEnd)
         if (chapterEnd.data.length > 0) {
           setChapterChangeServer(chapterEnd.data[0]);
         }

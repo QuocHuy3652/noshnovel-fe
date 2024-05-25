@@ -70,7 +70,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       // Load the genre list from the server
 
       getGenreList(selectedServer).then((genreList) => {
-        console.log(genreList); // Add this line
         const options = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
         setOptions(options);
         setGenreCache((prev) => ({ ...prev, [selectedServer]: options }));
@@ -196,7 +195,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       }),
                     }}
                     onChange={(val) => {
-                      // console.log(options, selectedOption)
                       setSelectedOption(val);
                       setValue('keyword', '');
                       setValue('genre', val?.value);

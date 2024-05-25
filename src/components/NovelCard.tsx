@@ -15,7 +15,6 @@ export type NovelCardProps = {
 export const NovelCard = (props: NovelCardProps) => {
   const { title, author, coverImage, description, totalChapters, category, chapterLabel, url } = props;
   const navigate = useNavigate();
-  // console.log(coverImage);
 
   const handleClick = () => {
     if (url) {

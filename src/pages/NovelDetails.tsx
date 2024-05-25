@@ -8,7 +8,7 @@ import { createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { apiGetGenre, apiGetNovelChapter, apiNovelDetail } from '~/apis';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
-import { insertToHistory, toSlug, updateHistory } from '~/utils/fn';
+import { insertToHistory, toSlug } from '~/utils/fn';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -120,7 +120,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
       if (page === 1) {
-        // console.log(response.data[0])
         setChapterOne(response.data[0]);
       }
       setChapters(response.data);
@@ -137,7 +136,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   useEffect(() => {
     fetchChapters();
   }, [novelSlug]);
-  // console.log(chapters);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -151,7 +149,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
 
     param.genre = toSlug(data);
     param.page = '1';
-    // console.log(param);
     navigate({
       pathname: `/${path.SEARCH}`,
       search: createSearchParams(param).toString(),
@@ -164,16 +161,12 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     param.novelSlug = novelSlug?.toString();
     param.chapterSlug = toSlug(data.slug);
     param.chapterIndex = data.chapterIndex;
-    const chapter = {
-      slug: param.chapterSlug,
-      label: data,
-    };
     const novelInfo = {
       coverImage: novelDetail.coverImage,
       title: novelDetail.title,
       novelSlug: param.novelSlug,
     };
-    insertToHistory(chapter, novelInfo, param.server);
+    insertToHistory(data, novelInfo, param.server);
 
     navigate({
       pathname: `/${path.READER}`,
@@ -355,6 +348,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                           novelSlug={novelSlug}
                           coverImage={novelDetail.coverImage}
                           title={novelDetail.title}
+                          isInsert={true}
                         />
                       </TabPanel>
                     ),

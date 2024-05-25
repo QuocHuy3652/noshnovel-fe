@@ -107,6 +107,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             onPageChange={handlePageChange}
             onReadNovel={handleReadNovel}
             chapterSlug={currentChapterSlug}
+            isInsert={false}
           />
           {isChangePage && <Loading isBlur={false}></Loading>}
         </DialogBody>

@@ -15,10 +15,11 @@ export interface ChapterListProps {
   title: string | null;
   coverImage: string | null;
   chapterSlug: string | null;
+  isInsert: boolean;
 }
 
 export const ChapterList = (props: ChapterListProps) => {
-  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug } = props;
+  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug, isInsert } = props;
   const [searchParams] = useSearchParams();
   const server : any = searchParams.get('server');
   
@@ -28,7 +29,9 @@ export const ChapterList = (props: ChapterListProps) => {
   const handleReadNovel = (data: any) => {
     if (!chapterSlug || chapterSlug !== data.slug) {
       onReadNovel(data);
-      insertToHistory(data, props, server);
+      if (isInsert) {
+        insertToHistory(data, props, server);
+      }
     }
   };
 
