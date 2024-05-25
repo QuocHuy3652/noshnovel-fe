@@ -5,6 +5,7 @@ interface Chapter {
   label: string;
   slug: string;
   name: string;
+  chapterIndex: string;
 }
 
 interface ChapterStore {

@@ -26,6 +26,7 @@ export const updateHistory = (
   server: string | null,
   novelSlug: string | null,
   newChapterSlug: string | null,
+  newChapterIndex: string | null,
   newChapterLabel: string | undefined,
 ) => {
   // Get the current history from localStorage
@@ -33,10 +34,9 @@ export const updateHistory = (
 
   // Find the chapter with the same novelSlug and server
   const existingIndex = history.findIndex((item: any) => item.novelSlug === novelSlug && item.server === server);
-
   // If it exists, update its url and chapterLabel
   if (existingIndex !== -1) {
-    history[existingIndex].url = `novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${newChapterSlug}`;
+    history[existingIndex].url = `novel-reader?server=${server}&novelSlug=${novelSlug}&chapterSlug=${newChapterSlug}&chapterIndex=${newChapterIndex}`;
     history[existingIndex].chapterLabel = newChapterLabel;
 
     // Move the updated item to the beginning of the history
@@ -54,9 +54,9 @@ export const insertToHistory = (chapter: any, props: any, server: string) => {
   let newChapter = {
     coverImage: props.coverImage,
     title: props.title,
-    url: `/novel-reader?server=${server}&novelSlug=${props.novelSlug}&chapterSlug=${chapter.slug}`,
+    url: `/novel-reader?server=${server}&novelSlug=${props.novelSlug}&chapterSlug=${chapter.slug}&chapterIndex=${chapter.label.chapterIndex}`,
     novelSlug: props.novelSlug,
-    chapterLabel: chapter.label,
+    chapterLabel: chapter.label.label,
     server: server,
   };
 

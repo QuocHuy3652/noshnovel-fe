@@ -14,6 +14,7 @@ import { toSlug } from '~/utils/fn';
 import { createSearchParams, useLocation } from 'react-router-dom';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
+import { updateHistory } from '~/utils/fn';
 
 export interface ChapterCatergoriesDialog {
   open: boolean;
@@ -29,8 +30,9 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(Math.ceil(params.chapterIndex / itemsPerPage));
   const [isChangePage, setIsChangePage] = useState(false);
+  const [currentChapterSlug, setCurrentChapterSlug] = useState('');
 
   // TODO: get novel slug & server
   const novelSlug = params.novelSlug;
@@ -39,7 +41,8 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const fetchChapters = async (page: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: itemsPerPage });
-      // console.log(response)
+      const currentIndex = response.data.findIndex((e: { chapterIndex: any; }) => e.chapterIndex === parseInt(params.chapterIndex));
+      if (currentIndex >= 0) setCurrentChapterSlug(response.data[currentIndex].slug);
       setChapters(response.data);
       setTotalItems(response.total);
       setTotalPages(response.totalPages);
@@ -52,7 +55,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   };
 
   useEffect(() => {
-    fetchChapters();
+    fetchChapters(currentPage);
   }, [novelSlug]);
 
   const handlePageChange = (page: number) => {
@@ -62,12 +65,12 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   };
 
   const handleReadNovel = (data: any) => {
-    console.log(data)
     const param: any = {};
     param.server = params.server?.toString();
     param.novelSlug = params.novelSlug?.toString();
     param.chapterSlug = toSlug(data.slug);
     param.chapterIndex = data.chapterIndex;
+    updateHistory(param.server, param.novelSlug, param.chapterSlug, param.chapterIndex, data.label);
     window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
   };
 
@@ -103,6 +106,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             totalPages={totalPages}
             onPageChange={handlePageChange}
             onReadNovel={handleReadNovel}
+            chapterSlug={currentChapterSlug}
           />
           {isChangePage && <Loading isBlur={false}></Loading>}
         </DialogBody>

@@ -26,10 +26,11 @@ export const NovelCard = (props: NovelCardProps) => {
       const server = urlParams.get('server');
       const novelSlug = urlParams.get('novelSlug');
       const chapterSlug = urlParams.get('chapterSlug');
+      const chapterIndex = urlParams.get('chapterIndex');
 
       // Update the history
       if (server && novelSlug && chapterSlug) {
-        updateHistory(server, novelSlug, chapterSlug, chapterLabel);
+        updateHistory(server, novelSlug, chapterSlug, chapterIndex, chapterLabel);
       }
     }
   };

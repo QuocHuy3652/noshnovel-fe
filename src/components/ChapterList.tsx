@@ -15,10 +15,11 @@ export interface ChapterListProps {
   novelSlug: string | null;
   title: string | null;
   coverImage: string | null;
+  chapterSlug: string | null;
 }
 
 export const ChapterList = (props: ChapterListProps) => {
-  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug } = props;
+  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug } = props;
   const [currentPage, setCurrentPage] = useState(props.currentPage);
   const { chapterList, setCurrentChapterList } = useChapterStore();
   const server = localStorage.getItem('selectedServer') || '';
@@ -37,8 +38,10 @@ export const ChapterList = (props: ChapterListProps) => {
     onPageChange(event.selected + 1);
   };
   const handleReadNovel = (data: any) => {
-    onReadNovel(data);
-    insertToHistory(data, props, server);
+    if (!chapterSlug || chapterSlug !== data.slug) {
+      onReadNovel(data);
+      insertToHistory(data, props, server);
+    }
   };
 
   return (
@@ -56,7 +59,7 @@ export const ChapterList = (props: ChapterListProps) => {
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-              className="hover:underline"
+              className={`hover:underline ${chapterSlug && chapterSlug === chapter.slug ? 'text-app_primary font-bold' : ''} `}
             >
               {chapter.label} - {chapter.name}
             </div>

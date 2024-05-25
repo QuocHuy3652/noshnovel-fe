@@ -36,7 +36,7 @@ interface Chapter {
   label: string;
   slug: string;
   name: string;
-  chapterIndex: number;
+  chapterIndex: string;
 }
 
 const customStyles = {
@@ -88,6 +88,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     server: searchParams.get('server'),
     novelSlug: searchParams.get('novelSlug'),
     chapterSlug: searchParams.get('chapterSlug'),
+    chapterIndex: searchParams.get('chapterIndex')
   };
   const { serverList } = useServerStore();
   const { register, handleSubmit, setValue } = useForm();
@@ -105,7 +106,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const endOfPageRef = useRef<HTMLDivElement | null>(null);
   const [showButton, setShowButton] = useState(false);
   const [isAtEnd, setIsAtEnd] = useState(false);
-  const { novelSlug, chapterSlug, server } = params;
+  const { novelSlug, chapterSlug, server, chapterIndex } = params;
   const [author, setAuthor] = useState('');
   const [openReadDialog, setOpenReadDialog] = useState(false);
   const [listFileNameExtensions, setListFileNameExtensions] = useState([]);
@@ -179,7 +180,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       const prevChapter = chapters[currentIndex - 1];
       const prevChapterSlug = prevChapter.slug;
       const prevChapterIndex = prevChapter.chapterIndex;
-      updateHistory(server, novelSlug, prevChapter.slug, prevChapter.label);
+      updateHistory(server, novelSlug, prevChapter.slug, prevChapterIndex, prevChapter.label);
       window.location.href = `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}&chapterIndex=${prevChapterIndex}`;
     }
   };
@@ -190,7 +191,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       const nextChapter = chapters[currentIndex + 1];
       const nextChapterSlug = nextChapter.slug;
       const nextChapterIndex = nextChapter.chapterIndex;
-      updateHistory(server, novelSlug, nextChapter.slug, nextChapter.label);
+      updateHistory(server, novelSlug, nextChapter.slug, nextChapterIndex, nextChapter.label);
       window.location.href = `${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}&chapterIndex=${nextChapterIndex}`;
     }
   };
