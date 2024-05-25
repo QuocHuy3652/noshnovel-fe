@@ -37,7 +37,7 @@ export const ChapterList = (props: ChapterListProps) => {
     onPageChange(event.selected + 1);
   };
   const handleReadNovel = (data: any) => {
-    onReadNovel(data.slug);
+    onReadNovel(data);
     insertToHistory(data, props, server);
   };
 

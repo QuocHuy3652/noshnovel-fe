@@ -62,10 +62,12 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   };
 
   const handleReadNovel = (data: any) => {
+    console.log(data)
     const param: any = {};
     param.server = params.server?.toString();
     param.novelSlug = params.novelSlug?.toString();
-    param.chapterSlug = toSlug(data);
+    param.chapterSlug = toSlug(data.slug);
+    param.chapterIndex = data.chapterIndex;
     window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
   };
 

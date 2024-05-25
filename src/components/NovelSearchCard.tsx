@@ -24,7 +24,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
       localStorage.setItem('selectedServer', server);
       window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
     } else if (namePage === 'reader') {
-      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=chuong-1`;
+      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=chuong-1&chapterIndex=1`;
     }
   };
   return (

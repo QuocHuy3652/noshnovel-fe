@@ -121,7 +121,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page });
       if (page === 1) {
         // console.log(response.data[0])
-        setChapterOne(response.data[0].slug);
+        setChapterOne(response.data[0]);
       }
       setChapters(response.data);
       setTotalItems(response.total);
@@ -162,8 +162,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     const param: any = {};
     param.server = selectedServer?.toString();
     param.novelSlug = novelSlug?.toString();
-    param.chapterSlug = toSlug(data);
-
+    param.chapterSlug = toSlug(data.slug);
+    param.chapterIndex = data.chapterIndex;
     const chapter = {
       slug: param.chapterSlug,
       label: data,

@@ -36,6 +36,7 @@ interface Chapter {
   label: string;
   slug: string;
   name: string;
+  chapterIndex: number;
 }
 
 const customStyles = {
@@ -176,9 +177,10 @@ export const NovelReader = (props: NovelReaderProps) => {
     const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter.label);
     if (currentIndex > 0) {
       const prevChapter = chapters[currentIndex - 1];
-      const prevChapterSlug = chapters[currentIndex - 1].slug;
+      const prevChapterSlug = prevChapter.slug;
+      const prevChapterIndex = prevChapter.chapterIndex;
       updateHistory(server, novelSlug, prevChapter.slug, prevChapter.label);
-      window.location.href = `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}`;
+      window.location.href = `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}&chapterIndex=${prevChapterIndex}`;
     }
   };
 
@@ -187,8 +189,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     if (currentIndex < chapters.length - 1) {
       const nextChapter = chapters[currentIndex + 1];
       const nextChapterSlug = nextChapter.slug;
+      const nextChapterIndex = nextChapter.chapterIndex;
       updateHistory(server, novelSlug, nextChapter.slug, nextChapter.label);
-      window.location.href = `${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}`;
+      window.location.href = `${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}&chapterIndex=${nextChapterIndex}`;
     }
   };
 
