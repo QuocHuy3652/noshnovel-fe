@@ -186,17 +186,22 @@ export const NovelReader = (props: NovelReaderProps) => {
   }, [novelSlug, server]);
 
   useEffect(() => {
-    // const fetchChapterEnds = async () => {
-    //   const result: any = await apiGetNovelChapter({server, novelSlug, page: 2, perPage: });
-    //   if (result) {
-    //     setListFileNameExtensions(result);
-    //   }
-    // };
+    const fetchChapterEnds = async () => {
+      if (parseInt(chapterIndex) >= 6) {
+        const result = await fetchChapters(2, parseInt(chapterIndex) - 1);
+        if (result) {
+          setListChapterEnds(result.data.slice(0, 5));
+        }        
+      } else {
+        const result = await fetchChapters(1, 10);
+        if (result) {
+          setListChapterEnds(result.data.slice(parseInt(chapterIndex) - 1, parseInt(chapterIndex) + 4));
+        }  
+      }
+    };
 
-    // fetchChapterEnds();
-    const index = chapters.findIndex((e) => e.slug == currentChapter.slug);
-    setListChapterEnds(chapters.slice(index, index + 5));
-  }, [chapters]);
+    fetchChapterEnds();
+  }, []);
 
   const getPreviousChapter = () => {
     if (parseInt(chapterIndex) > 1) {
