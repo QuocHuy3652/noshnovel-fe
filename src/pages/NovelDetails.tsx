@@ -37,7 +37,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const novelSlug = searchParams.get('novelSlug');
-  const server = localStorage.getItem('selectedServer');
+  const server = searchParams.get('server');
   const [selectedServer, setSelectedServer] = useState(server);
   const [isAvailable, setIsAvailable] = useState(true);
   const [genres, setGenres] = useState<Category[]>([]);
@@ -257,7 +257,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => handleChangeServer(source)}
-                        // disabled={selectedServer === source.name}
+                      // disabled={selectedServer === source.name}
                       >
                         {source.name}
                       </Button>
@@ -366,13 +366,15 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
           </div>
         </div>
       )}
-      <ReadNovelDialog
-        open={openReadDialog}
-        handleClose={() => setOpenReadDialog(false)}
-        server={serverChange}
-        title={novelDetail.title}
-        namePage="detail"
-      />
+      {openReadDialog ?
+        <ReadNovelDialog
+          open={openReadDialog}
+          handleClose={() => setOpenReadDialog(false)}
+          server={serverChange}
+          title={novelDetail.title}
+          namePage="detail"
+        /> : <></>
+      }
     </>
   );
 });

@@ -1,7 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/16/solid';
 import ReactPaginate from 'react-paginate';
-import { useEffect, useState } from 'react';
-import { useChapterStore } from '~/store';
+import { useSearchParams } from 'react-router-dom';
 import { insertToHistory } from '~/utils/fn';
 
 export interface ChapterListProps {
@@ -20,20 +19,9 @@ export interface ChapterListProps {
 
 export const ChapterList = (props: ChapterListProps) => {
   const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug } = props;
-  const [currentPage, setCurrentPage] = useState(props.currentPage);
-  const { chapterList, setCurrentChapterList } = useChapterStore();
-  const server = localStorage.getItem('selectedServer') || '';
-
-  useEffect(() => {
-    if (novelSlug) {
-      setCurrentChapterList(novelSlug, server);
-    }
-  }, [novelSlug]);
-
-  useEffect(() => {
-    setCurrentPage(props.currentPage);
-  }, [props.currentPage]);
-
+  const [searchParams] = useSearchParams();
+  const server : any = searchParams.get('server');
+  
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1);
   };

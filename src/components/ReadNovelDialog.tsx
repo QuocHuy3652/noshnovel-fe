@@ -13,9 +13,16 @@ import React, { useState, useEffect } from 'react';
 import { path } from '~/constants';
 import nosh_search from '~/assets/nosh_search.png';
 import { Novel } from '~/models/Novel';
-import { apiSearchNovel } from '~/apis';
+import { apiSearchNovel, apiGetNovelChapter } from '~/apis';
 import Spinner from './Spinner';
 import { NovelSearchCard } from '.';
+
+interface Chapter {
+  label: string;
+  slug: string;
+  name: string;
+  chapterIndex: string;
+}
 
 export interface ReadNovelDialogProps {
   open: boolean,
@@ -23,28 +30,50 @@ export interface ReadNovelDialogProps {
   server: any,
   title: string,
   namePage: string,
+  chapterIndex: string,
 }
 export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
-  const { open, handleClose, server, title, namePage } = props
+  const { open, handleClose, server, title, namePage, chapterIndex } = props
   const [novels, setNovels] = useState<Novel[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(true);
+  const [isLoadingChapter, setIsLoadingChapter] = useState(true);
   const [keyword, setKeyword] = useState(title);
+  const [chapterChangeServer, setChapterChangeServer] = useState<any>('');
 
   const handleChange = (e: any) => {
     setKeyword(e.target.value);
   };
 
   const fetchSearchNovel = async (keyword: string) => {
-    setIsLoading(true)
+    setIsLoadingSearch(true)
     const result: any = await apiSearchNovel({ server, keyword, page: 1, perPage: 1 });
     if (result) {
       setNovels(result.data);
     }
+    console.log(result)
+    if (namePage === 'reader' && result.data.length > 0) {
+      setIsLoadingChapter(true)
+      const chapter: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: parseInt(chapterIndex), perPage: 1 });
+      console.log(chapter)
+      if (chapter.data.length > 0) {
+        setChapterChangeServer(chapter.data[0]);
+      } else {
+        const chapterEnd: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: chapter.total, perPage: 1 });
+        console.log(chapterEnd)
+        if (chapterEnd.data.length > 0) {
+          setChapterChangeServer(chapterEnd.data[0]);
+        }
+      }
+    }
   };
 
   useEffect(() => {
-    setIsLoading(false);
-  }, [novels])
+    setIsLoadingSearch(false);
+  }, [novels, chapterChangeServer])
+
+  useEffect(() => {
+    setIsLoadingChapter(false);
+  }, [chapterChangeServer])
 
   useEffect(() => {
 
@@ -149,7 +178,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
               </div>
             </div>
           </div>
-          {isLoading ? <div className='my-5'><Spinner></Spinner></div> :
+          {isLoadingSearch || isLoadingChapter ? <div className='my-5'><Spinner></Spinner></div> :
             <div className="novel-history p-3 mt-3">
               {novels && novels.length > 0 ? (
                 novels.map((novel, index) => (
@@ -166,6 +195,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
                         novelSlug={novel.novelSlug}
                         namePage={namePage}
                         server={server}
+                        chapter={chapterChangeServer}
                       />
                     )}
                   </div>

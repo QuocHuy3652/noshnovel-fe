@@ -20,8 +20,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = totalRow * totalCol;
-  const server = localStorage.getItem('selectedServer');
-
+  const server = searchParams.get('server');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

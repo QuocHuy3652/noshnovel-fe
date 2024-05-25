@@ -138,6 +138,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       setIsLoading(true);
       const result: any = await apiGetNovelContent(params);
       const author: any = await apiNovelDetail({ server: params.server, novelSlug: params.novelSlug });
+      console.log(result)
       if (result) {
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter);
@@ -175,6 +176,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       } else {
         const next = await fetchChapters(parseInt(chapterIndex) + 1, 1);
         const prev = await fetchChapters(parseInt(chapterIndex) - 1, 1);
+        console.log(next, prev)
         setNextChapter(next.data[0]);
         setPrevChapter(prev.data[0]);
       }
@@ -191,12 +193,12 @@ export const NovelReader = (props: NovelReaderProps) => {
         const result = await fetchChapters(2, parseInt(chapterIndex) - 1);
         if (result) {
           setListChapterEnds(result.data.slice(0, 5));
-        }        
+        }
       } else {
         const result = await fetchChapters(1, 10);
         if (result) {
           setListChapterEnds(result.data.slice(parseInt(chapterIndex) - 1, parseInt(chapterIndex) + 4));
-        }  
+        }
       }
     };
 
@@ -568,13 +570,16 @@ export const NovelReader = (props: NovelReaderProps) => {
         listChapterEnds={listChapterEnds}
         isdownloading={isdownloading}
       />
-      <ReadNovelDialog
-        open={openReadDialog}
-        handleClose={() => setOpenReadDialog(false)}
-        server={serverChange}
-        title={currentTitle}
-        namePage="reader"
-      />
+      {openReadDialog ?
+        <ReadNovelDialog
+          open={openReadDialog}
+          handleClose={() => setOpenReadDialog(false)}
+          server={serverChange}
+          title={currentTitle}
+          namePage="reader"
+          chapterIndex={chapterIndex}
+        /> : <></>
+      }
     </>
   );
 };

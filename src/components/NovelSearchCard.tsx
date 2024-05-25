@@ -2,6 +2,13 @@ import { ShareIcon, UserCircleIcon, TagIcon, BookOpenIcon, HeartIcon } from '@he
 import { IconText } from '~/components/IconText.tsx';
 import { path } from '~/constants';
 
+interface Chapter {
+  label: string;
+  slug: string;
+  name: string;
+  chapterIndex: string;
+}
+
 export type NovelSeachCardProps = {
   title?: string;
   author?: string;
@@ -13,25 +20,25 @@ export type NovelSeachCardProps = {
   novelSlug?: string;
   namePage?: string; // search / detail / reader
   server?: any;
+  chapter?: Chapter;
 };
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
-  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug, namePage, server } = props;
-  const handleClick = (slug: string | undefined, server: any) => {
+  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug, namePage, server, chapter } = props;
+  const handleClick = (slug: string | undefined, server: any, chapter: Chapter | undefined) => {
     if (namePage === 'search') {
       window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
     } else if (namePage === 'detail') {
-      localStorage.setItem('selectedServer', server);
       window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
     } else if (namePage === 'reader') {
-      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=chuong-1&chapterIndex=1`;
+      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=${chapter?.slug}&chapterIndex=${chapter?.chapterIndex}`;
     }
   };
   return (
     <>
       <div
         className="rounded-2xl bg-white hover:opacity-50 shadow-xl hover:shadow-2xl hover:bg-gray-200 cursor-pointer p-5 flex flex-row  items-stretch relative"
-        onClick={() => handleClick(novelSlug, server)}
+        onClick={() => handleClick(novelSlug, server, chapter)}
       >
         <div className="novel-cover-img">
           <img
