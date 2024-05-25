@@ -12,11 +12,11 @@ import {
   apiNovelDetail,
   apiGetFileNameExtension,
   apiPostNovelDownload,
+  apiGetNovelChapter,
 } from '~/apis';
 import { useLocation } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
-import { useChapterStore } from '~/store';
 import { updateHistory } from '~/utils/fn';
 import { path } from '~/constants';
 import { useForm } from 'react-hook-form';
@@ -96,17 +96,19 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
   const [currentServer, setCurrentServer] = useState<any>({ value: params.server, label: params.server });
   const [currentChapter, setCurrentChapter] = React.useState<any>('');
+  const [prevChapter, setPrevChapter] = React.useState<any>('');
+  const [nextChapter, setNextChapter] = React.useState<any>('');
   const [currentContent, setCurrentContent] = React.useState<string>('');
   const [openChapterCategories, setOpenChapterCategories] = React.useState<boolean>(false);
   const [openSettings, setOpenSettings] = React.useState<boolean>(false);
   const [openDownload, setOpenDownload] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { chapterList, setCurrentChapterList, isLoad } = useChapterStore();
+  const [totalChapter, setTotalChapter] = useState(0);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const endOfPageRef = useRef<HTMLDivElement | null>(null);
   const [showButton, setShowButton] = useState(false);
-  const [isAtEnd, setIsAtEnd] = useState(false);
-  const { novelSlug, chapterSlug, server, chapterIndex } = params;
+  const { novelSlug, chapterSlug, server } = params;
+  const chapterIndex: any = params.chapterIndex;
   const [author, setAuthor] = useState('');
   const [openReadDialog, setOpenReadDialog] = useState(false);
   const [listFileNameExtensions, setListFileNameExtensions] = useState([]);
@@ -118,17 +120,18 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [fontFamily, setFontFamily] = useState('Arial');
   const [bgColor, setBgColor] = useState('white');
   const [lineHeight, setLineHeight] = useState(1.5);
-  useEffect(() => {
-    if (novelSlug && server) {
-      setCurrentChapterList(novelSlug, server);
-    }
-  }, [novelSlug, server]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      setChapters(chapterList);
+  const fetchChapters = async (page: number = 1, perPage: number = 1) => {
+    try {
+      const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage });
+      if (perPage === 1) {
+        setTotalChapter(response.total)
+      }
+      return response;
+    } catch (error) {
+      console.error(error);
     }
-  }, [chapterList, isLoading]);
+  };
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -146,7 +149,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       window.scrollTo(0, 0);
       setIsLoading(false);
     };
-
+    fetchChapters(parseInt(chapterIndex), 1);
     fetchContent();
   }, []);
 
@@ -162,6 +165,27 @@ export const NovelReader = (props: NovelReaderProps) => {
   }, []);
 
   useEffect(() => {
+    const fetchPrevNextChapters = async () => {
+      if (parseInt(chapterIndex) === 1) {
+        const next = await fetchChapters(parseInt(chapterIndex) + 1, 1);
+        setNextChapter(next.data[0]);
+      } else if (parseInt(chapterIndex) === totalChapter) {
+        const prev = await fetchChapters(parseInt(chapterIndex) - 1, 1);
+        setPrevChapter(prev.data[0]);
+      } else {
+        const next = await fetchChapters(parseInt(chapterIndex) + 1, 1);
+        const prev = await fetchChapters(parseInt(chapterIndex) - 1, 1);
+        setNextChapter(next.data[0]);
+        setPrevChapter(prev.data[0]);
+      }
+    };
+    // Gọi hàm async
+    if (novelSlug && server) {
+      fetchPrevNextChapters();
+    }
+  }, [novelSlug, server]);
+
+  useEffect(() => {
     // const fetchChapterEnds = async () => {
     //   const result: any = await apiGetNovelChapter({server, novelSlug, page: 2, perPage: });
     //   if (result) {
@@ -175,9 +199,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   }, [chapters]);
 
   const getPreviousChapter = () => {
-    const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter.label);
-    if (currentIndex > 0) {
-      const prevChapter = chapters[currentIndex - 1];
+    if (parseInt(chapterIndex) > 1) {
       const prevChapterSlug = prevChapter.slug;
       const prevChapterIndex = prevChapter.chapterIndex;
       updateHistory(server, novelSlug, prevChapter.slug, prevChapterIndex, prevChapter.label);
@@ -186,9 +208,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   };
 
   const getNextChapter = () => {
-    const currentIndex = chapters.findIndex((chapter) => chapter.label === currentChapter.label);
-    if (currentIndex < chapters.length - 1) {
-      const nextChapter = chapters[currentIndex + 1];
+    if (parseInt(chapterIndex) < totalChapter) {
       const nextChapterSlug = nextChapter.slug;
       const nextChapterIndex = nextChapter.chapterIndex;
       updateHistory(server, novelSlug, nextChapter.slug, nextChapterIndex, nextChapter.label);
@@ -196,9 +216,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
-  const onDownload = () => {};
+  const onDownload = () => { };
 
-  const handleSave = () => {};
+  const handleSave = () => { };
   // TODO: fetch source list and handle download novel with that source
 
   const handleDownload = async (selectedFileExt: any, chapterEnd: any) => {
@@ -229,7 +249,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     setIsdownloading(false);
   };
 
-  const handleSaveSetting = () => {};
+  const handleSaveSetting = () => { };
 
   const toggleMenuDialog = (isOpen: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(isOpen);
@@ -344,7 +364,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                           className="block w-full"
                           isSearchable={false}
                           defaultValue={currentServer}
-                          // key={currentServer?.value}
+                        // key={currentServer?.value}
                         />
                       </div>
                     </div>
@@ -482,7 +502,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                 className="bg-app_tertiary text-white flex"
                 label="Back"
                 onClick={getPreviousChapter}
-                disabled={currentChapter.label === chapters[0]?.label}
+                disabled={parseInt(chapterIndex) === 1}
               >
                 <ArrowLeftIcon className="w-4 h-4 mr-2" />
                 Chương trước
@@ -491,7 +511,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                 className="bg-app_tertiary text-white flex"
                 label="Next"
                 onClick={getNextChapter}
-                disabled={currentChapter.label === chapters[chapters.length - 1]?.label}
+                disabled={parseInt(chapterIndex) === totalChapter}
               >
                 Chương sau
                 <ArrowRightIcon className="ml-2 w-4 h-4" />
@@ -532,7 +552,7 @@ export const NovelReader = (props: NovelReaderProps) => {
         setBackgroundColor={setBgColor}
         setFontColor={setTextColor}
         setLineHeight={setLineHeight}
-        // handleSave={handleSaveSetting}
+      // handleSave={handleSaveSetting}
       />
       <DownloadNovelDialog
         open={openDownload}
