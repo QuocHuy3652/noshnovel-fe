@@ -50,8 +50,9 @@ export const updateHistory = (
 
 export const insertToHistory = (chapter: any, props: any, server: string) => {
   let history = JSON.parse(localStorage.getItem('history') || '[]');
+  const coverImage = props.coverImage || props.coverUrl;
   let newChapter = {
-    coverImage: props.coverImage,
+    coverImage: coverImage,
     title: props.title,
     url: `/novel-reader?server=${server}&novelSlug=${props.novelSlug}&chapterSlug=${chapter.slug}&chapterIndex=${chapter.chapterIndex}`,
     novelSlug: props.novelSlug,
@@ -72,6 +73,5 @@ export const insertToHistory = (chapter: any, props: any, server: string) => {
   if (history.length > 15) {
     history.pop();
   }
-  console.log('hihihihi')
   localStorage.setItem('history', JSON.stringify(history));
 };

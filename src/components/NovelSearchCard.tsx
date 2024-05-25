@@ -1,6 +1,7 @@
 import { ShareIcon, UserCircleIcon, TagIcon, BookOpenIcon, HeartIcon } from '@heroicons/react/16/solid';
 import { IconText } from '~/components/IconText.tsx';
 import { path } from '~/constants';
+import { insertToHistory } from '~/utils/fn';
 
 interface Chapter {
   label: string;
@@ -31,6 +32,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
     } else if (namePage === 'detail') {
       window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
     } else if (namePage === 'reader') {
+      insertToHistory(chapter, props, server);
       window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=${chapter?.slug}&chapterIndex=${chapter?.chapterIndex}`;
     }
   };
