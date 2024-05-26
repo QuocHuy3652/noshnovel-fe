@@ -11,12 +11,17 @@ Welcome to Noshnovel, a web application designed for a seamless novel reading ex
 - **Search Functionality**: Easily find novels by title, author, or genre.
 
 ## Screenshots
-
-![Homepage](https://github.com/Mike20403/noshnovel-fe/assets/57946382/0dd0ce7c-13cc-4420-8938-4fab8495a9c1)
+![Reading Interface](https://github.com/Mike20403/noshnovel-fe/assets/57946382/56d98f2c-8b9d-4a0d-87b1-7e3e790488b6)
 *Homepage showcasing featured novels.*
 
-![Reading Interface](https://github.com/Mike20403/noshnovel-fe/assets/57946382/56d98f2c-8b9d-4a0d-87b1-7e3e790488b6)
+![Homepage](https://github.com/Mike20403/noshnovel-fe/assets/57946382/0dd0ce7c-13cc-4420-8938-4fab8495a9c1)
 *Reading interface with customizable settings.*
+
+![image](https://github.com/Mike20403/noshnovel-fe/assets/57946382/fef06558-a594-4f12-863f-ada20cd4c457)
+*Novel Detail page with description and chapters.*
+
+![image](https://github.com/Mike20403/noshnovel-fe/assets/57946382/adee71fc-2054-441d-adc8-d5da6c6358dc)
+*Customizing your reading editor on your own interest*
 
 ## Installation
 
