@@ -1,6 +1,6 @@
 # Noshnovel - Novel Reading Application
 
-Welcome to Noshnovel, a web application designed for a seamless novel reading experience. Dive into a vast collection of novels, track your reading progress, and enjoy a user-friendly interface tailored for book lovers.
+Welcome to Noshnovel, a web application designed for a seamless novel reading experience. Dive into a vast collection of novels, enjoy a user-friendly interface tailored for book lovers.
 
 ## Features
 
