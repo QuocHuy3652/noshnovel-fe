@@ -1,30 +1,52 @@
-# React + TypeScript + Vite
+# Noshnovel - Novel Reading Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to Noshnovel, a web application designed for a seamless novel reading experience. Dive into a vast collection of novels, track your reading progress, and enjoy a user-friendly interface tailored for book lovers.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Extensive Library**: Browse through a diverse collection of novels across various genres.
+- **Reading History**: Automatically track your reading progress and pick up right where you left off.
+- **User-Friendly Interface**: Enjoy a clean and intuitive interface designed for an optimal reading experience.
+- **Customizable Reading Settings**: Adjust font size, background color, and other settings to suit your reading preferences.
+- **Search Functionality**: Easily find novels by title, author, or genre.
 
-## Expanding the ESLint configuration
+## Screenshots
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![Homepage](https://github.com/Mike20403/noshnovel-fe/assets/57946382/0dd0ce7c-13cc-4420-8938-4fab8495a9c1)
+*Homepage showcasing featured novels.*
 
-- Configure the top-level `parserOptions` property like this:
+![Reading Interface](https://github.com/Mike20403/noshnovel-fe/assets/57946382/56d98f2c-8b9d-4a0d-87b1-7e3e790488b6)
+*Reading interface with customizable settings.*
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Installation
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+To get started with Noshnovel, follow these steps:
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Mike20403/noshnovel-fe.git
+   ```
+
+2. **Navigate to the Project Directory**:
+   ```bash
+   cd noshnovel-fe
+   ```
+
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+4. **Run the Application**:
+   ```bash
+   npm run dev
+   ```
+
+   The application will be available at `http://localhost:3000`.
+
+## Usage
+
+1. **Browse Novels**: On the homepage, browse through the featured novels or use the search functionality to find a specific book.
+2. **Read Novels**: Click on a novel to open the reading interface. Customize your reading settings according to your preference.
+
+Thank you for using Noshnovel! Happy reading!
