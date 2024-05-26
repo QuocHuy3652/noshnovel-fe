@@ -111,7 +111,6 @@ export const SettingDialog = (props:SettingDialogProps) => {
   const [backgroundColor, setDialogBackgroundColor] = React.useState(bgColorId);
 
   const handleSave = () => {
-    console.log(activeFont);
     setFontFamily(fontFamily[activeFont].value);
     setFontSize(fontSize);
     setFontColor(fontColors[fontColor].value);

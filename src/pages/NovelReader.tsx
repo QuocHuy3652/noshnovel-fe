@@ -118,7 +118,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
   const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
   const [textColor, setTextColor] = useState(defaultFontColor ?? 'black');
-  const [fontSize, setFontSize] = useState(defaultFontSize ?? 18);
+  const [fontSize, setFontSize] = useState(defaultFontSize ?? '18px');
   const [fontFamily, setFontFamily] = useState(defaultFontFamily ?? 'Arial');
   const [bgColor, setBgColor] = useState(defaultBackgroundColor ?? 'white');
   const [lineHeight, setLineHeight] = useState(defaultLineHeight ?? 1.5);
@@ -126,6 +126,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const fetchChapters = async (page: number = 1, perPage: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage });
+      console.log('response: ', response)
       if (perPage === 1) {
         setTotalChapter(response.total);
       }
@@ -317,7 +318,6 @@ export const NovelReader = (props: NovelReaderProps) => {
   };
   const handleChangeServer = (data: any) => {
     if (data !== server) {
-      console.log('===================server: ',server);
       setOpenReadDialog(true);
       setServerChange(data);
     }
@@ -366,7 +366,6 @@ export const NovelReader = (props: NovelReaderProps) => {
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => {
-                          console.log('source===========',source)
                           setCurrentServer(source.name);
                           setValue('genre', source.name);
                           handleChangeServer(source.name);

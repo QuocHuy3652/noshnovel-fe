@@ -8,12 +8,12 @@ import { createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { apiGetGenre, apiGetNovelChapter, apiNovelDetail } from '~/apis';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
-import { insertToHistory, toSlug } from '~/utils/fn';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
+import { insertToHistory } from '~/utils/fn';
 
 export interface SourceNovel {
   name?: string;
@@ -147,7 +147,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     const param: any = {};
     param.server = selectedServer?.toString();
 
-    param.genre = toSlug(data);
+    param.genre = data;
     param.page = '1';
     navigate({
       pathname: `/${path.SEARCH}`,
@@ -159,7 +159,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     const param: any = {};
     param.server = selectedServer?.toString();
     param.novelSlug = novelSlug?.toString();
-    param.chapterSlug = toSlug(data.slug);
+    param.chapterSlug = data.slug;
     param.chapterIndex = data.chapterIndex;
     const novelInfo = {
       coverImage: novelDetail.coverImage,

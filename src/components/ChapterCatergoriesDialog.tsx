@@ -10,7 +10,6 @@ import {
 import React, { useState, useEffect } from 'react';
 import { ChapterList } from '~/components/ChapterList.tsx';
 import { apiGetNovelChapter } from '~/apis';
-import { toSlug } from '~/utils/fn';
 import { createSearchParams, useLocation } from 'react-router-dom';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
@@ -70,7 +69,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     const param: any = {};
     param.server = params.server?.toString();
     param.novelSlug = params.novelSlug?.toString();
-    param.chapterSlug = toSlug(data.slug);
+    param.chapterSlug = data.slug;
     param.chapterIndex = data.chapterIndex;
     updateHistory(param.server, param.novelSlug, param.chapterSlug, param.chapterIndex, data.label);
     window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
