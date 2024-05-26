@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { HashLoader } from 'react-spinners';
 
-const Loading = ({ fullScreen = true, isBlur = true }) => {
+const Loading = ({ fullScreen = true, isBlur = true, coverScreen = true }) => {
   const loader = <HashLoader color="#D1F4BC" size={100} speedMultiplier={2} />;
 
   if (fullScreen) {
@@ -12,10 +12,11 @@ const Loading = ({ fullScreen = true, isBlur = true }) => {
           justifyContent: 'center',
           alignItems: 'center',
           position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          top: coverScreen ? 0 : '50%',
+          left: coverScreen ? 0 : '50%',
+          right: coverScreen ? 0 : undefined,
+          bottom: coverScreen ? 0 : undefined,
+          transform: coverScreen ? undefined : 'translate(-50%, -50%)',
           backgroundColor: isBlur ? 'rgba(0, 0, 0, 0.4)' : 'transparent',
           zIndex: 5,
         }}

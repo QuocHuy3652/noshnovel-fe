@@ -1,7 +1,8 @@
 import {
   Button,
   Dialog,
-  DialogBody, DialogFooter,
+  DialogBody,
+  DialogFooter,
   DialogHeader,
   IconButton,
   Input,
@@ -16,6 +17,7 @@ import { Novel } from '~/models/Novel';
 import { apiSearchNovel, apiGetNovelChapter } from '~/apis';
 import Spinner from './Spinner';
 import { NovelSearchCard } from '.';
+import Loading from './Loading';
 
 interface Chapter {
   label: string;
@@ -25,15 +27,15 @@ interface Chapter {
 }
 
 export interface ReadNovelDialogProps {
-  open: boolean,
-  handleClose?: () => void,
-  server: any,
-  title: string,
-  namePage: string,
-  chapterIndex: string,
+  open: boolean;
+  handleClose?: () => void;
+  server: any;
+  title: string;
+  namePage: string;
+  chapterIndex: string;
 }
 export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
-  const { open, handleClose, server, title, namePage, chapterIndex } = props
+  const { open, handleClose, server, title, namePage, chapterIndex } = props;
   const [novels, setNovels] = useState<Novel[]>([]);
   const [isLoadingSearch, setIsLoadingSearch] = useState(true);
   const [isLoadingChapter, setIsLoadingChapter] = useState(true);
@@ -45,18 +47,28 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
   };
 
   const fetchSearchNovel = async (keyword: string) => {
-    setIsLoadingSearch(true)
+    setIsLoadingSearch(true);
     const result: any = await apiSearchNovel({ server, keyword, page: 1, perPage: 1 });
     if (result) {
       setNovels(result.data);
     }
     if (namePage === 'reader' && result.data.length > 0) {
-      setIsLoadingChapter(true)
-      const chapter: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: parseInt(chapterIndex), perPage: 1 });
+      setIsLoadingChapter(true);
+      const chapter: any = await apiGetNovelChapter({
+        server,
+        novelSlug: result.data[0].novelSlug,
+        page: parseInt(chapterIndex),
+        perPage: 1,
+      });
       if (chapter.data.length > 0) {
         setChapterChangeServer(chapter.data[0]);
       } else {
-        const chapterEnd: any = await apiGetNovelChapter({ server, novelSlug: result.data[0].novelSlug, page: chapter.total, perPage: 1 });
+        const chapterEnd: any = await apiGetNovelChapter({
+          server,
+          novelSlug: result.data[0].novelSlug,
+          page: chapter.total,
+          perPage: 1,
+        });
         if (chapterEnd.data.length > 0) {
           setChapterChangeServer(chapterEnd.data[0]);
         }
@@ -66,38 +78,30 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
 
   useEffect(() => {
     setIsLoadingSearch(false);
-  }, [novels, chapterChangeServer])
+  }, [novels, chapterChangeServer]);
 
   useEffect(() => {
     setIsLoadingChapter(false);
-  }, [chapterChangeServer])
+  }, [chapterChangeServer]);
 
   useEffect(() => {
     fetchSearchNovel(title);
-  }, [server, title])
+  }, [server, title]);
 
   const handleSearch = () => {
-    fetchSearchNovel(keyword)
-  }
+    fetchSearchNovel(keyword);
+  };
   return (
     <>
-      <Dialog
-        open={open}
-        size={"xl"}
-        handler={handleClose}>
+      <Dialog open={open} size={'xl'} handler={handleClose}>
         <DialogHeader className="justify-between">
+          <div></div>
           <div>
-          </div>
-          <div>
-            <Typography variant="h5" className="text-app_primary">
+            <Typography variant="h5" className="text-app_primary ml-4">
               Truyện tương tự
             </Typography>
           </div>
-          <IconButton
-            color="blue-gray"
-            size="sm"
-            variant="text"
-            onClick={handleClose}>
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -106,11 +110,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
               strokeWidth={2}
               className="h-5 w-5"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </IconButton>
         </DialogHeader>
@@ -149,6 +149,11 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
                   placeholder="Nhập tên truyện..."
                   defaultValue={title}
                   onChange={handleChange}
+                  onKeyPress={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSearch();
+                    }
+                  }}
                   required
                 />
                 <div
@@ -174,37 +179,40 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
               </div>
             </div>
           </div>
-          {isLoadingSearch || isLoadingChapter ? <div className='my-5'><Spinner></Spinner></div> :
-            <div className="novel-history p-3 mt-3">
-              {novels && novels.length > 0 ? (
-                novels.map((novel, index) => (
-                  <div key={index} className="col-span-1 p-3">
-                    {novel && (
-                      <NovelSearchCard
-                        title={novel.title}
-                        author={novel.author?.name ?? undefined}
-                        coverUrl={novel.coverImage}
-                        totalChapters={novel.totalChapter}
-                        category={novel.genres?.[0]?.name ?? undefined}
-                        description={novel.description ?? undefined}
-                        status={novel.status ?? undefined}
-                        novelSlug={novel.novelSlug}
-                        namePage={namePage}
-                        server={server}
-                        chapter={chapterChangeServer}
-                      />
-                    )}
-                  </div>
-                ))
-              ) : (
-                novels.length === 0 && <div className="text-xl mx-auto text-center">Không tìm thấy kết quả ¯\_(ツ)_/¯</div>
-              )}
+          {isLoadingSearch || isLoadingChapter ? (
+            <div className="my-5">
+              <Loading fullScreen={false}></Loading>
             </div>
-          }
+          ) : (
+            <div className="novel-history p-3 mt-3">
+              {novels && novels.length > 0
+                ? novels.map((novel, index) => (
+                    <div key={index} className="col-span-1 p-3">
+                      {novel && (
+                        <NovelSearchCard
+                          title={novel.title}
+                          author={novel.author?.name ?? undefined}
+                          coverUrl={novel.coverImage}
+                          totalChapters={novel.totalChapter}
+                          category={novel.genres?.[0]?.name ?? undefined}
+                          description={novel.description ?? undefined}
+                          status={novel.status ?? undefined}
+                          novelSlug={novel.novelSlug}
+                          namePage={namePage}
+                          server={server}
+                          chapter={chapterChangeServer}
+                        />
+                      )}
+                    </div>
+                  ))
+                : novels.length === 0 && (
+                    <div className="text-xl mx-auto text-center">Không tìm thấy kết quả ¯\_(ツ)_/¯</div>
+                  )}
+            </div>
+          )}
         </DialogBody>
-        <DialogFooter className={'text-center justify-center'}>
-        </DialogFooter>
+        <DialogFooter className={'text-center justify-center'}></DialogFooter>
       </Dialog>
     </>
-  )
-}
+  );
+};

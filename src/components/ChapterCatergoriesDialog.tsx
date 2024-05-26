@@ -110,7 +110,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             chapterSlug={currentChapterSlug}
             isInsert={false}
           />
-          {isChangePage && <Loading isBlur={false}></Loading>}
+          {isChangePage && <Loading isBlur={false} coverScreen={false}></Loading>}
         </DialogBody>
         {/* <DialogFooter className={'text-center justify-center'} >
           <Button
