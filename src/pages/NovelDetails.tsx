@@ -250,7 +250,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => handleChangeServer(source)}
-                      // disabled={selectedServer === source.name}
+                        // disabled={selectedServer === source.name}
                       >
                         {source.name}
                       </Button>
@@ -353,22 +353,24 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       </TabPanel>
                     ),
                   )}
-                  {isChangePage && <Loading></Loading>}
+                  {isChangePage && <Loading isBlur={false}></Loading>}
                 </TabsBody>
               </Tabs>
             </div>
           </div>
         </div>
       )}
-      {openReadDialog ?
+      {openReadDialog ? (
         <ReadNovelDialog
           open={openReadDialog}
           handleClose={() => setOpenReadDialog(false)}
           server={serverChange}
           title={novelDetail.title}
           namePage="detail"
-        /> : <></>
-      }
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 });

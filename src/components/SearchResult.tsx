@@ -16,6 +16,7 @@ export const SearchResult = () => {
   useEffect(() => {
     const fetchSearchNovel = async (params: any) => {
       setIsLoading(true);
+      setNovels([]);
       let result: any;
 
       if (params.server && params.keyword) {
@@ -47,9 +48,11 @@ export const SearchResult = () => {
 
   return (
     <>
-      {isLoading && <Loading />}
       <section className="novel-history text-app_primary p-5 bg-[#F8F8F8]">
-        <div className="border-app_primary text-3xl font-semibold">{isLoading ? 'Đang tìm kiếm' : `Kết quả tìm kiếm (${total} kết quả):`}</div>
+        <div className="border-app_primary text-3xl font-semibold">
+          {isLoading ? 'Đang tìm kiếm' : `Kết quả tìm kiếm (${total} kết quả):`}
+        </div>
+        {isLoading && <Loading isBlur={false} fullScreen={false} />}
         <div className="novel-history p-3 mt-3">
           {novels && novels.length > 0 ? (
             <CardSearchList item={novels} totalCol={2} totalRow={3} totalPages={totalPages} />

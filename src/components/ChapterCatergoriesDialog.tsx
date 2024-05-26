@@ -41,7 +41,9 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const fetchChapters = async (page: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: itemsPerPage });
-      const currentIndex = response.data.findIndex((e: { chapterIndex: any; }) => e.chapterIndex === parseInt(params.chapterIndex));
+      const currentIndex = response.data.findIndex(
+        (e: { chapterIndex: any }) => e.chapterIndex === parseInt(params.chapterIndex),
+      );
       if (currentIndex >= 0) setCurrentChapterSlug(response.data[currentIndex].slug);
       setChapters(response.data);
       setTotalItems(response.total);
@@ -84,7 +86,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
               Danh sách chương
             </Typography>
           </div>
-          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose} className="z-[10]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

@@ -93,7 +93,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     }
     smoothscroll.polyfill();
 
-    window.scrollTo({ top: 275, behavior: 'smooth' });
+    window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 
   const customStyles = {
@@ -139,7 +139,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   };
   return (
     <>
-      {isLoading && <Loading />}
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
         <img className="w-full relative h-[35rem]" src={nosh_bg} alt="banner" />
         <div className="wrapper absolute flex flex-col items-center justify-center w-[30rem]">
