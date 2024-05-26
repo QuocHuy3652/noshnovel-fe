@@ -19,10 +19,11 @@ export interface ChapterListProps {
 }
 
 export const ChapterList = (props: ChapterListProps) => {
-  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug, isInsert } = props;
+  const { item, itemsPerPage, totalItems, totalPages, onPageChange, onReadNovel, novelSlug, chapterSlug, isInsert } =
+    props;
   const [searchParams] = useSearchParams();
-  const server : any = searchParams.get('server');
-  
+  const server: any = searchParams.get('server');
+
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1);
   };
@@ -52,7 +53,7 @@ export const ChapterList = (props: ChapterListProps) => {
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               className={`hover:underline ${chapterSlug && chapterSlug === chapter.slug ? 'text-app_primary font-bold' : ''} `}
             >
-              {chapter.label} - {chapter.name}
+              {chapter.label} {chapter.name && `- ${chapter.name}`}
             </div>
           ))}
         </div>

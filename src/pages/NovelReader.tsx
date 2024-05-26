@@ -287,6 +287,27 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
+  const scrollToTop = () => {
+    try {
+      const targetPosition = 0;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 2000;
+      let start: number | null = null;
+
+      const step = (timestamp: number) => {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        window.scrollTo(0, easeInOutCubic(progress, startPosition, distance, duration));
+        if (progress < duration) window.requestAnimationFrame(step);
+      };
+
+      window.requestAnimationFrame(step);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const easeInOutCubic = (t: number, b: number, c: number, d: number) => {
     t /= d / 2;
     if (t < 1) return (c / 2) * t * t * t + b;
@@ -510,8 +531,25 @@ export const NovelReader = (props: NovelReaderProps) => {
               </Button>
               {showButton && (
                 <button
+                  onClick={scrollToTop}
+                  className="fixed top-[200px] right-8 rounded-md bg-app_primary shadow-none hover:bg-app_tertiary"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-[2.5rem] h-[2.5rem]"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m7 7l-7-7-7 7" />
+                  </svg>
+                </button>
+              )}
+              {showButton && (
+                <button
                   onClick={scrollToBottom}
-                  className="fixed bottom-[100px] right-8 rounded-md bg-app_primary shadow-none hover:bg-app_tertiary"
+                  className="fixed bottom-[200px] right-8 rounded-md bg-app_primary shadow-none hover:bg-app_tertiary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
