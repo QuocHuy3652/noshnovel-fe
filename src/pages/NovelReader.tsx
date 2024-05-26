@@ -118,7 +118,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
   const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
   const [textColor, setTextColor] = useState(defaultFontColor ?? 'black');
-  const [fontSize, setFontSize] = useState(defaultFontSize ?? '18px');
+  const [fontSize, setFontSize] = useState(defaultFontSize ?? 18);
   const [fontFamily, setFontFamily] = useState(defaultFontFamily ?? 'Arial');
   const [bgColor, setBgColor] = useState(defaultBackgroundColor ?? 'white');
   const [lineHeight, setLineHeight] = useState(defaultLineHeight ?? 1.5);

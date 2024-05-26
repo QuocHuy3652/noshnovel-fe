@@ -98,19 +98,20 @@ const fontFamily = [{
   }];
 
 export const SettingDialog = (props:SettingDialogProps) => {
-
-
   const { open, handleClose, setBackgroundColor, setFontColor, setFontSize, setFontFamily, setLineHeight } = props;
   const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
   const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
-  const [fontSize, setDialogFontSize] = React.useState(defaultFontSize ?? 12);
-  const [activeFont, setDialogActiveFont] = React.useState(fontFamily.findIndex((fontFamily) => fontFamily.value === defaultFontFamily) ?? 0);
+  const [fontSize, setDialogFontSize] = React.useState(defaultFontSize ?? 18);
+  const activeFontId = fontFamily.findIndex((fontFamily) => fontFamily.value === defaultFontFamily) < 0 ? 0 : fontFamily.findIndex((fontFamily) => fontFamily.value === defaultFontFamily);
+  const fontColorId = fontColors.findIndex((fontColor) => defaultFontColor === fontColor.value) < 0 ? 0 : fontColors.findIndex((fontColor) => defaultFontColor === fontColor.value);
+  const bgColorId = bgColors.findIndex((bgColor) => defaultBackgroundColor === bgColor.value) < 0 ? 0 : bgColors.findIndex((bgColor) => defaultBackgroundColor === bgColor.value);
+  const [activeFont, setDialogActiveFont] = React.useState(activeFontId);
   const [lineHeight, setDialogLineHeight] = React.useState(defaultLineHeight ?? 1.5);
-  const [fontColor, setDialogFontColor] = React.useState(fontColors.findIndex((fontColor) => defaultFontColor === fontColor.value) ?? 0);
-  const [backgroundColor, setDialogBackgroundColor] = React.useState(bgColors.findIndex((backgroundColor) => defaultBackgroundColor === backgroundColor.value) ?? 0);
-  
+  const [fontColor, setDialogFontColor] = React.useState(fontColorId);
+  const [backgroundColor, setDialogBackgroundColor] = React.useState(bgColorId);
 
   const handleSave = () => {
+    console.log(activeFont);
     setFontFamily(fontFamily[activeFont].value);
     setFontSize(fontSize);
     setFontColor(fontColors[fontColor].value);
