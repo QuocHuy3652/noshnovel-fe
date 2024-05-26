@@ -73,7 +73,6 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
   }, [chapterChangeServer])
 
   useEffect(() => {
-
     fetchSearchNovel(title);
   }, [server, title])
 

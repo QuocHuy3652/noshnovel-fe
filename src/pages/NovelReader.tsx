@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState,  useRef } from 'react';
 import { SourceNovel } from '~/pages/NovelDetails.tsx';
 import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { Novel } from '~/models';
@@ -14,7 +13,7 @@ import {
   apiPostNovelDownload,
   apiGetNovelChapter,
 } from '~/apis';
-import { useLocation } from 'react-router-dom';
+import { json, useLocation } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { updateHistory } from '~/utils/fn';
@@ -92,8 +91,8 @@ export const NovelReader = (props: NovelReaderProps) => {
     chapterIndex: searchParams.get('chapterIndex'),
   };
   const { serverList } = useServerStore();
+  const sources = serverList.map((name) => ({ name }));
   const { register, handleSubmit, setValue } = useForm();
-  const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
   const [currentTitle, setCurrentTitle] = React.useState<string>('');
   const [currentServer, setCurrentServer] = useState<any>({ value: params.server, label: params.server });
   const [currentChapter, setCurrentChapter] = React.useState<any>('');
@@ -105,7 +104,6 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [openDownload, setOpenDownload] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [totalChapter, setTotalChapter] = useState(0);
-  const [chapters, setChapters] = useState<Chapter[]>([]);
   const endOfPageRef = useRef<HTMLDivElement | null>(null);
   const [showButton, setShowButton] = useState(false);
   const { novelSlug, chapterSlug, server } = params;
@@ -116,11 +114,14 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
   const [isdownloading, setIsdownloading] = useState(false);
   const [serverChange, setServerChange] = useState(server);
-  const [textColor, setTextColor] = useState('black');
-  const [fontSize, setFontSize] = useState(14);
-  const [fontFamily, setFontFamily] = useState('Arial');
-  const [bgColor, setBgColor] = useState('white');
-  const [lineHeight, setLineHeight] = useState(1.5);
+
+  const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
+  const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
+  const [textColor, setTextColor] = useState(defaultFontColor ?? 'black');
+  const [fontSize, setFontSize] = useState(defaultFontSize ?? '18px');
+  const [fontFamily, setFontFamily] = useState(defaultFontFamily ?? 'Arial');
+  const [bgColor, setBgColor] = useState(defaultBackgroundColor ?? 'white');
+  const [lineHeight, setLineHeight] = useState(defaultLineHeight ?? 1.5);
 
   const fetchChapters = async (page: number = 1, perPage: number = 1) => {
     try {
@@ -316,10 +317,13 @@ export const NovelReader = (props: NovelReaderProps) => {
   };
   const handleChangeServer = (data: any) => {
     if (data !== server) {
+      console.log('===================server: ',server);
       setOpenReadDialog(true);
       setServerChange(data);
     }
   };
+
+  
   return (
     <>
       {isLoading ? (
@@ -352,72 +356,26 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
             )}
             <div className="novel-source flex flex-row w-full justify-end">
-              <div className="w-[10rem] mr-[10rem] flex flex-row">
-                <div className="source-select w-[40rem]">
-                  <div className="relative">
-                    <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
-                      Nguồn truyện
-                    </label>
-                    <div className="source-select w-[20rem]">
-                      <div className="relative">
-                        <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
-                          Nguồn truyện
-                        </label>
-                        <Select
-                          {...register('server')}
-                          options={serverOptions}
-                          placeholder="Chọn nguồn truyện"
-                          styles={customStyles}
-                          onChange={(val) => {
-                            const server = { value: val?.value, label: val?.label };
-                            setCurrentServer(server);
-                            setValue('genre', server.value);
-                            handleChangeServer(server.value);
-                          }}
-                          className="block w-full"
-                          isSearchable={false}
-                          defaultValue={currentServer}
-                          // key={currentServer?.value}
-                        />
-                      </div>
-                    </div>
-                    {/*<Select*/}
-                    {/*  className="bg-white"*/}
-                    {/*  label="Chọn nguồn truyện"*/}
-                    {/*  success*/}
-                    {/*  placeholder={'Chọn nguồn truyện'}*/}
-                    {/*  value={currentServer}*/}
-                    {/*  onPointerEnterCapture={undefined}*/}
-                    {/*  onPointerLeaveCapture={undefined}*/}
-                    {/*  onChange={(val) => {*/}
-                    {/*    setCurrentServer(val);*/}
-                    {/*    setValue('genre', val);*/}
-                    {/*    handleChangeServer(val);*/}
-                    {/*  }}*/}
-                    {/*>*/}
-                    {/*  {serverOptions.map((source, index) => {*/}
-                    {/*    return (*/}
-                    {/*      <Option key={index} value={source.value}>*/}
-                    {/*        {source.label}*/}
-                    {/*      </Option>*/}
-                    {/*    );*/}
-                    {/*  })}*/}
-                    {/*</Select>*/}
-                  </div>
-                </div>
-                {/* {sources.map((source) => (
+              <div className="flex flex-row">
+
+                    {sources.map((source) => (
                       <Button
                         key={source.name}
-                        className={`border-app_primary text-app_primary border-2 ml-2 ${source.name !== server ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        className={`border-app_primary mt-2 text-app_primary border-2 ml-2 ${source.name !== params.server ? 'bg-white' : 'bg-app_primary text-white'}`}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => handleChangeServer(source)}
-                      // disabled={selectedServer === source.name}
+                        onClick={() => {
+                          console.log('source===========',source)
+                          setCurrentServer(source.name);
+                          setValue('genre', source.name);
+                          handleChangeServer(source.name);
+                        }
+                      }
                       >
                         {source.name}
                       </Button>
-                    ))} */}
+                    ))}
               </div>
             </div>
             <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">

@@ -29,6 +29,7 @@ body {
   margin: 0;
   overflow-y: hidden;
   padding-bottom: 5rem;
+  padding-right: 0!important;
 }
 
 html {

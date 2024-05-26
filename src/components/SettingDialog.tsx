@@ -21,27 +21,94 @@ export interface SettingDialogProps {
   setBackgroundColor: (a: string) => void
 }
 
-export const SettingDialog = (props:SettingDialogProps) => {
-  const { open, handleClose, setBackgroundColor, setFontColor, setFontSize, setFontFamily, setLineHeight } = props;
-  const [fontSize, setDialogFontSize] = React.useState(12);
-  const [activeFont, setDialogActiveFont] = React.useState(0);
-  const [lineHeight, setDialogLineHeight] = React.useState(1.5);
-  const [fontColor, setDialogFontColor] = React.useState(0);
-  const [backgroundColor, setDialogBackgroundColor] = React.useState(0);
-  const fontFamily = [{
-    name: 'Arial',
-    class: 'font-sans',
-    value: 'Arial, Helvetica, sans-serif',
-  },{
-    name: 'Georgia',
-    class: 'font-serif',
-    value: 'Georgia, serif',
+const fontColors = [
+  {
+    name: 'black',
+    class: '!bg-black',
+    value: 'rgb(0 0 0 / var(--tw-bg-opacity))',
   },
+  {
+    name: 'red',
+    class: '!bg-red-500',
+    value: 'rgb(244 67 54 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'blue',
+    class: '!bg-blue-500',
+    value: 'rgb(33 150 243 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'green',
+    class: '!bg-green-500',
+    value: 'rgb(16 185 129 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'yellow',
+    class: '!bg-yellow-300',
+    value: 'rgb(255 193 7 / var(--tw-bg-opacity))',
+  }
+]
+
+const bgColors = [
+  {
+    name: 'white',
+    class: '!bg-white',
+    value: 'rgb(255 255 255 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'secondary',
+    class: '!bg-app_secondary',
+    value: 'rgb(209 244 188 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'red',
+    class: '!bg-red-100',
+    value: 'rgb(255 205 210 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'cyan',
+    class: '!bg-cyan-200',
+    value: 'rgb(128 222 234 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'deep-purple',
+    class: '!bg-deep-purple-200',
+    value: 'rgb(179 157 219 / var(--tw-bg-opacity))',
+  },
+  {
+    name: 'lime',
+    class: '!bg-lime-300',
+    value: 'rgb(220 231 117 / var(--tw-bg-opacity))',
+  },
+]
+
+const fontFamily = [{
+  name: 'Arial',
+  class: 'font-sans',
+  value: 'Arial, Helvetica, sans-serif',
+},{
+  name: 'Georgia',
+  class: 'font-serif',
+  value: 'Georgia, serif',
+},
   {
     name: 'Times New Roman',
     class: 'font-mono',
     value: 'Times New Roman, serif',
   }];
+
+export const SettingDialog = (props:SettingDialogProps) => {
+
+
+  const { open, handleClose, setBackgroundColor, setFontColor, setFontSize, setFontFamily, setLineHeight } = props;
+  const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
+  const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
+  const [fontSize, setDialogFontSize] = React.useState(defaultFontSize ?? 12);
+  const [activeFont, setDialogActiveFont] = React.useState(fontFamily.findIndex((fontFamily) => fontFamily.value === defaultFontFamily) ?? 0);
+  const [lineHeight, setDialogLineHeight] = React.useState(defaultLineHeight ?? 1.5);
+  const [fontColor, setDialogFontColor] = React.useState(fontColors.findIndex((fontColor) => defaultFontColor === fontColor.value) ?? 0);
+  const [backgroundColor, setDialogBackgroundColor] = React.useState(bgColors.findIndex((backgroundColor) => defaultBackgroundColor === backgroundColor.value) ?? 0);
+  
 
   const handleSave = () => {
     setFontFamily(fontFamily[activeFont].value);
@@ -49,68 +116,17 @@ export const SettingDialog = (props:SettingDialogProps) => {
     setFontColor(fontColors[fontColor].value);
     setBackgroundColor(bgColors[backgroundColor].value);
     setLineHeight(lineHeight);
+    localStorage.setItem('defaultSetting', JSON.stringify({
+      defaultFontSize: fontSize,
+      defaultFontFamily: fontFamily[activeFont].value,
+      defaultFontColor: fontColors[fontColor].value,
+      defaultBackgroundColor: bgColors[backgroundColor].value,
+      defaultLineHeight: lineHeight
+    }));
+
     handleClose();
   }
-  const fontColors = [
-    {
-      name: 'black',
-      class: '!bg-black',
-      value: 'rgb(0 0 0 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'red',
-      class: '!bg-red-500',
-      value: 'rgb(244 67 54 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'blue',
-      class: '!bg-blue-500',
-      value: 'rgb(33 150 243 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'green',
-      class: '!bg-green-500',
-      value: 'rgb(16 185 129 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'yellow',
-      class: '!bg-yellow-300',
-      value: 'rgb(255 193 7 / var(--tw-bg-opacity))',
-    }
-  ]
 
-  const bgColors = [
-    {
-      name: 'white',
-      class: '!bg-white',
-      value: 'rgb(255 255 255 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'secondary',
-      class: '!bg-app_secondary',
-      value: 'rgb(209 244 188 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'red',
-      class: '!bg-red-100',
-      value: 'rgb(255 205 210 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'cyan',
-      class: '!bg-cyan-200',
-      value: 'rgb(128 222 234 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'deep-purple',
-      class: '!bg-deep-purple-200',
-      value: 'rgb(179 157 219 / var(--tw-bg-opacity))',
-    },
-    {
-      name: 'lime',
-      class: '!bg-lime-300',
-      value: 'rgb(220 231 117 / var(--tw-bg-opacity))',
-    },
-    ]
 
   return (
     <>
