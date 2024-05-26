@@ -22,6 +22,7 @@ import { path } from '~/constants';
 import { useForm } from 'react-hook-form';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
 import Select from 'react-select';
+import { useDownloadStore } from '~/store/useDownloadStore';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -88,7 +89,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     server: searchParams.get('server'),
     novelSlug: searchParams.get('novelSlug'),
     chapterSlug: searchParams.get('chapterSlug'),
-    chapterIndex: searchParams.get('chapterIndex')
+    chapterIndex: searchParams.get('chapterIndex'),
   };
   const { serverList } = useServerStore();
   const { register, handleSubmit, setValue } = useForm();
@@ -111,7 +112,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const chapterIndex: any = params.chapterIndex;
   const [author, setAuthor] = useState('');
   const [openReadDialog, setOpenReadDialog] = useState(false);
-  const [listFileNameExtensions, setListFileNameExtensions] = useState([]);
+  const { fileExtensions } = useDownloadStore();
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
   const [isdownloading, setIsdownloading] = useState(false);
   const [serverChange, setServerChange] = useState(server);
@@ -125,7 +126,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage });
       if (perPage === 1) {
-        setTotalChapter(response.total)
+        setTotalChapter(response.total);
       }
       return response;
     } catch (error) {
@@ -151,17 +152,6 @@ export const NovelReader = (props: NovelReaderProps) => {
     };
     fetchChapters(parseInt(chapterIndex), 1);
     fetchContent();
-  }, []);
-
-  useEffect(() => {
-    const fetchFileNameExtension = async () => {
-      const result: any = await apiGetFileNameExtension();
-      if (result) {
-        setListFileNameExtensions(result);
-      }
-    };
-
-    fetchFileNameExtension();
   }, []);
 
   useEffect(() => {
@@ -221,9 +211,9 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
-  const onDownload = () => { };
+  const onDownload = () => {};
 
-  const handleSave = () => { };
+  const handleSave = () => {};
   // TODO: fetch source list and handle download novel with that source
 
   const handleDownload = async (selectedFileExt: any, chapterEnd: any) => {
@@ -254,7 +244,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     setIsdownloading(false);
   };
 
-  const handleSaveSetting = () => { };
+  const handleSaveSetting = () => {};
 
   const toggleMenuDialog = (isOpen: boolean, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(isOpen);
@@ -344,14 +334,12 @@ export const NovelReader = (props: NovelReaderProps) => {
               <div className="w-[10rem] mr-[10rem] flex flex-row">
                 <div className="source-select w-[40rem]">
                   <div className="relative">
-                    <label
-                      className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                    <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
                       Nguồn truyện
                     </label>
                     <div className="source-select w-[20rem]">
                       <div className="relative">
-                        <label
-                          className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                        <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
                           Nguồn truyện
                         </label>
                         <Select
@@ -368,7 +356,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                           className="block w-full"
                           isSearchable={false}
                           defaultValue={currentServer}
-                        // key={currentServer?.value}
+                          // key={currentServer?.value}
                         />
                       </div>
                     </div>
@@ -412,8 +400,7 @@ export const NovelReader = (props: NovelReaderProps) => {
               </div>
             </div>
             <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">
-              <div
-                className="max-h-[8rem] fixed ml-[-3rem] py-1 action-menu bg-app_primary rounded-xl justify-center items-center align-middle flex flex-col w-[3rem]">
+              <div className="max-h-[8rem] fixed ml-[-3rem] py-1 action-menu bg-app_primary rounded-xl justify-center items-center align-middle flex flex-col w-[3rem]">
                 <IconButton
                   onClick={() => toggleMenuDialog(true, setOpenChapterCategories)}
                   className="bg-transparent shadow-none hover:bg-app_tertiary"
@@ -483,7 +470,8 @@ export const NovelReader = (props: NovelReaderProps) => {
                   fontFamily: fontFamily ?? 'Arial, Helvetica, sans-serif',
                   backgroundColor: bgColor ?? 'var(white)',
                 }}
-                className="py-[3rem] h-full rounded-xl page-detail bg-white min-w-[70vw] flex flex-col">
+                className="py-[3rem] h-full rounded-xl page-detail bg-white min-w-[70vw] flex flex-col"
+              >
                 <div className="chapter-name text-center">
                   <Typography
                     // className="text-app_primary"
@@ -556,18 +544,18 @@ export const NovelReader = (props: NovelReaderProps) => {
         setBackgroundColor={setBgColor}
         setFontColor={setTextColor}
         setLineHeight={setLineHeight}
-      // handleSave={handleSaveSetting}
+        // handleSave={handleSaveSetting}
       />
       <DownloadNovelDialog
         open={openDownload}
         handleClose={() => toggleMenuDialog(false, setOpenDownload)}
         handleDownload={handleDownload}
-        listFileNameExtensions={listFileNameExtensions}
+        listFileNameExtensions={fileExtensions}
         chapterStart={currentChapter}
         listChapterEnds={listChapterEnds}
         isdownloading={isdownloading}
       />
-      {openReadDialog ?
+      {openReadDialog ? (
         <ReadNovelDialog
           open={openReadDialog}
           handleClose={() => setOpenReadDialog(false)}
@@ -575,8 +563,10 @@ export const NovelReader = (props: NovelReaderProps) => {
           title={currentTitle}
           namePage="reader"
           chapterIndex={chapterIndex}
-        /> : <></>
-      }
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
