@@ -2,6 +2,7 @@ import { ShareIcon, UserCircleIcon, TagIcon, BookOpenIcon, HeartIcon } from '@he
 import { IconText } from '~/components/IconText.tsx';
 import { path } from '~/constants';
 import { insertToHistory } from '~/utils/fn';
+import { useNavigate } from 'react-router-dom';
 
 interface Chapter {
   label: string;
@@ -22,18 +23,39 @@ export type NovelSeachCardProps = {
   namePage?: string; // search / detail / reader
   server?: any;
   chapter?: Chapter;
+  onCardClick?: () => void;
 };
 
 export const NovelSearchCard = (props: NovelSeachCardProps) => {
-  const { title, author, coverUrl, description, totalChapters, category, status, novelSlug, namePage, server, chapter } = props;
+  const {
+    title,
+    author,
+    coverUrl,
+    description,
+    totalChapters,
+    category,
+    status,
+    novelSlug,
+    namePage,
+    server,
+    chapter,
+  } = props;
+
+  const navigate = useNavigate();
+
   const handleClick = (slug: string | undefined, server: any, chapter: Chapter | undefined) => {
     if (namePage === 'search') {
-      window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
+      navigate(`/${path.DETAIL}?server=${server}&novelSlug=${slug}`);
     } else if (namePage === 'detail') {
-      window.location.href = `${path.DETAIL}?server=${server}&novelSlug=${slug}`;
+      navigate(`/${path.DETAIL}?server=${server}&novelSlug=${slug}`);
     } else if (namePage === 'reader') {
       insertToHistory(chapter, props, server);
-      window.location.href = `${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=${chapter?.slug}&chapterIndex=${chapter?.chapterIndex}`;
+      navigate(
+        `/${path.READER}?server=${server}&novelSlug=${slug}&chapterSlug=${chapter?.slug}&chapterIndex=${chapter?.chapterIndex}`,
+      );
+    }
+    if (props.onCardClick) {
+      props.onCardClick();
     }
   };
   return (

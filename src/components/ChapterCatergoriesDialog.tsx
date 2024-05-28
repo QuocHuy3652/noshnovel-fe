@@ -14,6 +14,7 @@ import { createSearchParams, useLocation } from 'react-router-dom';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 import { updateHistory } from '~/utils/fn';
+import { useNavigate } from 'react-router-dom';
 
 export interface ChapterCatergoriesDialog {
   open: boolean;
@@ -33,10 +34,10 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [isChangePage, setIsChangePage] = useState(false);
   const [currentChapterSlug, setCurrentChapterSlug] = useState('');
 
-  // TODO: get novel slug & server
   const novelSlug = params.novelSlug;
   const server = params.server;
 
+  const navigate = useNavigate();
   const fetchChapters = async (page: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: itemsPerPage });
@@ -72,7 +73,8 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     param.chapterSlug = data.slug;
     param.chapterIndex = data.chapterIndex;
     updateHistory(param.server, param.novelSlug, param.chapterSlug, param.chapterIndex, data.label);
-    window.location.href = `${path.READER}?${createSearchParams(param).toString()}`;
+    navigate(`/${path.READER}?${createSearchParams(param).toString()}`);
+    handleClose();
   };
 
   return (

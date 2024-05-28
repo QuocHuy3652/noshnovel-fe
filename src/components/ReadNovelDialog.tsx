@@ -201,6 +201,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
                           namePage={namePage}
                           server={server}
                           chapter={chapterChangeServer}
+                          onCardClick={handleClose}
                         />
                       )}
                     </div>

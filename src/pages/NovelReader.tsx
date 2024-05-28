@@ -1,4 +1,4 @@
-import React, { useEffect, useState,  useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { SourceNovel } from '~/pages/NovelDetails.tsx';
 import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { Novel } from '~/models';
@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
 import Select from 'react-select';
 import { useDownloadStore } from '~/store/useDownloadStore';
+import { useNavigate } from 'react-router-dom';
 
 export interface NovelReaderProps {
   sources?: SourceNovel[];
@@ -116,17 +117,19 @@ export const NovelReader = (props: NovelReaderProps) => {
   const [serverChange, setServerChange] = useState(server);
 
   const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
-  const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } = defaultSetting
+  const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } =
+    defaultSetting;
   const [textColor, setTextColor] = useState(defaultFontColor ?? 'black');
   const [fontSize, setFontSize] = useState(defaultFontSize ?? '18px');
   const [fontFamily, setFontFamily] = useState(defaultFontFamily ?? 'Arial');
   const [bgColor, setBgColor] = useState(defaultBackgroundColor ?? 'white');
   const [lineHeight, setLineHeight] = useState(defaultLineHeight ?? 1.5);
+  const navigate = useNavigate();
 
   const fetchChapters = async (page: number = 1, perPage: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage });
-      console.log('response: ', response)
+      console.log('response: ', response);
       if (perPage === 1) {
         setTotalChapter(response.total);
       }
@@ -154,7 +157,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     };
     fetchChapters(parseInt(chapterIndex), 1);
     fetchContent();
-  }, []);
+  }, [server, novelSlug, chapterSlug, chapterIndex]);
 
   useEffect(() => {
     const fetchPrevNextChapters = async () => {
@@ -175,7 +178,7 @@ export const NovelReader = (props: NovelReaderProps) => {
     if (novelSlug && server) {
       fetchPrevNextChapters();
     }
-  }, [novelSlug, server]);
+  }, [novelSlug, server, chapterIndex]);
 
   useEffect(() => {
     const fetchChapterEnds = async () => {
@@ -200,7 +203,9 @@ export const NovelReader = (props: NovelReaderProps) => {
       const prevChapterSlug = prevChapter.slug;
       const prevChapterIndex = prevChapter.chapterIndex;
       updateHistory(server, novelSlug, prevChapter.slug, prevChapterIndex, prevChapter.label);
-      window.location.href = `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}&chapterIndex=${prevChapterIndex}`;
+      navigate(
+        `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${prevChapterSlug}&chapterIndex=${prevChapterIndex}`,
+      );
     }
   };
 
@@ -209,7 +214,9 @@ export const NovelReader = (props: NovelReaderProps) => {
       const nextChapterSlug = nextChapter.slug;
       const nextChapterIndex = nextChapter.chapterIndex;
       updateHistory(server, novelSlug, nextChapter.slug, nextChapterIndex, nextChapter.label);
-      window.location.href = `${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}&chapterIndex=${nextChapterIndex}`;
+      navigate(
+        `/${path.READER}?server=${server}&novelSlug=${novelSlug}&chapterSlug=${nextChapterSlug}&chapterIndex=${nextChapterIndex}`,
+      );
     }
   };
 
@@ -323,7 +330,6 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
-  
   return (
     <>
       {isLoading ? (
@@ -357,24 +363,22 @@ export const NovelReader = (props: NovelReaderProps) => {
             )}
             <div className="novel-source flex flex-row w-full justify-end">
               <div className="flex flex-row">
-
-                    {sources.map((source) => (
-                      <Button
-                        key={source.name}
-                        className={`border-app_primary mt-2 text-app_primary border-2 ml-2 ${source.name !== params.server ? 'bg-white' : 'bg-app_primary text-white'}`}
-                        placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                        onClick={() => {
-                          setCurrentServer(source.name);
-                          setValue('genre', source.name);
-                          handleChangeServer(source.name);
-                        }
-                      }
-                      >
-                        {source.name}
-                      </Button>
-                    ))}
+                {sources.map((source) => (
+                  <Button
+                    key={source.name}
+                    className={`border-app_primary mt-2 text-app_primary border-2 ml-2 ${source.name !== params.server ? 'bg-white' : 'bg-app_primary text-white'}`}
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                    onClick={() => {
+                      setCurrentServer(source.name);
+                      setValue('genre', source.name);
+                      handleChangeServer(source.name);
+                    }}
+                  >
+                    {source.name}
+                  </Button>
+                ))}
               </div>
             </div>
             <div className="novel-body flex flex-row mt-[1rem] space-x-5 ">

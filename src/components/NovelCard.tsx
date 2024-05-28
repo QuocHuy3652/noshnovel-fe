@@ -10,6 +10,7 @@ export type NovelCardProps = {
   category?: string;
   url?: string;
   chapterLabel?: string;
+  onCardClick?: () => void;
 };
 
 export const NovelCard = (props: NovelCardProps) => {

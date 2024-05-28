@@ -60,7 +60,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
                     description={novel.description ?? undefined}
                     status={novel.status ?? undefined}
                     novelSlug={novel.novelSlug}
-                    namePage='search'
+                    namePage="search"
                     server={server}
                   />
                 )}
