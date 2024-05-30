@@ -11,7 +11,7 @@ const useSignal = () => {
 
   useEffect(() => {
     connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:7264/service-update')
+      .withUrl('http://tmplam-001-site1.ktempurl.com/service-update')
       .withAutomaticReconnect()
       .build();
 
