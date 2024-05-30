@@ -27,3 +27,10 @@ export const apiGetNovelContent = (params: any) =>
     method: 'get',
     params,
   });
+
+export const apiFilterNovelByAuthor = (params: any) =>
+  axios({
+    url: '/Novels/author-filter',
+    method: 'get',
+    params,
+  });

@@ -33,6 +33,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [currentPage, setCurrentPage] = useState(Math.ceil(params.chapterIndex / itemsPerPage));
   const [isChangePage, setIsChangePage] = useState(false);
   const [currentChapterSlug, setCurrentChapterSlug] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const novelSlug = params.novelSlug;
   const server = params.server;
@@ -40,6 +41,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const navigate = useNavigate();
   const fetchChapters = async (page: number = 1) => {
     try {
+      setIsLoading(true);
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage: itemsPerPage });
       const currentIndex = response.data.findIndex(
         (e: { chapterIndex: any }) => e.chapterIndex === parseInt(params.chapterIndex),
@@ -53,12 +55,13 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
       console.error(error);
     } finally {
       setIsChangePage(false);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchChapters(currentPage);
-  }, [novelSlug]);
+  }, [novelSlug, params.chapterIndex]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -77,6 +80,13 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
     handleClose();
   };
 
+  const handleCloseAndReset = () => {
+    const initialPage = Math.ceil(params.chapterIndex / itemsPerPage);
+    setCurrentPage(initialPage);
+    fetchChapters(initialPage);
+    handleClose();
+  };
+
   return (
     <>
       <Dialog open={open} size={size || 'lg'} handler={handleClose}>
@@ -87,7 +97,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
               Danh sách chương
             </Typography>
           </div>
-          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose} className="z-[10]">
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleCloseAndReset} className="z-[10]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -112,7 +122,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             chapterSlug={currentChapterSlug}
             isInsert={false}
           />
-          {isChangePage && <Loading isBlur={false} coverScreen={false}></Loading>}
+          {isLoading && <Loading isBlur={false} coverScreen={false}></Loading>}
         </DialogBody>
         {/* <DialogFooter className={'text-center justify-center'} >
           <Button

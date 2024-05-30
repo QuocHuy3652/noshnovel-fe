@@ -137,6 +137,10 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       transform: 'translateX(3rem)',
     }),
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 300);
+  }, [location.pathname]);
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">

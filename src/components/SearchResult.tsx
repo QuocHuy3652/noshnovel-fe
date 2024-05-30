@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { apiSearchNovel, apiFilterGenre } from '~/apis';
+import { apiSearchNovel, apiFilterGenre, apiFilterNovelByAuthor } from '~/apis';
 import { Novel } from '~/models/Novel';
 import { CardSearchList } from '~/components/CardSearchList.tsx';
 import Loading from './Loading';
@@ -12,6 +12,9 @@ export const SearchResult = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');
+  const genre = searchParams.get('genre');
+  const author = searchParams.get('author');
 
   useEffect(() => {
     const fetchSearchNovel = async (params: any) => {
@@ -31,6 +34,12 @@ export const SearchResult = () => {
           page: params.page,
           ...params,
         });
+      } else if (params.server && params.author) {
+        result = await apiFilterNovelByAuthor({
+          perPage: 6,
+          page: params.page,
+          ...params,
+        });
       }
 
       if (result) {
@@ -46,11 +55,20 @@ export const SearchResult = () => {
     fetchSearchNovel(params);
   }, [searchParams]);
 
+  let searchLabel = 'Kết quả tìm kiếm';
+  if (keyword) {
+    searchLabel = `Tìm kiếm theo từ khóa "${keyword}"`;
+  } else if (genre) {
+    searchLabel = `Tìm kiếm theo thể loại "${genre}"`;
+  } else if (author) {
+    searchLabel = `Tìm kiếm theo tác giả "${author}"`;
+  }
+
   return (
     <>
       <section className="novel-history text-app_primary p-5 bg-[#F8F8F8]">
         <div className="border-app_primary text-3xl font-semibold">
-          {isLoading ? 'Đang tìm kiếm' : `Kết quả tìm kiếm (${total} kết quả):`}
+          {isLoading ? 'Đang tìm kiếm' : `${searchLabel} (${total} kết quả):`}
         </div>
         {isLoading && (
           <div className="flex items-center justify-center h-full mt-[60px]">
