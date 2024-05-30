@@ -4,7 +4,7 @@ import React from 'react';
 import { Category, CategoryChips } from '~/components/CategoryChips.tsx';
 import { ChapterList } from '~/components';
 import { useServerStore } from '~/store/useServerStore';
-import { createSearchParams, useLocation } from 'react-router-dom';
+import { Link, createSearchParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { apiGetGenre, apiGetNovelChapter, apiNovelDetail } from '~/apis';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
@@ -14,12 +14,17 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
 import { insertToHistory } from '~/utils/fn';
+import { UserCircleIcon } from '@heroicons/react/16/solid';
 
 export interface SourceNovel {
   name?: string;
   url?: string;
   sourceHandlerFn: () => void;
 }
+type Author = {
+  name: string;
+  slug: string;
+};
 
 export interface NovelDetails {
   title: string;
@@ -29,7 +34,7 @@ export interface NovelDetails {
   description: string;
   coverImage: string;
   genres: Category[];
-  author: object;
+  author: Author;
 }
 export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const { serverList } = useServerStore();
@@ -60,7 +65,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     description: '',
     coverImage: '',
     genres: [],
-    author: {},
+    author: { name: '', slug: '' },
   });
 
   const goBack = () => {
@@ -143,11 +148,18 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     fetchChapters(page);
   };
 
-  const handleSearch = (data: any) => {
+  const handleSearch = (data: any, type: 'genre' | 'author' | 'keyword') => {
     const param: any = {};
     param.server = selectedServer?.toString();
 
-    param.genre = data;
+    if (type === 'genre') {
+      param.genre = data;
+    } else if (type === 'author') {
+      param.author = data;
+    } else if (type === 'keyword') {
+      param.keyword = data;
+    }
+
     param.page = '1';
     navigate({
       pathname: `/${path.SEARCH}`,
@@ -181,6 +193,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     }
   };
 
+  console.log(novelDetail.author.name);
+
   return (
     <>
       {isLoading ? (
@@ -206,8 +220,23 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                 />
                 <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                   <div className="inner-wrapper flex flex-col">
-                    <p className="text-3xl font-bold text-black max-w-[40rem]">{novelDetail.title}</p>
-                    <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500">
+                    <p
+                      className="text-3xl font-bold text-black max-w-[40rem]  cursor-pointer"
+                      onClick={() => handleSearch(novelDetail.title, 'keyword')}
+                    >
+                      {novelDetail.title}
+                    </p>
+                    <div className="novel-author mt-2 flex items-center gap-1 max-w-[40rem]">
+                      <UserCircleIcon className="w-[2rem] h-[2rem] text-blue-gray-100" />
+                      <Typography
+                        color="black"
+                        className="font-medium text-blue-gray-500 cursor-pointer"
+                        onClick={() => handleSearch(novelDetail.author.name, 'author')}
+                      >
+                        {novelDetail.author.name ?? 'Không rõ'}
+                      </Typography>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2 font-bold text-blue-gray-500">
                       {novelDetail.rating}
                       <Rating
                         value={Math.round(novelDetail.rating) || 0}
@@ -225,17 +254,24 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         Dựa trên {novelDetail.reviewsNumber} đánh giá
                       </Typography>
                     </div>
+
                     <CategoryChips
                       categories={novelDetail.genres}
                       isGenreAvailable={isGenreAvailable}
                       handleSearch={handleSearch}
                     />
+                    <Typography
+                      className={` mt-[2rem]badge rounded text-blue-gray-500 p-2 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] rounded-[7px] border-[1.5px] ${novelDetail.status === 'Đang ra' ? 'border-green-500' : 'border-yellow-500'}`}
+                    >
+                      {novelDetail.status || 'Không rõ'}
+                    </Typography>
+
                     {/* <p className="text-3xl font-bold text-app_primary">{novelDetail.reviewsNumber}</p> */}
                   </div>
-                  <div className="bottom-action flex flex-row max-w-[60rem] flex-wrap">
+                  <div className="bottom-action flex flex-row max-w-[60rem] flex-wrap  ">
                     <Button
                       onClick={() => handleReadNovel(chapterOne)}
-                      className="bg-app_tertiary mt-2 border-app_primary ml-2"
+                      className="bg-app_tertiary mt-2 border-app_primary "
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -245,7 +281,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                     {sources.map((source) => (
                       <Button
                         key={source.name}
-                        className={`border-app_primary mt-2 text-app_primary border-2 ml-2 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
+                        className={`border-app_primary mt-2 text-app_primary border-2 ml-1 ${source.name !== selectedServer ? 'bg-white' : 'bg-app_primary text-white'}`}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}

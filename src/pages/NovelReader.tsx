@@ -13,7 +13,7 @@ import {
   apiPostNovelDownload,
   apiGetNovelChapter,
 } from '~/apis';
-import { json, useLocation } from 'react-router-dom';
+import { createSearchParams, json, useLocation } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { updateHistory } from '~/utils/fn';
@@ -330,6 +330,25 @@ export const NovelReader = (props: NovelReaderProps) => {
     }
   };
 
+  const handleSearch = (data: any, type: 'genre' | 'author' | 'keyword') => {
+    const param: any = {};
+    param.server = server;
+
+    if (type === 'genre') {
+      param.genre = data;
+    } else if (type === 'author') {
+      param.author = data;
+    } else if (type === 'keyword') {
+      param.keyword = data;
+    }
+
+    param.page = '1';
+    navigate({
+      pathname: `/${path.SEARCH}`,
+      search: createSearchParams(param).toString(),
+    });
+  };
+
   return (
     <>
       {isLoading ? (
@@ -339,11 +358,12 @@ export const NovelReader = (props: NovelReaderProps) => {
           <div className="novel-wrapper text-center">
             <div className="novel-title">
               <Typography
-                className="text-app_primary"
+                className="text-app_primary cursor-pointer"
                 variant="h3"
                 placeholder={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
+                onClick={() => handleSearch(currentTitle, 'keyword')}
               >
                 {currentTitle}
               </Typography>
@@ -351,11 +371,12 @@ export const NovelReader = (props: NovelReaderProps) => {
             {author !== '' && (
               <div className="novel-author">
                 <Typography
-                  className="text-app_primary"
+                  className="text-app_primary cursor-pointer"
                   variant="h5"
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
                   onPointerLeaveCapture={undefined}
+                  onClick={() => handleSearch(author, 'author')}
                 >
                   Tác giả: {author}
                 </Typography>
