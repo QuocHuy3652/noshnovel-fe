@@ -79,7 +79,7 @@ export const CardSearchList = withRouter((props: CardSearchListProps & WithRoute
         nextClassName={totalPages != 1 ? 'inline-block rounded-md bg-app_primary p-2 text-white' : ''}
         pageClassName="inline-block p-2 rounded-md bg-app_secondary hover:opacity-50 min-w-[3rem] text-center"
         activeLinkClassName="text-white font-bold "
-        activeClassName="inline-block rounded-md bg-green-700 p-2 text-white"
+        activeClassName="inline-block rounded-md !bg-app_primary bg-green-700 p-2 text-white"
         breakLabel="..."
         pageRangeDisplayed={5}
         renderOnZeroPageCount={null}

@@ -222,28 +222,27 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                 <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                   <div className="inner-wrapper flex flex-col">
                     <p
-                      className="text-3xl font-bold text-black max-w-[40rem]  cursor-pointer"
-                      onClick={() => handleSearch(novelDetail.title, 'keyword')}
+                      className="text-3xl font-bold text-black max-w-[40rem]"
                     >
                       {novelDetail.title}
                     </p>
-                    <div className="novel-author mt-2 flex items-center gap-1 max-w-[40rem]">
-                      <UserCircleIcon className="w-[2rem] h-[2rem] text-blue-gray-100" />
-                      <Typography
-                        color="black"
-                        className="font-medium text-blue-gray-500 cursor-pointer"
-                        onClick={() => handleSearch(novelDetail.author.name, 'author')}
-                      >
+                    <div
+                      className="novel-author mt-2 flex items-center gap-1 max-w-[40rem]"
+                      onClick={() => handleSearch(novelDetail.author.slug, 'author')}
+                    >
+                      <UserCircleIcon className="w-[2rem] h-[2rem] text-blue-gray-100 cursor-pointer" />
+                      <Typography color="black" className="font-medium text-blue-gray-500 cursor-pointer">
                         {novelDetail.author.name ?? 'Không rõ'}
                       </Typography>
                     </div>
-                    <div className="mt-3 flex items-center gap-2 font-bold text-blue-gray-500">
+                    <div className="mt-2 flex items-center gap-2 font-bold text-blue-gray-500" aria-readonly>
                       {novelDetail.rating}
                       <Rating
                         value={Math.round(novelDetail.rating) || 0}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
+                        readonly 
                       />
                       <Typography
                         color="blue-gray"
@@ -262,7 +261,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       handleSearch={handleSearch}
                     />
                     <Typography
-                      className={` mt-[2rem]badge rounded text-blue-gray-500 p-2 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] rounded-[7px] border-[1.5px] ${novelDetail.status === 'Đang ra' ? 'border-green-500' : 'border-yellow-500'}`}
+                      className={` mt-[1rem]badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] rounded-[7px]  ${novelDetail.status === 'Đang ra' ? 'bg-green-300' : 'bg-yellow-500'}`}
                     >
                       {novelDetail.status || 'Không rõ'}
                     </Typography>

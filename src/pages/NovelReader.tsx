@@ -110,12 +110,13 @@ export const NovelReader = (props: NovelReaderProps) => {
   const { novelSlug, chapterSlug, server } = params;
   const chapterIndex: any = params.chapterIndex;
   const [author, setAuthor] = useState('');
+  const [authorSlug, setAuthorSlug] = useState('');
   const [openReadDialog, setOpenReadDialog] = useState(false);
   const { fileExtensions } = useDownloadStore();
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
   const [isdownloading, setIsdownloading] = useState(false);
   const [serverChange, setServerChange] = useState(server);
-
+  const [isAvailable, setIsavailable] = useState(true);
   const defaultSetting = JSON.parse(localStorage.getItem('defaultSetting') || '{}');
   const { defaultFontColor, defaultFontSize, defaultFontFamily, defaultBackgroundColor, defaultLineHeight } =
     defaultSetting;
@@ -141,15 +142,21 @@ export const NovelReader = (props: NovelReaderProps) => {
   useEffect(() => {
     const fetchContent = async () => {
       setIsLoading(true);
+      setCurrentChapter('');
       const result: any = await apiGetNovelContent(params);
       const author: any = await apiNovelDetail({ server: params.server, novelSlug: params.novelSlug });
+      if (author) {
+        setCurrentTitle(author.title);        
+        setAuthor(author.author.name);
+        setAuthorSlug(author.author.slug);
+      }
       if (result) {
+        setIsavailable(true);
         setCurrentTitle(result.title);
         setCurrentChapter(result.chapter);
         setCurrentContent(result.content.replace(/\r\n|\n/g, '<br/>'));
-        if (author) {
-          setAuthor(author.author.name);
-        }
+      } else {
+        setIsavailable(false);
       }
       window.scrollTo(0, 0);
       setIsLoading(false);
@@ -348,6 +355,16 @@ export const NovelReader = (props: NovelReaderProps) => {
     });
   };
 
+  const handleClickTitle = () => {
+    const param: any = {};
+    param.server = server;
+    param.novelSlug = novelSlug;
+    navigate({
+      pathname: `/${path.DETAIL}`,
+      search: createSearchParams(param).toString(),
+    });
+  }
+
   return (
     <>
       {isLoading ? (
@@ -357,31 +374,29 @@ export const NovelReader = (props: NovelReaderProps) => {
           <div className="novel-wrapper text-center">
             <div className="novel-title">
               <Typography
-                className="text-app_primary cursor-pointer"
+                className="text-app_primary"
                 variant="h3"
                 placeholder={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
-                onClick={() => handleSearch(currentTitle, 'keyword')}
               >
-                {currentTitle}
+                <span onClick={handleClickTitle} className='cursor-pointer'>{currentTitle}</span>
               </Typography>
             </div>
             {author !== '' && (
               <div className="novel-author">
                 <Typography
-                  className="text-app_primary cursor-pointer"
+                  className="text-app_primary"
                   variant="h5"
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onClick={() => handleSearch(author, 'author')}
+                  onPointerLeaveCapture={undefined}                  
                 >
-                  Tác giả: {author}
+                  Tác giả: <span onClick={() => handleSearch(authorSlug, 'author')} className='cursor-pointer' style={{ fontWeight: 'normal' }}>{author}</span>
                 </Typography>
               </div>
             )}
-            <div className="novel-source flex flex-row w-full justify-end">
+            <div className="novel-source mt-3 flex flex-row w-full justify-end">
               <div className="flex flex-row">
                 {sources.map((source) => (
                   <Button
@@ -485,10 +500,22 @@ export const NovelReader = (props: NovelReaderProps) => {
                     {currentChapter.label ?? ''}
                   </Typography>
                 </div>
-                <div
-                  dangerouslySetInnerHTML={{ __html: currentContent }}
-                  className="novel-content text-justify text-left p-[3rem]"
-                ></div>
+                {isAvailable ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: currentContent }}
+                    className="novel-content text-justify text-left p-[3rem]"
+                  ></div>
+                ) : (
+                  <Typography
+                    className="text-red-700"
+                    variant="h3"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    SERVER KHÔNG KHẢ DỤNG
+                  </Typography>
+                )}
               </div>
             </div>
             <div className="novel-reader-bottom-action flex justify-center space-x-5 mt-5" ref={endOfPageRef}>
@@ -496,7 +523,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                 className="bg-app_tertiary text-white flex"
                 label="Back"
                 onClick={getPreviousChapter}
-                disabled={parseInt(chapterIndex) === 1}
+                disabled={parseInt(chapterIndex) === 1 || isAvailable === false}
               >
                 <ArrowLeftIcon className="w-4 h-4 mr-2" />
                 Chương trước
@@ -505,7 +532,7 @@ export const NovelReader = (props: NovelReaderProps) => {
                 className="bg-app_tertiary text-white flex"
                 label="Next"
                 onClick={getNextChapter}
-                disabled={parseInt(chapterIndex) === totalChapter}
+                disabled={parseInt(chapterIndex) === totalChapter || isAvailable === false}
               >
                 Chương sau
                 <ArrowRightIcon className="ml-2 w-4 h-4" />

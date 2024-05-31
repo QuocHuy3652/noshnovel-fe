@@ -48,7 +48,7 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
 
   const fetchSearchNovel = async (keyword: string) => {
     setIsLoadingSearch(true);
-    const result: any = await apiSearchNovel({ server, keyword, page: 1, perPage: 1 });
+    const result: any = await apiSearchNovel({ server, keyword, page: 1, perPage: 5 });
     if (result) {
       setNovels(result.data);
     }
@@ -93,12 +93,12 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
   };
   return (
     <>
-      <Dialog open={open} size={'xl'} handler={handleClose}>
+      <Dialog open={open} size={'xl'} handler={handleClose} className="overflow-y-auto">
         <DialogHeader className="justify-between">
           <div></div>
           <div>
-            <Typography variant="h5" className="text-app_primary ml-4">
-              Truyện tương tự
+            <Typography variant="h4" className="text-app_primary ml-4">
+              Truyện Tương Tự (Server: {server})
             </Typography>
           </div>
           <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
@@ -114,12 +114,12 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="p-0">
+        <DialogBody className="p-0 overflow-y-auto">
           <div className="flex flex-col justify-center items-center">
-            <div className="flex flex-row space-x-2 p-0 text-app_tertiary">
+            {/* <div className="flex flex-row space-x-2 p-0 text-app_tertiary">
               <Typography variant="h6">Server: </Typography>
               <Typography variant="h6">{server}</Typography>
-            </div>
+            </div> */}
             <div className="search-input flex flex-row mt-5 w-[40rem]">
               <label htmlFor="simple-search" className="sr-only">
                 Search
@@ -184,7 +184,12 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
               <Loading fullScreen={false}></Loading>
             </div>
           ) : (
-            <div className="novel-history p-3 mt-3">
+            <div className="novel-history text-app_primary p-3 mt-3 overflow-y-auto max-h-[20rem]" style={{
+              overflowY: 'auto',
+              maxHeight: '20rem',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'green #f1f1f1',
+            }}>
               {novels && novels.length > 0
                 ? novels.map((novel, index) => (
                     <div key={index} className="col-span-1 p-3">
