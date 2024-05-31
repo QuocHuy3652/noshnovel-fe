@@ -1,21 +1,21 @@
 import { useServerStore } from '~/store/useServerStore';
-import { useLocation, useNavigate } from 'react-router-dom';
-import nosh_bg from '/src/assets/nosh_bg.png';
-import nosh_logo from '/src/assets/nosh_logo.png';
+import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useGenreStore } from '~/store/useGenreStore';
 import { path } from '~/constants';
 import { createSearchParams } from 'react-router-dom';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import Select from 'react-select';
-// import { FaSearch } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import { Button } from '@material-tailwind/react';
-import nosh_search from '/src/assets/nosh_search.png';
-import Spinner from './Spinner';
-import Loading from '~/components/Loading';
+import React, { useEffect, useState } from 'react';
 import smoothscroll from 'smoothscroll-polyfill';
-
+import { DragTable } from '~/components/DragTable.tsx';
+import nosh_bg from '/src/assets/nosh_bg.png';
+import nosh_logo from '/src/assets/nosh_logo.png';
+import nosh_search from '/src/assets/nosh_search.png';
+import tag from '/src/assets/tag.png';
+import { Simulate } from 'react-dom/test-utils';
+import toggle = Simulate.toggle;
+import { IconButton } from '@mui/material';
 interface OptionType {
   label: string;
   value: string;
@@ -47,6 +47,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const [selectedOption, setSelectedOption] = useState<any>(null);
   const [genreCache, setGenreCache] = useState<Record<string, OptionType[]>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [openSourcesPriority, setOpenSourcesPriority] = useState(false);
 
   useEffect(() => {
     if (options.length > 0) {
@@ -76,6 +77,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       });
     }
   }, [selectedServer]);
+
 
   const handleSearch = (data: SearchData) => {
     const param: Record<string, string | string[]> = {};
@@ -144,9 +146,9 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
-        <img className="w-full relative h-[35rem]" src={nosh_bg} alt="banner" />
+        <img className="w-full h-[35rem]" src={nosh_bg} alt="banner"/>
         <div className="wrapper absolute flex flex-col items-center justify-center w-[30rem]">
-          <img className="w-[13rem] h-[13rem]" src={nosh_logo} alt="banner" />
+          <img className="w-[13rem] h-[13rem]" src={nosh_logo} alt="banner"/>
           <div className="banner-text flex flex-col justify-center items-start text-white">
             <h1 className="text-5xl font-bold text-app_primary">Nosh Novel</h1>
           </div>
@@ -154,7 +156,8 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
             <div className="filter-selection flex flex-row justify-between space-x-5 mt-5">
               <div className="source-select w-[20rem]">
                 <div className="relative">
-                  <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                  <label
+                    className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
                     Nguồn truyện
                   </label>
                   <Select
@@ -172,7 +175,8 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
               </div>
               <div className="categories-select w-[20rem] ">
                 <div className="relative">
-                  <label className=" text-[13px] absolute left-2 top-6 transform -translate-y-1/2 text-app_primary z-10 ">
+                  <label
+                    className=" text-[13px] absolute left-2 top-6 transform -translate-y-1/2 text-app_primary z-10 ">
                     Thể loại
                   </label>
                   <Select
@@ -243,7 +247,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                   required
                 />
                 <div
-                  className="absolute inset-y-0 right-0 flex items-center gap-4  border border-app_primary"
+                  className="absolute inset-y-0 right-0 flex items-center gap-4 border border-app_primary"
                   style={{
                     backgroundColor: '#D1F4BC',
                     borderTopRightRadius: '0.375rem',
@@ -266,6 +270,22 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
             </div>
           </form>
         </div>
+        <IconButton
+          className="w-[3rem] h-[3rem] !absolute top-[7rem] right-[4rem]"
+          color="blue-gray"
+          size="sm"
+          variant="text"
+          onClick={() => setOpenSourcesPriority(!openSourcesPriority)}>
+          <img className={`${openSourcesPriority ? "bg-0" : "rotate-180"} `} src={tag} alt="banner"/>
+        </IconButton>
+        {
+          openSourcesPriority && (
+            <div
+              className="rounded-xl source-priority absolute w-[20rem] border-[3px] border-app_primary bg-white top-[10rem] right-[5rem] p-3">
+              <DragTable/>
+            </div>
+          )
+        }
       </section>
     </>
   );
