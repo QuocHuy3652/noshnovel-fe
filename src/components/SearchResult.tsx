@@ -4,12 +4,14 @@ import { apiSearchNovel, apiFilterGenre, apiFilterNovelByAuthor } from '~/apis';
 import { Novel } from '~/models/Novel';
 import { CardSearchList } from '~/components/CardSearchList.tsx';
 import Loading from './Loading';
+import { useGenreStore } from '~/store';
 
 export const SearchResult = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const { currentGenre, setCurrentGenre } = useGenreStore();
 
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
@@ -59,7 +61,7 @@ export const SearchResult = () => {
   if (keyword) {
     searchLabel = `Tìm kiếm theo từ khóa "${keyword}"`;
   } else if (genre) {
-    searchLabel = `Tìm kiếm theo thể loại "${genre}"`;
+    searchLabel = `Tìm kiếm theo thể loại "${currentGenre}"`;
   } else if (author) {
     searchLabel = `Tìm kiếm theo tác giả "${author}"`;
   }

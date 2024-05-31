@@ -129,7 +129,6 @@ export const NovelReader = (props: NovelReaderProps) => {
   const fetchChapters = async (page: number = 1, perPage: number = 1) => {
     try {
       const response: any = await apiGetNovelChapter({ novelSlug, server, page, perPage });
-      console.log('response: ', response);
       if (perPage === 1) {
         setTotalChapter(response.total);
       }

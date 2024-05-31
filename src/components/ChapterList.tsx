@@ -16,6 +16,7 @@ export interface ChapterListProps {
   coverImage: string | null;
   chapterSlug: string | null;
   isInsert: boolean;
+  isChangePage: boolean;
 }
 
 export const ChapterList = (props: ChapterListProps) => {
@@ -39,24 +40,26 @@ export const ChapterList = (props: ChapterListProps) => {
   return (
     <>
       <div className="chapter-list wrapper flex flex-col ">
-        <div className="grid grid-cols-4 gap-4">
-          {item.map((chapter, index) => (
-            <div
-              key={index}
-              onClick={() => handleReadNovel(chapter)}
-              style={{
-                cursor: 'pointer',
-                padding: '10px',
-                transition: 'background-color 0.3s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-              className={`hover:underline ${chapterSlug && chapterSlug === chapter.slug ? 'text-app_primary font-bold' : ''} `}
-            >
-              {chapter.label} {chapter.name && `- ${chapter.name}`}
-            </div>
-          ))}
-        </div>
+        {!props.isChangePage && (
+          <div className="grid grid-cols-4 gap-4">
+            {item.map((chapter, index) => (
+              <div
+                key={index}
+                onClick={() => handleReadNovel(chapter)}
+                style={{
+                  cursor: 'pointer',
+                  padding: '10px',
+                  transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                className={`hover:underline ${chapterSlug && chapterSlug === chapter.slug ? 'text-app_primary font-bold' : ''} `}
+              >
+                {chapter.label} {chapter.name && `- ${chapter.name}`}
+              </div>
+            ))}
+          </div>
+        )}
 
         <ReactPaginate
           className="flex flex-row justify-center items-center gap-2 mt-20"

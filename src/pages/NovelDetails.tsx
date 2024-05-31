@@ -13,8 +13,9 @@ import Loading from '~/components/Loading';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
-import { insertToHistory } from '~/utils/fn';
+import { insertToHistory, toSlug } from '~/utils/fn';
 import { UserCircleIcon } from '@heroicons/react/16/solid';
+import { useGenreStore } from '~/store';
 
 export interface SourceNovel {
   name?: string;
@@ -56,6 +57,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
   const [isChangePage, setIsChangePage] = useState(false);
   const [openReadDialog, setOpenReadDialog] = useState(false);
   const [serverChange, setServerChange] = useState(server);
+  const { setCurrentGenre } = useGenreStore();
 
   const [novelDetail, setNovelDetail] = useState<NovelDetails>({
     title: '',
@@ -153,7 +155,8 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     param.server = selectedServer?.toString();
 
     if (type === 'genre') {
-      param.genre = data;
+      param.genre = toSlug(data);
+      setCurrentGenre(data);
     } else if (type === 'author') {
       param.author = data;
     } else if (type === 'keyword') {
@@ -192,8 +195,6 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
       setServerChange(data.name);
     }
   };
-
-  console.log(novelDetail.author.name);
 
   return (
     <>
@@ -373,6 +374,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       </TabPanel>
                     ) : (
                       <TabPanel key={value} value={value}>
+                        {isChangePage && <Loading coverScreen={false} fullScreen={false} />}
                         <ChapterList
                           item={chapters}
                           currentPage={currentPage}
@@ -385,11 +387,11 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                           coverImage={novelDetail.coverImage}
                           title={novelDetail.title}
                           isInsert={true}
+                          isChangePage={isChangePage}
                         />
                       </TabPanel>
                     ),
                   )}
-                  {isChangePage && <Loading isBlur={false}></Loading>}
                 </TabsBody>
               </Tabs>
             </div>

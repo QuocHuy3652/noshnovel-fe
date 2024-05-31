@@ -34,7 +34,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   }
   const { register, handleSubmit, setValue } = useForm();
   const { serverList } = useServerStore();
-  const { genreList, getGenreList } = useGenreStore();
+  const { genreList, getGenreList, setCurrentGenre } = useGenreStore();
   const [selectedServer, setSelectedServer] = useState(server);
   const [options, setOptions] = useState<OptionType[]>(
     (genreList || []).map((genre) => ({ value: genre.slug, label: genre.name })),
@@ -201,6 +201,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       setSelectedOption(val);
                       setValue('keyword', '');
                       setValue('genre', val?.value);
+                      setCurrentGenre(val?.label);
                       handleSearch({ genre: val?.value });
                     }}
                     className="block w-full "
