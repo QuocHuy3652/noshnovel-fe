@@ -80,7 +80,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
                 <ShareIcon className="w-[1.5rem] h-[1.5rem]" />
               </a>
               <a className="action">
-                <HeartIcon className="w-[1.5rem] h-[1.5rem]" />
+                <HeartIcon className="w-[1.5rem] h-[1.5rem] text-red-500" />
               </a>
             </div>
           </div>

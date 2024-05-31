@@ -60,7 +60,9 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   };
 
   useEffect(() => {
-    fetchChapters(currentPage);
+    const initialPage = Math.ceil(params.chapterIndex / itemsPerPage);
+    setCurrentPage(initialPage);
+    fetchChapters(initialPage);
   }, [novelSlug, params.chapterIndex]);
 
   const handlePageChange = (page: number) => {
