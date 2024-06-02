@@ -178,6 +178,9 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     }
   }, [location.search]);
 
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
@@ -307,9 +310,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
         <div ref={wrapperRef}>
           <IconButton
             className="w-[3rem] h-[3rem] !absolute top-[5rem] right-[3rem]"
-            color="blue-gray"
-            size="sm"
-            variant="text"
             onClick={() => setOpenSourcesPriority(!openSourcesPriority)}
           >
             <img className={`${openSourcesPriority ? 'bg-0' : 'rotate-180'} `} src={tag} alt="banner" />

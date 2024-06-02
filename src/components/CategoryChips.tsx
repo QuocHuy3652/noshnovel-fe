@@ -9,7 +9,7 @@ export interface Category {
 export interface CategoryChipsProps {
   categories: Category[];
   isGenreAvailable: (category: Category) => boolean;
-  handleSearch: (genreSlug: string, type: string) => void;
+  handleSearch: (data: any, type: "genre" | "author" | "keyword") => void
 }
 export const CategoryChips = (props: CategoryChipsProps) => {
   const { categories, isGenreAvailable, handleSearch } = props;

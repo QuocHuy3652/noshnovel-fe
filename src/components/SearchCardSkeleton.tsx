@@ -45,8 +45,8 @@ export function ImagePlacehoderSkeleton() {
         <Typography
           as="div"
           variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
           &nbsp;
         </Typography>
         <Typography
@@ -59,8 +59,8 @@ export function ImagePlacehoderSkeleton() {
         <Typography
           as="div"
           variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
           &nbsp;
         </Typography>
         <Typography

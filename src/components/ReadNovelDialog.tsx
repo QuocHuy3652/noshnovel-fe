@@ -32,10 +32,10 @@ export interface ReadNovelDialogProps {
   server: any;
   title: string;
   namePage: string;
-  chapterIndex: string;
+  chapterIndex?: string;
 }
 export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
-  const { open, handleClose, server, title, namePage, chapterIndex } = props;
+  const { open, handleClose, server, title, namePage, chapterIndex = '0' } = props;
   const [novels, setNovels] = useState<Novel[]>([]);
   const [isLoadingSearch, setIsLoadingSearch] = useState(true);
   const [isLoadingChapter, setIsLoadingChapter] = useState(true);

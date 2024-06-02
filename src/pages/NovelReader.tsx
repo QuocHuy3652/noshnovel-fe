@@ -13,14 +13,13 @@ import {
   apiPostNovelDownload,
   apiGetNovelChapter,
 } from '~/apis';
-import { createSearchParams, json, useLocation } from 'react-router-dom';
+import { createSearchParams, useLocation } from 'react-router-dom';
 import { useServerStore } from '~/store/useServerStore';
 import Loading from '~/components/Loading';
 import { updateHistory } from '~/utils/fn';
 import { path } from '~/constants';
 import { useForm } from 'react-hook-form';
 import { ReadNovelDialog } from '~/components/ReadNovelDialog.tsx';
-import Select from 'react-select';
 import { useDownloadStore } from '~/store/useDownloadStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -82,7 +81,7 @@ const customStyles = {
   }),
 };
 
-export const NovelReader = (props: NovelReaderProps) => {
+export const NovelReader = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const params = {
@@ -534,19 +533,17 @@ export const NovelReader = (props: NovelReaderProps) => {
             <div className="novel-reader-bottom-action flex justify-center space-x-5 mt-5" ref={endOfPageRef}>
               <Button
                 className="bg-app_tertiary text-white flex"
-                label="Back"
                 onClick={getPreviousChapter}
-                disabled={parseInt(chapterIndex) === 1 || isAvailable === false}
-              >
+                disabled={parseInt(chapterIndex) === 1 || isAvailable === false} 
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}              >
                 <ArrowLeftIcon className="w-4 h-4 mr-2" />
                 Chương trước
               </Button>
               <Button
                 className="bg-app_tertiary text-white flex"
-                label="Next"
                 onClick={getNextChapter}
-                disabled={parseInt(chapterIndex) === totalChapter || isAvailable === false}
-              >
+                disabled={parseInt(chapterIndex) === totalChapter || isAvailable === false} 
+                placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}              >
                 Chương sau
                 <ArrowRightIcon className="ml-2 w-4 h-4" />
               </Button>

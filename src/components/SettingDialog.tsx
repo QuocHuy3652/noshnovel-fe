@@ -145,15 +145,19 @@ export const SettingDialog = (props: SettingDialogProps) => {
 
   return (
     <>
-      <Dialog open={open} size={'md'} handler={handleClose}>
-        <DialogHeader className="justify-between">
+      <Dialog open={open} size={"md"} handler={handleClose} placeholder={undefined}
+              onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <DialogHeader className="justify-between" placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div></div>
           <div>
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" color="blue-gray" placeholder={undefined}
+                        onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               Cài đặt
             </Typography>
           </div>
-          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}
+                      placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -166,35 +170,47 @@ export const SettingDialog = (props: SettingDialogProps) => {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="px-[3rem]">
+        <DialogBody className="px-[3rem]" placeholder={undefined} onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}>
           <div className="flex gap-x-4">
             <div className="flex-col space-y-[1.5rem] basis-1/3">
-              <Typography variant="h6" className="text-app_primary">
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Cỡ chữ:
               </Typography>
-              <Typography variant="h6" className="text-app_primary">
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Font chữ:
               </Typography>
-              <Typography variant="h6" className="text-app_primary">
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Màu chữ:
               </Typography>
-              <Typography variant="h6" className="text-app_primary">
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Màu nền:
               </Typography>
-              <Typography variant="h6" className="text-app_primary">
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Độ giãn dòng:
               </Typography>
             </div>
             <div className="flex-col space-y-4 basis-2/3">
               <div className="font-size">
-                <ButtonGroup variant="outlined" color="black" size="sm">
-                  <Button className="!rounded-none w-[5rem]" onClick={() => setDialogFontSize(fontSize - 1)}>
+                <ButtonGroup variant="outlined" color="black" size="sm" placeholder={undefined}
+                             onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                  <Button className="!rounded-none w-[5rem]" onClick={() => setDialogFontSize(fontSize - 1)}
+                          placeholder={undefined} onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}>
                     A-
                   </Button>
-                  <Button className="w-[5rem]" disabled>
+                  <Button className="w-[5rem]" disabled placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                     {fontSize}
                   </Button>
-                  <Button className="!rounded-none w-[5rem]" onClick={() => setDialogFontSize(fontSize + 1)}>
+                  <Button className="!rounded-none w-[5rem]" onClick={() => setDialogFontSize(fontSize + 1)}
+                          placeholder={undefined} onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}>
                     A+
                   </Button>
                 </ButtonGroup>
@@ -206,17 +222,17 @@ export const SettingDialog = (props: SettingDialogProps) => {
                       <>
                         <Button
                           style={{
-                            backgroundColor: activeFont === index ? 'var(--color-app_tertiary)' : 'var(--color-white)',
-                            color: activeFont === index ? 'white' : 'black',
-                            borderColor: activeFont === index ? 'var(--color-app_primary)' : 'var(--color-white)',
+                            backgroundColor: activeFont === index ? "var(--color-app_tertiary)" : "var(--color-white)",
+                            color: activeFont === index ? "white" : "black",
+                            borderColor: activeFont === index ? "var(--color-app_primary)" : "var(--color-white)",
                           }}
                           onClick={() => {
                             setDialogActiveFont(index);
                           }}
                           className={`font-family text-[0.5rem] option-1 text-black bg-white border`}
                           variant="outlined"
-                          size="sm"
-                        >
+                          size="sm" placeholder={undefined} onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}                        >
                           {item.name}
                         </Button>
                       </>
@@ -257,20 +273,22 @@ export const SettingDialog = (props: SettingDialogProps) => {
                 })}
               </div>
               <div className="line-space">
-                <ButtonGroup variant="outlined" color="black" size="sm">
+                <ButtonGroup variant="outlined" color="black" size="sm" placeholder={undefined}
+                             onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                   <Button
                     className="!rounded-none w-[5rem]"
                     onClick={() => setDialogLineHeight(parseFloat((lineHeight - 0.1).toFixed(1)))}
-                  >
+                    placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                  >
                     L-
                   </Button>
-                  <Button className="w-[5rem]" disabled>
+                  <Button className="w-[5rem]" disabled placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                     {lineHeight}
                   </Button>
                   <Button
                     className="!rounded-none w-[5rem]"
                     onClick={() => setDialogLineHeight(parseFloat((lineHeight + 0.1).toFixed(1)))}
-                  >
+                    placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                  >
                     L+
                   </Button>
                 </ButtonGroup>
@@ -278,15 +296,17 @@ export const SettingDialog = (props: SettingDialogProps) => {
             </div>
           </div>
         </DialogBody>
-        <DialogFooter className={'mt-2 text-center justify-center space-x-10'}>
-          <Button variant="filled" color="red" onClick={handleClose} className="mr-1">
+        <DialogFooter className={"mt-2 text-center justify-center space-x-10"}
+                      placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+          <Button variant="filled" color="red" onClick={handleClose} className="mr-1"
+                  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <span>Cancel</span>
           </Button>
           <Button
             // variant="gradient"
             className="!bg-app_primary hover:opacity-60"
-            onClick={handleSave}
-          >
+            onClick={handleSave} placeholder={undefined} onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}          >
             <span>Confirm</span>
           </Button>
         </DialogFooter>
