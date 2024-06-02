@@ -53,6 +53,7 @@ module.exports = {
     //     "argsIgnorePattern": "^_"
     //   }
     // ],
+    "react/prop-types": "off",
     "no-unused-vars": "off",
     'react/react-in-jsx-scope': "off",
     'jsx-a11y/label-has-associated-control': 'off',

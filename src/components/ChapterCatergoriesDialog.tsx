@@ -1,8 +1,6 @@
 import {
-  Button,
   Dialog,
   DialogBody,
-  DialogFooter,
   DialogHeader,
   IconButton,
   Typography,
@@ -10,7 +8,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { ChapterList } from '~/components/ChapterList.tsx';
 import { apiGetNovelChapter } from '~/apis';
-import { createSearchParams, useLocation } from 'react-router-dom';
+import { createSearchParams } from 'react-router-dom';
 import { path } from '~/constants';
 import Loading from '~/components/Loading';
 import { updateHistory } from '~/utils/fn';
@@ -34,7 +32,6 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
   const [isChangePage, setIsChangePage] = useState(false);
   const [currentChapterSlug, setCurrentChapterSlug] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const novelSlug = params.novelSlug;
   const server = params.server;
 
@@ -91,15 +88,20 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
 
   return (
     <>
-      <Dialog open={open} size={size || 'lg'} handler={handleClose}>
-        <DialogHeader className="justify-between">
+      <Dialog open={open} size={size || "lg"} handler={handleClose}  placeholder={undefined}
+              onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <DialogHeader className="justify-between" placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div></div>
           <div>
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" color="blue-gray" placeholder={undefined}
+                        onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               Danh sách chương
             </Typography>
           </div>
-          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleCloseAndReset} className="z-[10]">
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleCloseAndReset} className="z-[10]"
+                      placeholder={undefined} onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -112,7 +114,8 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="px-[3rem]">
+        <DialogBody className="px-[3rem]" placeholder={undefined} onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}>
           <ChapterList
             item={chapters}
             currentPage={currentPage}
@@ -122,8 +125,7 @@ export const ChapterCatergoriesDialog = (props: ChapterCatergoriesDialog) => {
             onPageChange={handlePageChange}
             onReadNovel={handleReadNovel}
             chapterSlug={currentChapterSlug}
-            isInsert={false}
-          />
+            isInsert={false} novelSlug={null} title={null} coverImage={null} isChangePage={false}          />
           {isLoading && <Loading isBlur={false} coverScreen={false}></Loading>}
         </DialogBody>
         {/* <DialogFooter className={'text-center justify-center'} >

@@ -50,12 +50,15 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
       <Dialog
         open={open}
         size={"sm"}
-        handler={handleClose}>
-        <DialogHeader className="justify-between">
+        handler={handleClose} placeholder={undefined} onPointerEnterCapture={undefined}
+        onPointerLeaveCapture={undefined}>
+        <DialogHeader className="justify-between" placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div>
           </div>
           <div>
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" color="blue-gray" placeholder={undefined}
+                        onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               Tải tiểu thuyết
             </Typography>
           </div>
@@ -63,7 +66,8 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
             color="blue-gray"
             size="sm"
             variant="text"
-            onClick={handleClose}>
+            onClick={handleClose} placeholder={undefined} onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -80,24 +84,28 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="px-[3rem]">
+        <DialogBody className="px-[3rem]" placeholder={undefined} onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}>
           <div className="flex flex-row basis-1/3 space-x-4">
             <div className="flex flex-col space-y-10">
-              <Typography variant="h6" className="text-app_primary">Từ:</Typography>
-              <Typography variant="h6" className="text-app_primary">Đến:</Typography>
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Từ:</Typography>
+              <Typography variant="h6" className="text-app_primary" placeholder={undefined}
+                          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Đến:</Typography>
             </div>
             <div className="flex flex-col basis-2/3 space-y-6">
-              <Input label='Chương bắt đầu' value={chapterStart.label} readOnly></Input>
+              <Input label="Chương bắt đầu" value={chapterStart.label} readOnly onPointerEnterCapture={undefined}
+                     onPointerLeaveCapture={undefined} crossOrigin={undefined}></Input>
               <Select
-                id='chapterEnd'
+                id="chapterEnd"
                 label="Chương kết thúc"
                 // value={listChapterEnds[listChapterEnds.findIndex(e => e.slug === chapterEnd)].label}
                 value={chapterEnd}
                 onChange={(val) => {
                   setChapterEnd(val);
-                  setValue('chapterEnd', val);
-                }}
-              >
+                  setValue("chapterEnd", val);
+                }} placeholder={undefined} onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}              >
                 {listChapterEnds.map((val, index) => {
                   return (
                     <Option key={index} value={val.slug}>
@@ -126,7 +134,8 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
             </div>
           </div>
         </DialogBody>
-        <DialogFooter className={'text-center justify-center'} >
+        <DialogFooter className={"text-center justify-center"} placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >
           {
             isdownloading ? <Spinner></Spinner> :
               (
@@ -137,7 +146,8 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
                   }}
                 >
                   <MenuHandler>
-                    <Button className="text-white bg-app_tertiary flex flex-row space-x-1">
+                    <Button className="text-white bg-app_tertiary flex flex-row space-x-1"
+                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                       <p>Download</p>
                       <ArrowDownIcon
                         strokeWidth={2}
@@ -145,7 +155,8 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
                       />
                     </Button>
                   </MenuHandler>
-                  <MenuList className="z-[10000]">
+                  <MenuList className="z-[10000]" placeholder={undefined}
+                            onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                     {
                       listFileNameExtensions.map((val, index) => {
                         return (
@@ -153,9 +164,10 @@ export const DownloadNovelDialog = (props: DownloadNovelDialogProps) => {
                             key={index}
                             onClick={() => {
                               handleDownload(val, chapterEnd);
-                              setValue('source', val);
+                              setValue("source", val);
                             }}
-                          >
+                            placeholder={undefined} onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}                          >
                             {val}
                           </MenuItem>
                         );

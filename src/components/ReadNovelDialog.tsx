@@ -28,7 +28,7 @@ interface Chapter {
 
 export interface ReadNovelDialogProps {
   open: boolean;
-  handleClose?: () => void;
+  handleClose: () => void;
   server: any;
   title: string;
   namePage: string;
@@ -93,15 +93,19 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
   };
   return (
     <>
-      <Dialog open={open} size={'xl'} handler={handleClose} className="overflow-y-auto">
-        <DialogHeader className="justify-between">
+      <Dialog open={open} size={"xl"} handler={handleClose} className="overflow-y-auto"
+              placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <DialogHeader className="justify-between" placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div></div>
           <div>
-            <Typography variant="h4" className="text-app_primary ml-4">
+            <Typography variant="h4" className="text-app_primary ml-4" placeholder={undefined}
+                        onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               Truyện Tương Tự (Server: {server})
             </Typography>
           </div>
-          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}>
+          <IconButton color="blue-gray" size="sm" variant="text" onClick={handleClose}
+                      placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -114,7 +118,8 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
             </svg>
           </IconButton>
         </DialogHeader>
-        <DialogBody className="p-0 overflow-y-auto">
+        <DialogBody className="p-0 overflow-y-auto" placeholder={undefined}
+                    onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div className="flex flex-col justify-center items-center">
             {/* <div className="flex flex-row space-x-2 p-0 text-app_tertiary">
               <Typography variant="h6">Server: </Typography>
@@ -217,7 +222,8 @@ export const ReadNovelDialog = (props: ReadNovelDialogProps) => {
             </div>
           )}
         </DialogBody>
-        <DialogFooter className={'text-center justify-center'}></DialogFooter>
+        <DialogFooter className={"text-center justify-center"} placeholder={undefined}
+                      onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} children={undefined} />
       </Dialog>
     </>
   );

@@ -2,18 +2,16 @@ import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-ho
 import React, { useEffect, useState } from 'react';
 import { useServerStore } from '~/store';
 
-export interface DragTableProps {}
-
 export interface SortableItemProps {
   value: string;
-  index: number;
+  itemIndex: number;
 }
 
 export interface SortableListProps {
   items: string[];
 }
 
-const SortableItem = SortableElement(({ value, itemIndex }: SortableItemProps) => {
+const SortableItem = SortableElement<SortableItemProps>(({ value, itemIndex }: SortableItemProps) => {
   const colorClasses = [
     'bg-green-700',
     'bg-green-600',
@@ -36,17 +34,17 @@ const SortableItem = SortableElement(({ value, itemIndex }: SortableItemProps) =
   );
 });
 
-const SortableList = SortableContainer(({ items }: SortableListProps) => {
+const SortableList = SortableContainer<SortableListProps>(({ items }:SortableListProps) => {
   return (
     <ul>
       {items.map((value, index) => (
-        <SortableItem key={`item-${value}`} index={index} itemIndex={index} value={value} />
+        <SortableItem key={`item-${value}`} itemIndex={index} value={value}  index={index}/>
       ))}
     </ul>
   );
 });
 
-export const DragTable = (props: DragTableProps) => {
+export const DragTable = () => {
   const { serverList } = useServerStore();
   const [dataSource, setDataSource] = useState<string[]>([]);
 

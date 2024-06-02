@@ -1,4 +1,5 @@
 import { Typography } from "@material-tailwind/react";
+import React from "react";
 
 export function ImagePlacehoderSkeleton() {
   return (
@@ -23,8 +24,22 @@ export function ImagePlacehoderSkeleton() {
         <Typography
           as="div"
           variant="h1"
-          className="mb-4 h-3 w-56 rounded-full bg-app_secondary"
-        >
+          className="mb-4 h-3 w-56 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >
+          &nbsp;
+        </Typography>
+        <Typography
+          as="div"
+          variant="paragraph"
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+          &nbsp;
+        </Typography>
+        <Typography
+          as="div"
+          variant="paragraph"
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >
           &nbsp;
         </Typography>
         <Typography
@@ -37,8 +52,8 @@ export function ImagePlacehoderSkeleton() {
         <Typography
           as="div"
           variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >
           &nbsp;
         </Typography>
         <Typography
@@ -51,22 +66,8 @@ export function ImagePlacehoderSkeleton() {
         <Typography
           as="div"
           variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
-          &nbsp;
-        </Typography>
-        <Typography
-          as="div"
-          variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
-          &nbsp;
-        </Typography>
-        <Typography
-          as="div"
-          variant="paragraph"
-          className="mb-2 h-2 w-72 rounded-full bg-app_secondary"
-        >
+          className="mb-2 h-2 w-72 rounded-full bg-app_secondary" placeholder={undefined}
+          onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >
           &nbsp;
         </Typography>
       </div>
