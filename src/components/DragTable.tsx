@@ -1,87 +1,95 @@
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useServerStore } from '~/store';
 
+export interface DragTableProps {}
 
-export interface  DragTableProps {
-
+export interface SortableItemProps {
+  value: string;
+  index: number;
 }
 
 export interface SortableListProps {
-  data: any
+  items: string[];
 }
 
-const data = {
-  items: [
-    {
-    id: 1,
-    name: 'truyenfull.vn',
-    description: 'Novel description',
-    genre: 'Action',
-    author: 'Author name',
-    source: 'Novel source',
-    },
-    {
-      id: 2,
-      name: 'tangthuvien.com',
-      description: 'Novel description',
-      genre: 'Action',
-      author: 'Author name',
-      source: 'Novel source',
-    },
-    {
-      id: 3,
-      name: 'santruyen.com',
-      description: 'Novel description',
-      genre: 'Action',
-      author: 'Author name',
-      source: 'Novel source',
-    },
-    {
-      id: 4,
-      name: 'truyenconlon.vn',
-      description: 'Novel description',
-      genre: 'Action',
-      author: 'Author name',
-      source: 'Novel source',
-    },
-    {
-      id: 5,
-      name: 'truyen18+.vn',
-      description: 'Novel description',
-      genre: 'Action',
-      author: 'Author name',
-      source: 'Novel source',
-    },
-  ]
-}
+const SortableItem = SortableElement(({ value, itemIndex }: SortableItemProps) => {
+  const colorClasses = [
+    'bg-green-700',
+    'bg-green-600',
+    'bg-green-500',
+    'bg-green-400',
+    'bg-green-300',
+    'bg-green-200',
+    'bg-green-100',
+  ];
 
+  const colorClass = colorClasses[itemIndex % colorClasses.length];
+  return (
+    <li
+      className={`p-1 border border-app_primary rounded my-2 text-white cursor-pointer ${colorClass}`}
+      tabIndex={0}
+      style={{ listStyleType: 'none', userSelect: 'none' }}
+    >
+      {value}
+    </li>
+  );
+});
 
-const SortableItem = SortableElement(({value}) => (
-  <li className="p-1 border border-app_primary rounded my-2 !text-app_primary" tabIndex={0}>{value}</li>
-));
-
-const SortableList = SortableContainer(({ data }: SortableListProps) => {
+const SortableList = SortableContainer(({ items }: SortableListProps) => {
   return (
     <ul>
-      {data.items.map((value, index) => (
-        <SortableItem key={`item-${value}`} index={index} value={value.name} />
+      {items.map((value, index) => (
+        <SortableItem key={`item-${value}`} index={index} itemIndex={index} value={value} />
       ))}
     </ul>
   );
 });
 
-export const DragTable = (props:DragTableProps) => {
-  const [dataSource, setDataSource] = React.useState(data);
-  const [selectedItems, setSelectedItems] = React.useState([]);
+export const DragTable = (props: DragTableProps) => {
+  const { serverList } = useServerStore();
+  const [dataSource, setDataSource] = useState<string[]>([]);
 
-  const onSortEnd = ({oldIndex, newIndex}) => {
-    setDataSource({
-      items: arrayMove(dataSource.items, oldIndex, newIndex),
-    })
-  }
+  // On component mount, restore serverList from localStorage if it exists, otherwise from global state
+  useEffect(() => {
+    const savedServerList = localStorage.getItem('serverList');
+    if (savedServerList) {
+      const parsedList = JSON.parse(savedServerList) as string[];
+      setDataSource(parsedList);
+    } else {
+      setDataSource(serverList);
+      localStorage.setItem('serverList', JSON.stringify(serverList));
+    }
+  }, []);
+
+  // When serverList changes, update dataSource and save to localStorage
+  useEffect(() => {
+    const savedServerList = localStorage.getItem('priorityList');
+    if (savedServerList) {
+      let parsedList = JSON.parse(savedServerList) as string[];
+      // Filter out servers that are not in the new serverList
+      parsedList = parsedList.filter((server) => serverList.includes(server));
+      // Add new servers from the new serverList
+      const newServers = serverList.filter((server) => !parsedList.includes(server));
+      parsedList = [...parsedList, ...newServers];
+      setDataSource(parsedList);
+      localStorage.setItem('priorityList', JSON.stringify(parsedList));
+    } else {
+      setDataSource(serverList);
+      localStorage.setItem('priorityList', JSON.stringify(serverList));
+    }
+  }, [serverList]);
+
+  const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+    const newItems = arrayMove(dataSource, oldIndex, newIndex);
+    setDataSource(newItems);
+    localStorage.setItem('priorityList', JSON.stringify(newItems));
+  };
 
   return (
-   <SortableList data={dataSource} onSortEnd={onSortEnd}>
-   </SortableList>
-    )
-}
+    <>
+      <h1 className="text-center text-green-800 font-sans text-[18px]  ">Nguồn truyện ưu tiên</h1>
+      <SortableList items={dataSource} onSortEnd={onSortEnd}></SortableList>
+    </>
+  );
+};

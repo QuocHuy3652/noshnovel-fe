@@ -156,9 +156,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
 
     if (type === 'genre') {
       param.genre = toSlug(data);
-      setCurrentGenre(data);
+      localStorage.setItem('currentGenre', JSON.stringify(data));
     } else if (type === 'author') {
-      param.author = data;
+      param.author = data.slug;
+      localStorage.setItem('currentAuthor', JSON.stringify(data.name));
     } else if (type === 'keyword') {
       param.keyword = data;
     }
@@ -188,6 +189,14 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
       search: createSearchParams(param).toString(),
     });
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serverFromUrl = urlParams.get('server');
+    if (serverFromUrl && serverFromUrl !== selectedServer) {
+      setSelectedServer(serverFromUrl);
+    }
+  }, [window.location.search]);
 
   const handleChangeServer = (data: any) => {
     if (data.name !== selectedServer) {
@@ -221,14 +230,10 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                 />
                 <div className="outer-wrapper flex flex-col justify-between ml-[5rem]">
                   <div className="inner-wrapper flex flex-col">
-                    <p
-                      className="text-3xl font-bold text-black max-w-[40rem]"
-                    >
-                      {novelDetail.title}
-                    </p>
+                    <p className="text-3xl font-bold text-black max-w-[40rem]">{novelDetail.title}</p>
                     <div
                       className="novel-author mt-2 flex items-center gap-1 max-w-[40rem]"
-                      onClick={() => handleSearch(novelDetail.author.slug, 'author')}
+                      onClick={() => handleSearch(novelDetail.author, 'author')}
                     >
                       <UserCircleIcon className="w-[2rem] h-[2rem] text-blue-gray-100 cursor-pointer" />
                       <Typography color="black" className="font-medium text-blue-gray-500 cursor-pointer">
@@ -242,7 +247,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        readonly 
+                        readonly
                       />
                       <Typography
                         color="blue-gray"

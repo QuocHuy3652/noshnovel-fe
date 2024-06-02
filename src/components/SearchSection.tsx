@@ -6,7 +6,7 @@ import { path } from '~/constants';
 import { createSearchParams } from 'react-router-dom';
 import { withRouter, WithRouterProps } from '~/hocs/withRouter';
 import Select from 'react-select';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import smoothscroll from 'smoothscroll-polyfill';
 import { DragTable } from '~/components/DragTable.tsx';
 import nosh_bg from '/src/assets/nosh_bg.png';
@@ -16,6 +16,7 @@ import tag from '/src/assets/tag.png';
 import { Simulate } from 'react-dom/test-utils';
 import toggle = Simulate.toggle;
 import { IconButton } from '@mui/material';
+import useOutsideClick from '~/hooks/useOutSideClick';
 interface OptionType {
   label: string;
   value: string;
@@ -39,7 +40,10 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const [options, setOptions] = useState<OptionType[]>(
     (genreList || []).map((genre) => ({ value: genre.slug, label: genre.name })),
   );
-  const serverOptions: OptionType[] = serverList.map((server) => ({ value: server, label: server }));
+  const serverOptions: OptionType[] = [
+    ...serverList.map((server) => ({ value: server, label: server })),
+    { value: 'all', label: 'Tất cả' },
+  ];
   const defaultOption = serverOptions.find((option) => option.value === selectedServer);
 
   const location = useLocation();
@@ -48,6 +52,10 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   const [genreCache, setGenreCache] = useState<Record<string, OptionType[]>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [openSourcesPriority, setOpenSourcesPriority] = useState(false);
+  const [searchKey, setSearchKey] = useState(Date.now());
+
+  const wrapperRef = useRef(null);
+  useOutsideClick(wrapperRef, () => setOpenSourcesPriority(false));
 
   useEffect(() => {
     if (options.length > 0) {
@@ -63,13 +71,15 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     localStorage.setItem('selectedServer', value);
     setSelectedServer(value);
   };
-  useEffect(() => {
-    if (genreCache[selectedServer]) {
-      // Use the cached genre lis
-      setOptions(genreCache[selectedServer]);
-    } else {
-      // Load the genre list from the server
 
+  useEffect(() => {
+    if (selectedServer === 'all') {
+      setOptions([{ value: 'all', label: 'Tất cả' }]);
+    } else if (selectedServer && genreCache[selectedServer]) {
+      // Use the cached genre list
+      setOptions(genreCache[selectedServer]);
+    } else if (selectedServer) {
+      // Load the genre list from the server
       getGenreList(selectedServer).then((genreList) => {
         const options = genreList.map((genre) => ({ value: genre.slug, label: genre.name }));
         setOptions(options);
@@ -77,7 +87,6 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
       });
     }
   }, [selectedServer]);
-
 
   const handleSearch = (data: SearchData) => {
     const param: Record<string, string | string[]> = {};
@@ -96,6 +105,11 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
     smoothscroll.polyfill();
 
     window.scrollTo({ top: 300, behavior: 'smooth' });
+
+    const newSearchKey = Date.now();
+    setSearchKey(newSearchKey);
+
+    localStorage.setItem('searchKey', newSearchKey.toString());
   };
 
   const customStyles = {
@@ -143,12 +157,33 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
   useEffect(() => {
     window.scrollTo(0, 300);
   }, [location.pathname]);
+
+  const genre = searchParams.get('genre');
+
+  useEffect(() => {
+    if (genre) {
+      const matchingOption = options.find((option) => option.value === genre);
+      if (matchingOption) {
+        localStorage.setItem('currentGenre', JSON.stringify(matchingOption.label));
+        setSelectedOption(matchingOption);
+      }
+    }
+  }, [genre, options]);
+
+  useEffect(() => {
+    const serverFromUrl = searchParams.get('server');
+    if (serverFromUrl && serverFromUrl !== selectedServer) {
+      setSelectedServer(serverFromUrl);
+      localStorage.setItem('selectedServer', serverFromUrl);
+    }
+  }, [location.search]);
+
   return (
     <>
       <section className="banner flex flex-col w-full items-center justify-center min-h-[10rem]">
-        <img className="w-full h-[35rem]" src={nosh_bg} alt="banner"/>
+        <img className="w-full h-[35rem]" src={nosh_bg} alt="banner" />
         <div className="wrapper absolute flex flex-col items-center justify-center w-[30rem]">
-          <img className="w-[13rem] h-[13rem]" src={nosh_logo} alt="banner"/>
+          <img className="w-[13rem] h-[13rem]" src={nosh_logo} alt="banner" />
           <div className="banner-text flex flex-col justify-center items-start text-white">
             <h1 className="text-5xl font-bold text-app_primary">Nosh Novel</h1>
           </div>
@@ -156,8 +191,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
             <div className="filter-selection flex flex-row justify-between space-x-5 mt-5">
               <div className="source-select w-[20rem]">
                 <div className="relative">
-                  <label
-                    className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
+                  <label className=" text-[13px] absolute left-2 top-1/2 transform -translate-y-1/2 text-app_primary z-10">
                     Nguồn truyện
                   </label>
                   <Select
@@ -175,8 +209,7 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
               </div>
               <div className="categories-select w-[20rem] ">
                 <div className="relative">
-                  <label
-                    className=" text-[13px] absolute left-2 top-6 transform -translate-y-1/2 text-app_primary z-10 ">
+                  <label className=" text-[13px] absolute left-2 top-6 transform -translate-y-1/2 text-app_primary z-10 ">
                     Thể loại
                   </label>
                   <Select
@@ -205,11 +238,12 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
                       setSelectedOption(val);
                       setValue('keyword', '');
                       setValue('genre', val?.value);
-                      setCurrentGenre(val?.label);
+                      localStorage.setItem('currentGenre', JSON.stringify(val?.label));
                       handleSearch({ genre: val?.value });
                     }}
                     className="block w-full "
                     isLoading={options.length === 0}
+                    isDisabled={selectedServer === 'all'}
                   />
                 </div>
               </div>
@@ -270,22 +304,22 @@ const SearchSection = ({ navigate }: WithRouterProps) => {
             </div>
           </form>
         </div>
-        <IconButton
-          className="w-[3rem] h-[3rem] !absolute top-[7rem] right-[4rem]"
-          color="blue-gray"
-          size="sm"
-          variant="text"
-          onClick={() => setOpenSourcesPriority(!openSourcesPriority)}>
-          <img className={`${openSourcesPriority ? "bg-0" : "rotate-180"} `} src={tag} alt="banner"/>
-        </IconButton>
-        {
-          openSourcesPriority && (
-            <div
-              className="rounded-xl source-priority absolute w-[20rem] border-[3px] border-app_primary bg-white top-[10rem] right-[5rem] p-3">
-              <DragTable/>
+        <div ref={wrapperRef}>
+          <IconButton
+            className="w-[3rem] h-[3rem] !absolute top-[5rem] right-[3rem]"
+            color="blue-gray"
+            size="sm"
+            variant="text"
+            onClick={() => setOpenSourcesPriority(!openSourcesPriority)}
+          >
+            <img className={`${openSourcesPriority ? 'bg-0' : 'rotate-180'} `} src={tag} alt="banner" />
+          </IconButton>
+          {openSourcesPriority && (
+            <div className="rounded-xl source-priority absolute w-[20rem] border-[3px] border-app_primary bg-white top-[6.5rem] right-[4rem] p-3">
+              <DragTable />
             </div>
-          )
-        }
+          )}
+        </div>
       </section>
     </>
   );

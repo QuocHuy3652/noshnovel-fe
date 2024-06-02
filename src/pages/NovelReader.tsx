@@ -111,6 +111,7 @@ export const NovelReader = (props: NovelReaderProps) => {
   const chapterIndex: any = params.chapterIndex;
   const [author, setAuthor] = useState('');
   const [authorSlug, setAuthorSlug] = useState('');
+  const [authorData, setAuthorData] = useState({ name: '', slug: '' });
   const [openReadDialog, setOpenReadDialog] = useState(false);
   const { fileExtensions } = useDownloadStore();
   const [listChapterEnds, setListChapterEnds] = useState<Chapter[]>([]);
@@ -146,9 +147,11 @@ export const NovelReader = (props: NovelReaderProps) => {
       const result: any = await apiGetNovelContent(params);
       const author: any = await apiNovelDetail({ server: params.server, novelSlug: params.novelSlug });
       if (author) {
-        setCurrentTitle(author.title);        
-        setAuthor(author.author.name);
-        setAuthorSlug(author.author.slug);
+        setCurrentTitle(author.title);
+        setAuthorData({
+          name: author.author.name,
+          slug: author.author.slug,
+        });
       }
       if (result) {
         setIsavailable(true);
@@ -343,7 +346,8 @@ export const NovelReader = (props: NovelReaderProps) => {
     if (type === 'genre') {
       param.genre = data;
     } else if (type === 'author') {
-      param.author = data;
+      param.author = data.slug;
+      localStorage.setItem('currentAuthor', JSON.stringify(data.name));
     } else if (type === 'keyword') {
       param.keyword = data;
     }
@@ -363,7 +367,7 @@ export const NovelReader = (props: NovelReaderProps) => {
       pathname: `/${path.DETAIL}`,
       search: createSearchParams(param).toString(),
     });
-  }
+  };
 
   return (
     <>
@@ -380,19 +384,28 @@ export const NovelReader = (props: NovelReaderProps) => {
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
               >
-                <span onClick={handleClickTitle} className='cursor-pointer'>{currentTitle}</span>
+                <span onClick={handleClickTitle} className="cursor-pointer">
+                  {currentTitle}
+                </span>
               </Typography>
             </div>
-            {author !== '' && (
+            {authorData.name !== '' && (
               <div className="novel-author">
                 <Typography
                   className="text-app_primary"
                   variant="h5"
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}                  
+                  onPointerLeaveCapture={undefined}
                 >
-                  Tác giả: <span onClick={() => handleSearch(authorSlug, 'author')} className='cursor-pointer' style={{ fontWeight: 'normal' }}>{author}</span>
+                  Tác giả:{' '}
+                  <span
+                    onClick={() => handleSearch(authorData, 'author')}
+                    className="cursor-pointer"
+                    style={{ fontWeight: 'normal' }}
+                  >
+                    {authorData.name}
+                  </span>
                 </Typography>
               </div>
             )}

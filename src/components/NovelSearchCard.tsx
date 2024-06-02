@@ -47,6 +47,7 @@ export const NovelSearchCard = (props: NovelSeachCardProps) => {
     if (namePage === 'search') {
       navigate(`/${path.DETAIL}?server=${server}&novelSlug=${slug}`);
     } else if (namePage === 'detail') {
+      localStorage.setItem('selectedServer', server);
       navigate(`/${path.DETAIL}?server=${server}&novelSlug=${slug}`);
     } else if (namePage === 'reader') {
       insertToHistory(chapter, props, server);
