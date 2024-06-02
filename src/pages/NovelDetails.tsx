@@ -155,7 +155,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
     param.server = selectedServer?.toString();
 
     if (type === 'genre') {
-      param.genre = toSlug(data);
+      param.genre = data;
       localStorage.setItem('currentGenre', JSON.stringify(data));
     } else if (type === 'author') {
       param.author = data.slug;
