@@ -15,7 +15,7 @@ const useSignal = () => {
       .withAutomaticReconnect()
       .build();
 
-    connection.start().catch((err: any) => console.error('Error while establishing connection :('));
+    connection.start().catch(() => console.error('Error while establishing connection :('));
 
     connection.on('DownloadFormatUpdate', () => {
       if (!toast.isActive('downloadFormatUpdateToast')) {

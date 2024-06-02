@@ -534,7 +534,7 @@ export const NovelReader = () => {
               <Button
                 className="bg-app_tertiary text-white flex"
                 onClick={getPreviousChapter}
-                disabled={parseInt(chapterIndex) === 1 || isAvailable === false} 
+                disabled={parseInt(chapterIndex) === 1 || isAvailable === false}
                 placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}              >
                 <ArrowLeftIcon className="w-4 h-4 mr-2" />
                 Chương trước
@@ -542,7 +542,7 @@ export const NovelReader = () => {
               <Button
                 className="bg-app_tertiary text-white flex"
                 onClick={getNextChapter}
-                disabled={parseInt(chapterIndex) === totalChapter || isAvailable === false} 
+                disabled={parseInt(chapterIndex) === totalChapter || isAvailable === false}
                 placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}              >
                 Chương sau
                 <ArrowRightIcon className="ml-2 w-4 h-4" />
