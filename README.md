@@ -10,6 +10,9 @@ Welcome to Noshnovel, a web application designed for a seamless novel reading ex
 - **Customizable Reading Settings**: Adjust font size, background color, and other settings to suit your reading preferences.
 - **Search Functionality**: Easily find novels by title, author, or genre.
 
+## Demo page:
+Page demo [here](https://mike20403.github.io/noshnovel-fe/)
+
 ## Project Design
 
 You can view the project design on Figma using the following link:
