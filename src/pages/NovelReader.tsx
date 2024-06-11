@@ -204,7 +204,7 @@ export const NovelReader = () => {
     };
 
     fetchChapterEnds();
-  }, []);
+  }, [chapterSlug]);
 
   const getPreviousChapter = () => {
     if (parseInt(chapterIndex) > 1) {
