@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { toast } from 'react-toastify';
 import { useServerStore } from '~/store';
 import { useDownloadStore } from '~/store/useDownloadStore';
+import { HubConnectionBuilder, HubConnection, HttpTransportType } from '@microsoft/signalr';
+import { SOCKET_URL } from '~/constants/socket.constant';
 
 const useSignal = () => {
   const { serverList, getServerList } = useServerStore();
@@ -11,7 +12,10 @@ const useSignal = () => {
 
   useEffect(() => {
     connection = new HubConnectionBuilder()
-      .withUrl('https://tmplam-001-site1.ktempurl.com/service-update')
+      .withUrl(`${SOCKET_URL}/service-update`, {
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+      })
       .withAutomaticReconnect()
       .build();
 
