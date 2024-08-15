@@ -236,9 +236,13 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       onClick={() => handleSearch(novelDetail.author, 'author')}
                     >
                       <UserCircleIcon className="w-[2rem] h-[2rem] text-blue-gray-100 cursor-pointer" />
-                      <Typography color="black" className="font-medium text-blue-gray-500 cursor-pointer"
-                                  placeholder={undefined} onPointerEnterCapture={undefined}
-                                  onPointerLeaveCapture={undefined}>
+                      <Typography
+                        color="black"
+                        className="font-medium text-blue-gray-500 cursor-pointer"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
                         {novelDetail.author.name ?? 'Không rõ'}
                       </Typography>
                     </div>
@@ -268,9 +272,11 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       handleSearch={handleSearch}
                     />
                     <Typography
-                      className={` mt-[1rem]badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] rounded-[7px]  ${novelDetail.status === "Đang ra" ? "bg-green-300" : "bg-yellow-500"}`}
-                      placeholder={undefined} onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}                    >
+                      className={` mt-[1rem]badge rounded text-white p-1 text-center mt-3 text-xs whitespace-nowrap max-w-[8rem] rounded-[7px]  ${novelDetail.status === 'Đang ra' ? 'bg-green-300' : 'bg-yellow-500'}`}
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
                       {novelDetail.status || 'Không rõ'}
                     </Typography>
 
@@ -283,6 +289,7 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
+                      disabled={chapterOne === 'chuong-1'}
                     >
                       Đọc ngay
                     </Button>
@@ -394,7 +401,9 @@ export const NovelDetails = withRouter(({ navigate }: WithRouterProps) => {
                           coverImage={novelDetail.coverImage}
                           title={novelDetail.title}
                           isInsert={true}
-                          isChangePage={isChangePage} chapterSlug={null} />
+                          isChangePage={isChangePage}
+                          chapterSlug={null}
+                        />
                       </TabPanel>
                     ),
                   )}
