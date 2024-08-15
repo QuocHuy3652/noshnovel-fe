@@ -11,13 +11,7 @@ const useSignal = () => {
   let connection: HubConnection | null = null;
 
   useEffect(() => {
-    connection = new HubConnectionBuilder()
-      .withUrl(`${SOCKET_URL}/service-update`, {
-        skipNegotiation: true,
-        transport: HttpTransportType.WebSockets,
-      })
-      .withAutomaticReconnect()
-      .build();
+    connection = new HubConnectionBuilder().withUrl(`${SOCKET_URL}/service-update`).withAutomaticReconnect().build();
 
     connection.start().catch(() => console.error('Error while establishing connection :('));
 
