@@ -10,7 +10,8 @@ Welcome to Noshnovel, a web application designed for a seamless novel reading ex
 - **Customizable Reading Settings**: Adjust font size, background color, and other settings to suit your reading preferences.
 - **Search Functionality**: Easily find novels by title, author, or genre.
 
-## Demo page:
+## Demo page
+
 Page demo [here](https://mike20403.github.io/noshnovel-fe/)
 
 ## Project Design
@@ -19,8 +20,8 @@ You can view the project design on Figma using the following link:
 
 [Design in Figma](https://www.figma.com/design/kIOPzaq50Kf0Br4GvQevvR/Main?node-id=7-2&t=RI3Bx0FU94WwaCRL-1)
 
-
 ## Screenshots
+
 ![Reading Interface](https://github.com/Mike20403/noshnovel-fe/assets/57946382/56d98f2c-8b9d-4a0d-87b1-7e3e790488b6)
 *Homepage showcasing featured novels.*
 
@@ -38,26 +39,30 @@ You can view the project design on Figma using the following link:
 To get started with Noshnovel, follow these steps:
 
 1. **Clone the Repository**:
+
    ```bash
-   git clone https://github.com/Mike20403/noshnovel-fe.git
+   git clone https://github.com/QuocHuy3652/noshnovel-fe.git
    ```
 
 2. **Navigate to the Project Directory**:
+
    ```bash
    cd noshnovel-fe
    ```
 
 3. **Install Dependencies**:
+
    ```bash
    npm install
    ```
 
 4. **Run the Application**:
+
    ```bash
    npm run dev
    ```
 
-   The application will be available at `http://localhost:3000`.
+   The application will be available at `http://localhost:5173/noshnovel-fe`.
 
 ## Usage
 
